@@ -7,6 +7,8 @@ namespace Penwyn.Game
     public enum CharacterAbilityStates
     {
         Idling,
-        Running
+        Running,
+        Gliding,
+        OnAir
     }
 }

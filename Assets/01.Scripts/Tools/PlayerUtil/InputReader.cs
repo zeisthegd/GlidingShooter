@@ -37,6 +37,7 @@ namespace Penwyn.Tools
         public bool IsHoldingNormalAttack { get; set; }
         public bool IsHoldingSpecialAttack { get; set; }
         public bool IsHoldingJump { get; set; }
+        public bool IsHoldingGlide { get; set; }
 
         #endregion
 
@@ -96,10 +97,12 @@ namespace Penwyn.Tools
             if (context.started)
             {
                 GlidePressed?.Invoke();
+                IsHoldingGlide = true;
             }
             else if (context.phase == UnityEngine.InputSystem.InputActionPhase.Canceled)
             {
                 GlideReleased?.Invoke();
+                IsHoldingGlide = false;
             }
         }
 

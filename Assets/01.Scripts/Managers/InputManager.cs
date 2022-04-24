@@ -8,6 +8,22 @@ namespace Penwyn.Game
 {
     public class InputManager : MonoBehaviour
     {
-        [SerializeField] InputReader inputReader;
+        public InputReader inputReader;
+        public bool ShouldHideCursor = false;
+
+        protected virtual void Start()
+        {
+            Initialization();
+        }
+
+        public virtual void Initialization()
+        {
+            HideCursor();
+        }
+
+        public virtual void HideCursor()
+        {
+            Cursor.visible = !ShouldHideCursor;
+        }
     }
 }

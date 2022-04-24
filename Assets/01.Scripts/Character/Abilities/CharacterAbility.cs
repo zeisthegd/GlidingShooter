@@ -9,7 +9,7 @@ namespace Penwyn.Game
         public bool AbilityPermitted = true;
         public string Name;
 
-        public List<CharacterAbilityStates> forbidStates;
+        public List<CharacterAbilityStates> ForbidStates;
 
         protected Character _character;
         protected CharacterController _controller;

@@ -10,6 +10,7 @@ namespace Penwyn.Game
     {
         [Header("Speed")]
         public float RunSpeed = 5;
+        public float MaxSpeed = 5;
         public bool UseRawInput = true;
         public ControlType Type;
         [Header("Feedbacks")]
@@ -40,20 +41,26 @@ namespace Penwyn.Game
 
         public virtual void RunRaw(Vector2 input)
         {
-            Vector3 direction = transform.right * input.x + transform.forward * input.y;
-            _controller.SetVelocity(direction * RunSpeed);
-            Debug.DrawRay(_character.Position, direction * RunSpeed, Color.green);
+            if (_controller.Velocity.magnitude < MaxSpeed)
+            {
+                Vector3 direction = transform.right * input.x + transform.forward * input.y;
+                _controller.SetVelocity(direction * RunSpeed);
+            }
         }
 
         public virtual void RunAccelerate(Vector2 input)
         {
-            Vector3 direction = transform.right * input.x + transform.forward * input.y;
-            _controller.AddForce(direction * RunSpeed, ForceMode.Acceleration);
+            Debug.Log(_controller.Velocity.magnitude);
+            if (_controller.Velocity.magnitude < MaxSpeed)
+            {
+                Vector3 direction = transform.right * input.x + transform.forward * input.y;
+                _controller.AddForce(direction * RunSpeed, ForceMode.Acceleration);
+            }
         }
 
         public virtual void LookAtCamera()
         {
-            _character.transform.eulerAngles = new Vector3(0, Camera.main.transform.eulerAngles.y, 0);
+            _character.transform.localRotation =Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
         }
 
         protected virtual void DustHandling()
