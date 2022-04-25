@@ -6,10 +6,10 @@ using Penwyn.Tools;
 
 namespace Penwyn.Game
 {
-    public class InputManager : SingletonMonoBehaviour<InputManager>
+    [CreateAssetMenu(menuName = "Managers/Input Manager")]
+    public class InputManager : SingletonScriptableObject<InputManager>
     {
-        public CameraController MainCamera;
-        public InputReader inputReader;
+        public InputReader InputReader;
         public bool ShouldHideCursor = false;
 
         protected virtual void Start()

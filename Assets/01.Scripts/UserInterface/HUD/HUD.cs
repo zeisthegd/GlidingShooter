@@ -19,13 +19,8 @@ namespace Penwyn.UI
         public Button WeaponButton;
         public List<WeaponUpgradeButton> WeaponUpgradeButtons;
 
-        [Header("Level")]
-        public ProgressBar LevelProgress;
-
-
         protected virtual void Awake()
         {
-            LevelManager.PlayerSpawned += OnPlayerSpawned;
         }
 
         protected virtual void Update()
@@ -37,7 +32,7 @@ namespace Penwyn.UI
 
         public virtual void UpdateLevelProgress()
         {
-            LevelProgress.SetValue(LevelManager.Instance.Progress);
+
         }
 
         #endregion

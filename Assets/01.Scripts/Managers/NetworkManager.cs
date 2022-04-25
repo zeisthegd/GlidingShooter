@@ -9,13 +9,14 @@ using Penwyn.Tools;
 
 namespace Penwyn.Game
 {
-    public class NetworkManager : SingletonMonoBehaviour<NetworkManager>
+    [CreateAssetMenu(menuName ="Managers/Network Manager")]
+    public class NetworkManager : SingletonScriptableObject<NetworkManager>
     {
-        [SerializeField] NetworkSettings networkSettings;
-
-        List<RoomInfo> roomList = new List<RoomInfo>();
+        public NetworkSettings NetworkSettings;
+        public List<RoomInfo> RoomList = new List<RoomInfo>();
 
         #region Server Connections
+
         public void Connect()
         {
             AssignSettings();
@@ -66,6 +67,7 @@ namespace Penwyn.Game
                 PhotonNetwork.NickName = NetworkSettings.NickName;
                 PhotonNetwork.GameVersion = NetworkSettings.GameVersion;
                 PhotonNetwork.AutomaticallySyncScene = NetworkSettings.AutomaticallySyncScene;
+                PhotonNetwork.OfflineMode = NetworkSettings.OfflineMode;
             }
         }
 
@@ -82,11 +84,11 @@ namespace Penwyn.Game
         {
             if (PhotonNetwork.IsConnectedAndReady)
             {
-                for (int i = 0; i < roomList.Count; i++)
+                for (int i = 0; i < RoomList.Count; i++)
                 {
-                    if ((string)roomList[i].CustomProperties["Passcode"] == passCode)
+                    if ((string)RoomList[i].CustomProperties["Passcode"] == passCode)
                     {
-                        PhotonNetwork.JoinRoom(roomList[i].Name);
+                        PhotonNetwork.JoinRoom(RoomList[i].Name);
                         return;
                     }
                 }
@@ -132,7 +134,7 @@ namespace Penwyn.Game
             while (passcode == null)
             {
                 passcode = Randomizer.RandomString(6);
-                if (roomList.Find(x => (string)x.CustomProperties["Passcode"] == passcode) != null)
+                if (RoomList.Find(x => (string)x.CustomProperties["Passcode"] == passcode) != null)
                 {
                     passcode = null;
                 }
@@ -141,11 +143,6 @@ namespace Penwyn.Game
         }
 
         #endregion
-
-
-
-        public NetworkSettings NetworkSettings { get => Instance.networkSettings; }
-        public List<RoomInfo> RoomList { get => roomList; set => roomList = value; }
     }
 }
 

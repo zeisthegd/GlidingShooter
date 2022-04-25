@@ -8,12 +8,9 @@ namespace Penwyn.Game
     [CreateAssetMenu(menuName = "Settings/Network")]
     public class NetworkSettings : ScriptableObject
     {
-        [SerializeField] string gameVersion;
-        [SerializeField] string nickName;
-        [SerializeField] bool automaticallySyncScene;
-
-        public string GameVersion { get => gameVersion; }
-        public string NickName { get => nickName; set => nickName = value; }
-        public bool AutomaticallySyncScene { get => automaticallySyncScene; }
+        public string GameVersion;
+        public string NickName;
+        public bool AutomaticallySyncScene;
+        public bool OfflineMode;
     }
 }

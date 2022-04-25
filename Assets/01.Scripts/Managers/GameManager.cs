@@ -7,6 +7,8 @@ using Photon;
 using Photon.Pun;
 using Photon.Realtime;
 
+using NaughtyAttributes;
+
 using Penwyn.Tools;
 using Penwyn.UI;
 
@@ -16,25 +18,24 @@ namespace Penwyn.Game
     public class GameManager : MonoBehaviourPun
     {
         [Header("Managers")]
-        [SerializeField] NetworkManager networkManager;
-       // [SerializeField] CameraManager cameraManager;
-        [SerializeField] SceneManager sceneManager;
-       // [SerializeField] PlayerManager playerManager;
-        //[SerializeField] UIManager uiManager;
+        [Expandable] public NetworkManager NetworkManager;
+        [Expandable] public CameraManager CameraManager;
+        [Expandable] public SceneManager SceneManager;
+        [Expandable] public PlayerManager PlayerManager;
+        [Expandable] public InputManager InputManager;
+        [Expandable] public AudioPlayer AudioPlayer;
 
         [Header("Utilities")]
-        [SerializeField] CursorUtility cursorUtility;
-        [SerializeField] InputReader inputReader;
+        public CursorUtility CursorUtility;
 
         //[SerializeField] AudioPlayer audioPlayer;
-        [SerializeField] Announcer announcer;
 
         [Header("Level Stuff")]
         //[SerializeField] Level levelPref;
-        [SerializeField] string levelPath;
-        [SerializeField] MatchSettings matchSettings;
+        public string LevelPath;
+        [Expandable] public MatchSettings MatchSettings;
 
-     //   Level currentLevel;
+        //   Level currentLevel;
 
         public static GameManager Instance;
 
@@ -63,25 +64,18 @@ namespace Penwyn.Game
         }
 
 
-        [PunRPC]
-        /// <summary>
-        /// Assign the local player to a random position.
-        /// </summary>
-        public void SetUpPlayersOnClients()
+        public virtual void OnRoomSceneLoaded()
         {
+            CameraManager.CreatePlayerCamera();
+            PlayerManager.CreateLocalPlayer();
         }
-
 
         void OnSceneLoad(Scene scene, LoadSceneMode mode)
         {
-
+            if (scene.name == SceneManager.RoomSceenName)
+            {
+                OnRoomSceneLoaded();
+            }
         }
-
-        public MatchSettings MatchSettings { get => matchSettings; }
-
-        public Announcer Announcer { get => announcer; }
-        
-    
-        public InputReader InputReader { get => inputReader; }
     }
 }

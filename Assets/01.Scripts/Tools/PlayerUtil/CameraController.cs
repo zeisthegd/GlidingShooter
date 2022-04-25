@@ -21,8 +21,13 @@ namespace Penwyn.Tools
 
         public virtual void FollowPlayer()
         {
-            _virtualCamera.Follow = Characters.Player.transform;
-            _virtualCamera.LookAt = Characters.Player.transform;
+            Follow(PlayerManager.Instance.LocalPlayer.transform, PlayerManager.Instance.LocalPlayer.transform);
+        }
+
+        public virtual void Follow(Transform followTrf, Transform lookAtTrf)
+        {
+            _virtualCamera.Follow = followTrf;
+            _virtualCamera.LookAt = lookAtTrf;
         }
 
         public virtual void StartShaking(float amplitude, float frequency)
@@ -43,12 +48,10 @@ namespace Penwyn.Tools
 
         public virtual void ConnectEvents()
         {
-            LevelManager.PlayerSpawned += FollowPlayer;
         }
 
         public virtual void DisconnectEvents()
         {
-            LevelManager.PlayerSpawned -= FollowPlayer;
 
         }
 

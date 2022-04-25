@@ -11,33 +11,34 @@ using Penwyn.Tools;
 
 namespace Penwyn.Game
 {
-    public class SceneManager : SingletonMonoBehaviour<SceneManager>
+    [CreateAssetMenu(menuName = "Managers/Scene Manager")]
+    public class SceneManager : SingletonScriptableObject<SceneManager>
     {
         [Header("Scene names")]
-        [SerializeField] string title;
-        [SerializeField] string lobby;
-        [SerializeField] string room;
-        [SerializeField] string match;
+        public string TitleSceenName;
+        public string LobbySceenName;
+        public string RoomSceenName;
+        public string MatchSceenName;
 
         #region Load Scenes
         public void LoadTitleScene()
         {
-            LoadScene(title);
+            LoadScene(TitleSceenName);
         }
 
         public void LoadLobbyScene()
         {
-            LoadScene(lobby);
+            LoadScene(LobbySceenName);
         }
 
         public void LoadRoomScene()
         {
-            Photon.Pun.PhotonNetwork.LoadLevel(2);
+            LoadScene(RoomSceenName);
         }
 
         void LoadScene(string sceneName)
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+            PhotonNetwork.LoadLevel(sceneName);
         }
         #endregion
 
@@ -45,7 +46,7 @@ namespace Penwyn.Game
 
         public void LoadMatchScene()
         {
-            PhotonNetwork.LoadLevel(match);
+            PhotonNetwork.LoadLevel(MatchSceenName);
         }
 
         #endregion
@@ -57,9 +58,9 @@ namespace Penwyn.Game
             Application.Quit();
         }
 
-        public string Title { get => title; }
-        public string Lobby { get => lobby; }
-        public string Room { get => room; }
-        public string Match { get => match; }
+        public string Title { get => TitleSceenName; }
+        public string Lobby { get => LobbySceenName; }
+        public string Room { get => RoomSceenName; }
+        public string Match { get => MatchSceenName; }
     }
 }

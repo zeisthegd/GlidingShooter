@@ -77,7 +77,7 @@ namespace Penwyn.Game
                     Dive();
                 AddHelpingLevitateForce();
                 // AirStrafe();
-                _character.Model.transform.localRotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x+90, 0, 0);
+                _character.Model.transform.localRotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x + 90, 0, 0);
             }
         }
 
@@ -127,13 +127,13 @@ namespace Penwyn.Game
                 _fov -= Time.deltaTime * (MaxFOV - MinFOV) * FOVAdjustDuration;
             }
             _fov = Mathf.Clamp(_fov, MinFOV, MaxFOV);
-            InputManager.Instance.MainCamera.SetFOV(_fov);
+            CameraManager.Instance.CurrenPlayerCam.SetFOV(_fov);
         }
 
         public virtual void CameraShake()
         {
             if (_isGliding)
-                InputManager.Instance.MainCamera.StartShaking(FlyingShakeData.Amplitude * _forcePercentage, FlyingShakeData.Frequency * _forcePercentage);
+                CameraManager.Instance.CurrenPlayerCam.StartShaking(FlyingShakeData.Amplitude * _forcePercentage, FlyingShakeData.Frequency * _forcePercentage);
         }
         public virtual void Reset()
         {
@@ -143,7 +143,7 @@ namespace Penwyn.Game
             _maxSpeed = 0;
             _topRecordedVelocity = 0;
             _controller.Body.useGravity = true;
-            InputManager.Instance.MainCamera.StartShaking(0, 0);
+            CameraManager.Instance.CurrenPlayerCam.StartShaking(0, 0);
         }
 
         public override void ConnectEvents()
