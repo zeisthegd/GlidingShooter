@@ -10,8 +10,11 @@ namespace Penwyn.Game
         public float MaxJumpForce = 30;
         public virtual void Jump()
         {
-            _controller.AddForce(Vector3.up * MaxJumpForce, ForceMode.VelocityChange);
-            _controller.AddForce(Camera.main.transform.forward, ForceMode.VelocityChange);
+            if (_controller.IsTouchingGround)
+            {
+                _controller.AddForce(Vector3.up * MaxJumpForce, ForceMode.VelocityChange);
+                _controller.AddForce(Camera.main.transform.forward, ForceMode.VelocityChange);
+            }
         }
         public override void ConnectEvents()
         {

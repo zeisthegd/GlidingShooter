@@ -2,14 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StateMachine<T>
+namespace Penwyn.Game
 {
-    public T CurrentState { get; protected set; }
-    public T PreviousState { get; protected set; }
-
-    public virtual void ChangeState(T newState)
+    public class StateMachine<T>
     {
-        PreviousState = CurrentState;
-        CurrentState = newState;
+        public T CurrentState { get; protected set; }
+        public T PreviousState { get; protected set; }
+
+        public StateMachine(T initState)
+        {
+            CurrentState = initState;
+        }
+
+        public virtual void ChangeState(T newState)
+        {
+            PreviousState = CurrentState;
+            CurrentState = newState;
+        }
     }
 }
+

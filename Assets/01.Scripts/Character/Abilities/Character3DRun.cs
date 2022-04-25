@@ -29,7 +29,7 @@ namespace Penwyn.Game
 
         public override void FixedUpdateAbility()
         {
-            if (Type == ControlType.PlayerInput)
+            if (Type == ControlType.PlayerInput && _controller.IsTouchingGround)
             {
                 if (UseRawInput)
                     RunRaw(InputReader.Instance.MoveInput);
@@ -41,16 +41,12 @@ namespace Penwyn.Game
 
         public virtual void RunRaw(Vector2 input)
         {
-            if (_controller.Velocity.magnitude < MaxSpeed)
-            {
-                Vector3 direction = transform.right * input.x + transform.forward * input.y;
-                _controller.SetVelocity(direction * RunSpeed);
-            }
+            Vector3 direction = transform.right * input.x + transform.forward * input.y;
+            _controller.SetVelocity(direction * RunSpeed);
         }
 
         public virtual void RunAccelerate(Vector2 input)
         {
-            Debug.Log(_controller.Velocity.magnitude);
             if (_controller.Velocity.magnitude < MaxSpeed)
             {
                 Vector3 direction = transform.right * input.x + transform.forward * input.y;
@@ -60,7 +56,9 @@ namespace Penwyn.Game
 
         public virtual void LookAtCamera()
         {
-            _character.transform.localRotation =Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
+            _character.transform.localRotation = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
+            if (_controller.IsTouchingGround || _controller.IsTouchingWall)
+                _character.Model.transform.localRotation = Quaternion.Euler(0, 0, 0);
         }
 
         protected virtual void DustHandling()
@@ -88,9 +86,6 @@ namespace Penwyn.Game
         {
             base.DisconnectEvents();
         }
-
-
-
 
         public override void OnDisable()
         {

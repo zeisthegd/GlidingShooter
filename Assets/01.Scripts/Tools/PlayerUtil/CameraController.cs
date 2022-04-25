@@ -10,16 +10,35 @@ namespace Penwyn.Tools
 {
     public class CameraController : MonoBehaviour
     {
-        protected CinemachineVirtualCamera _camComponent;
+        protected CinemachineVirtualCamera _virtualCamera;
+        protected CinemachineBasicMultiChannelPerlin _virtualCameraNoise;
 
         protected virtual void Awake()
         {
-            _camComponent = GetComponent<CinemachineVirtualCamera>();
+            _virtualCamera = GetComponent<CinemachineVirtualCamera>();
+            _virtualCameraNoise = _virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         }
+
         public virtual void FollowPlayer()
         {
-            _camComponent.Follow = Characters.Player.transform;
-            _camComponent.LookAt = Characters.Player.transform;
+            _virtualCamera.Follow = Characters.Player.transform;
+            _virtualCamera.LookAt = Characters.Player.transform;
+        }
+
+        public virtual void StartShaking(float amplitude, float frequency)
+        {
+            if (_virtualCamera != null && _virtualCameraNoise != null)
+            {
+                _virtualCameraNoise.m_AmplitudeGain = amplitude;
+                _virtualCameraNoise.m_FrequencyGain = frequency;
+            }
+
+        }
+
+        public virtual void SetFOV(float newFOV)
+        {
+            if (_virtualCamera != null)
+                _virtualCamera.m_Lens.FieldOfView = newFOV;
         }
 
         public virtual void ConnectEvents()

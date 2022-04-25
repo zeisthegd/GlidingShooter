@@ -6,8 +6,9 @@ using Penwyn.Tools;
 
 namespace Penwyn.Game
 {
-    public class InputManager : MonoBehaviour
+    public class InputManager : SingletonMonoBehaviour<InputManager>
     {
+        public CameraController MainCamera;
         public InputReader inputReader;
         public bool ShouldHideCursor = false;
 

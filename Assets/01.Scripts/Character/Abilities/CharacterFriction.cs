@@ -29,7 +29,7 @@ namespace Penwyn.Game
             if (InputReader.Instance.MoveInput.magnitude < 0.01F && _controller.Velocity.magnitude > 0)
             {
                 Vector2 amount = _controller.Body.velocity.normalized * -1F;
-                amount *= _controller.Settings.friction;
+                amount *= _controller.Settings.Friction;
                 _controller.AddForce(amount, ForceMode.Force);
                 Debug.DrawRay(_character.Position, amount, Color.yellow);
             }

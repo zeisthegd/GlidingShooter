@@ -24,9 +24,6 @@ namespace Penwyn.Game
                 case WeaponAimType.Mouse:
                     MouseAim();
                     break;
-                case WeaponAimType.ForwardMovement:
-                    ForwardMovementAim();
-                    break;
                 default:
                     break;
             }
@@ -38,17 +35,11 @@ namespace Penwyn.Game
             _weapon.transform.right = dirToMouse;
         }
 
-        protected virtual void ForwardMovementAim()
-        {
-            if (InputReader.Instance.MoveInput.magnitude > 0)
-                _weapon.transform.right = InputReader.Instance.MoveInput;
-        }
     }
 
     public enum WeaponAimType
     {
         Mouse,
-        ForwardMovement,
         Script
     }
 }

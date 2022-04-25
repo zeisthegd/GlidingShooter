@@ -50,7 +50,7 @@ namespace Penwyn.Game
             if (_waitingPool == null)
             {
                 _waitingPool = new GameObject(DefinePoolName());
-                SceneManager.MoveGameObjectToScene(_waitingPool, this.gameObject.scene);
+                UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(_waitingPool, this.gameObject.scene);
                 _objectPool = _waitingPool.AddComponent<ObjectPool>();
                 _objectPool.PooledObjects = new List<GameObject>();
                 ApplyNesting();

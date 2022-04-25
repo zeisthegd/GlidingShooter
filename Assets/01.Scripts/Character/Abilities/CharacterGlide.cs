@@ -7,13 +7,28 @@ namespace Penwyn.Game
 {
     public class CharacterGlide : CharacterAbility
     {
-        public float MaxSpeed = 30;
-        public float MaxDrag = 6;
-        public float DragResetFactor = 1;
-        public float UpForceResetFactor = 1;
-        protected float _dragPercentage = 100;
+        [Header("Dive")]
+        public float MaxForce = 30;
+        public float AirStrafeForce = 10;
+        public float MinForcePercentage = 0.5F;
+
+        [Header("Levitate")]
+        public float LevitateForceMultiplier = 1.5F;
+        public float LevitateForceDecreaseMultiplier = 1.5F;
+        public float LevitateExternalForce = 1;
+
+        [Header("VFX")]
+        public float MinFOV = 40;
+        public float MaxFOV = 70;
+        public float FOVAdjustDuration = 1;
+        public FeedbackCameraShakeData FlyingShakeData;
+
+
+        protected float _forcePercentage = 100;
         protected bool _isGliding = false;
         protected float _maxSpeed = 0;
+        protected float _topRecordedVelocity = 0;
+        protected float _fov = 0;
 
         public override void AwakeAbility(Character character)
         {
@@ -23,6 +38,8 @@ namespace Penwyn.Game
         public override void UpdateAbility()
         {
             base.UpdateAbility();
+            AdjustFlightFOV();
+            CameraShake();
         }
 
         public override void FixedUpdateAbility()
@@ -33,50 +50,100 @@ namespace Penwyn.Game
 
         public virtual void StartGliding()
         {
-
-            StopCoroutine(ResetDragToZero());
+            if (CanStartGliding)
+            {
+                _isGliding = true;
+            }
         }
         public virtual void StopGliding()
         {
-            _isGliding = false;
-            StartCoroutine(ResetDragToZero());
+            if (_isGliding)
+            {
+                Reset();
+            }
         }
         public virtual void Glide()
         {
-            if (InputReader.Instance.IsHoldingGlide)
+            if (InputReader.Instance.IsHoldingGlide && !_controller.IsTouchingGround)
             {
-                Debug.Log(Camera.main.transform.eulerAngles.x);
                 float camAngle = Camera.main.transform.eulerAngles.x > 180 ? 360 - Camera.main.transform.eulerAngles.x : Camera.main.transform.eulerAngles.x;
-                if (IsLookingUp)
-                {
-                    StartCoroutine(ResetDragToZero());
-                    if (_maxSpeed > 0 && _controller.Velocity.magnitude < MaxSpeed)
-                    {
-                        _controller.AddForce(Camera.main.transform.forward * _maxSpeed * (1 - _dragPercentage), ForceMode.Impulse);
-                        _maxSpeed -= Time.deltaTime * UpForceResetFactor;
-                        Debug.DrawRay(_character.Position, Camera.main.transform.forward * _maxSpeed, Color.green);
-                    }
-                }
-                else
-                {
-                    StopCoroutine(ResetDragToZero());
-                    _dragPercentage = 1 - Mathf.Abs(camAngle / 90);
-                    _controller.Body.drag = MaxDrag * _dragPercentage;
+                _forcePercentage = Mathf.Abs(camAngle / 90);
+                _forcePercentage = Mathf.Clamp(_forcePercentage, MinForcePercentage, Mathf.Abs(camAngle / 90));
+                _controller.Body.useGravity = IsLookingUp;
 
-                    if (_controller.Velocity.magnitude > _maxSpeed)
-                        _maxSpeed = _controller.Velocity.magnitude;
-                }
+                if (IsLookingUp)
+                    Levitate();
+                else
+                    Dive();
+                AddHelpingLevitateForce();
+                // AirStrafe();
+                _character.Model.transform.localRotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x+90, 0, 0);
             }
         }
 
-        public virtual IEnumerator ResetDragToZero()
+        public virtual void Levitate()
         {
-            float drag = _controller.Body.drag;
-            while (_controller.Body.drag > 0)
+            if (_topRecordedVelocity > 1)
+                _controller.SetVelocity(Camera.main.transform.forward * _topRecordedVelocity * LevitateForceMultiplier);
+            _topRecordedVelocity = Mathf.Clamp(_topRecordedVelocity, 0, _topRecordedVelocity - Time.deltaTime * LevitateForceDecreaseMultiplier);
+
+        }
+
+        public virtual void Dive()
+        {
+            _maxSpeed = _forcePercentage * MaxForce;
+            _controller.SetVelocity(_maxSpeed * Camera.main.transform.forward);
+            if (_controller.Velocity.y < 0 && _topRecordedVelocity < Mathf.Abs(_controller.Velocity.y))
             {
-                _controller.Body.drag -= (Time.deltaTime * DragResetFactor);
-                yield return null;
+                _topRecordedVelocity = Mathf.Abs(_controller.Velocity.y);
             }
+        }
+
+        public virtual void AddHelpingLevitateForce()
+        {
+            if (InputReader.Instance.IsHoldingJump)
+            {
+                _controller.SetVelocity(Camera.main.transform.forward * LevitateExternalForce);
+            }
+        }
+
+        public virtual void AirStrafe()
+        {
+            if (_controller.Velocity.z < AirStrafeForce)
+            {
+                _controller.AddForce(_character.transform.right * InputReader.Instance.MoveInput.y * AirStrafeForce, ForceMode.Impulse);
+                Debug.DrawRay(_character.Position, _character.transform.right * InputReader.Instance.MoveInput.y * AirStrafeForce, Color.red, 2);
+            }
+        }
+
+        public virtual void AdjustFlightFOV()
+        {
+            if (_isGliding)
+            {
+                _fov += Time.deltaTime * (MaxFOV - MinFOV) * FOVAdjustDuration;
+            }
+            else
+            {
+                _fov -= Time.deltaTime * (MaxFOV - MinFOV) * FOVAdjustDuration;
+            }
+            _fov = Mathf.Clamp(_fov, MinFOV, MaxFOV);
+            InputManager.Instance.MainCamera.SetFOV(_fov);
+        }
+
+        public virtual void CameraShake()
+        {
+            if (_isGliding)
+                InputManager.Instance.MainCamera.StartShaking(FlyingShakeData.Amplitude * _forcePercentage, FlyingShakeData.Frequency * _forcePercentage);
+        }
+        public virtual void Reset()
+        {
+            _forcePercentage = 1;
+            _fov = 40;
+            _isGliding = false;
+            _maxSpeed = 0;
+            _topRecordedVelocity = 0;
+            _controller.Body.useGravity = true;
+            InputManager.Instance.MainCamera.StartShaking(0, 0);
         }
 
         public override void ConnectEvents()
@@ -93,10 +160,14 @@ namespace Penwyn.Game
             InputReader.Instance.GlideReleased -= StopGliding;
         }
 
+
+
         public override void OnDisable()
         {
             base.OnDisable();
         }
+
+        public bool CanStartGliding => AbilityPermitted && !_controller.IsTouchingGround;
 
         public bool IsLookingUp => Camera.main.transform.eulerAngles.x > 180;
     }
