@@ -151,26 +151,27 @@ namespace Penwyn.Game
         {
             _currentlyInvulnerable = true;
             _invulnerableTime = 0;
-            Coroutine flicker = StartCoroutine(SpriteRendererUtil.Flicker(_character.SpriteRenderer, DamageTakenFlickerColor, InvulnerableDuration, 0.1F));
+            _character.MeshRenderer.material.color = DamageTakenFlickerColor;
             while (_invulnerableTime < InvulnerableDuration)
             {
                 _invulnerableTime += Time.deltaTime;
                 yield return null;
             }
+            ResetColor();
             _currentlyInvulnerable = false;
         }
 
         protected virtual IEnumerator InvincibleCoroutine(float duration)
         {
             _invulnerableTime = 0;
-            Coroutine flicker = StartCoroutine(SpriteRendererUtil.Flicker(_character.SpriteRenderer, InvincibleFlickerColor, duration));
+            _character.MeshRenderer.material.color = InvincibleFlickerColor;
             while (_invulnerableTime < duration)
             {
                 _invulnerableTime += Time.deltaTime;
                 yield return null;
             }
+            ResetColor();
             Invincible = false;
-            StopCoroutine(flicker);
         }
         #endregion
 
@@ -181,11 +182,16 @@ namespace Penwyn.Game
                 _healthBar.Initialization();
         }
 
+        public virtual void ResetColor()
+        {
+            if (_character != null && _character.MeshRenderer != null)
+                _character.MeshRenderer.material.color = Color.white;
+        }
+
         public virtual void Reset()
         {
             StopAllCoroutines();
-            if (_character != null && _character.SpriteRenderer != null)
-                _character.SpriteRenderer.color = Color.white;
+            ResetColor();
         }
 
         public virtual void OnEnable()

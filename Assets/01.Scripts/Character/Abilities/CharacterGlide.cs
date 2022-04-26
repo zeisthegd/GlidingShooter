@@ -18,6 +18,7 @@ namespace Penwyn.Game
         public float LevitateExternalForce = 1;
 
         [Header("VFX")]
+        public float CameraDistanceWhenDiving = 10;
         public float MinFOV = 40;
         public float MaxFOV = 70;
         public float FOVAdjustDuration = 1;
@@ -29,6 +30,7 @@ namespace Penwyn.Game
         protected float _maxSpeed = 0;
         protected float _topRecordedVelocity = 0;
         protected float _fov = 0;
+        protected float _camDst = 0;
 
         public override void AwakeAbility(Character character)
         {
@@ -38,26 +40,31 @@ namespace Penwyn.Game
         public override void UpdateAbility()
         {
             base.UpdateAbility();
-            AdjustFlightFOV();
-            CameraShake();
+            if (AbilityAuthorized)
+            {
+                CameraShake();
+                AdjustFlightFOV();
+                AdjustFlightCamDistance();
+            }
         }
 
         public override void FixedUpdateAbility()
         {
             base.FixedUpdateAbility();
-            Glide();
+            if (AbilityAuthorized)
+                Glide();
         }
 
         public virtual void StartGliding()
         {
-            if (CanStartGliding)
+            if (CanStartGliding && AbilityAuthorized)
             {
                 _isGliding = true;
             }
         }
         public virtual void StopGliding()
         {
-            if (_isGliding)
+            if (_isGliding && AbilityAuthorized)
             {
                 Reset();
             }
@@ -76,7 +83,6 @@ namespace Penwyn.Game
                 else
                     Dive();
                 AddHelpingLevitateForce();
-                // AirStrafe();
                 _character.Model.transform.localRotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x + 90, 0, 0);
             }
         }
@@ -85,7 +91,7 @@ namespace Penwyn.Game
         {
             if (_topRecordedVelocity > 1)
                 _controller.SetVelocity(Camera.main.transform.forward * _topRecordedVelocity * LevitateForceMultiplier);
-            _topRecordedVelocity = Mathf.Clamp(_topRecordedVelocity, 0, _topRecordedVelocity - Time.deltaTime * LevitateForceDecreaseMultiplier);
+            _topRecordedVelocity = Mathf.Clamp(_topRecordedVelocity - Time.deltaTime * LevitateForceDecreaseMultiplier, 0, _topRecordedVelocity - Time.deltaTime * LevitateForceDecreaseMultiplier);
 
         }
 
@@ -130,6 +136,21 @@ namespace Penwyn.Game
             CameraManager.Instance.CurrenPlayerCam.SetFOV(_fov);
         }
 
+        public virtual void AdjustFlightCamDistance()
+        {
+            if (_isGliding)
+            {
+                _camDst += Time.deltaTime * (MaxFOV - MinFOV) * FOVAdjustDuration;
+            }
+            else
+            {
+                _camDst -= Time.deltaTime * (MaxFOV - MinFOV) * FOVAdjustDuration;
+            }
+            _camDst = Mathf.Clamp(_camDst, 0.01f, CameraDistanceWhenDiving);
+            CameraManager.Instance.CurrenPlayerCam.ChangeBodyDistance(_camDst);
+        }
+
+
         public virtual void CameraShake()
         {
             if (_isGliding)
@@ -148,16 +169,24 @@ namespace Penwyn.Game
 
         public override void ConnectEvents()
         {
-            base.ConnectEvents();
-            InputReader.Instance.GlidePressed += StartGliding;
-            InputReader.Instance.GlideReleased += StopGliding;
+            if (AbilityAuthorized)
+            {
+                base.ConnectEvents();
+                InputReader.Instance.GlidePressed += StartGliding;
+                InputReader.Instance.GlideReleased += StopGliding;
+                _controller.GroundTouched += StopGliding;
+            }
         }
 
         public override void DisconnectEvents()
         {
-            base.DisconnectEvents();
-            InputReader.Instance.GlidePressed -= StartGliding;
-            InputReader.Instance.GlideReleased -= StopGliding;
+            if (AbilityAuthorized)
+            {
+                base.DisconnectEvents();
+                InputReader.Instance.GlidePressed -= StartGliding;
+                InputReader.Instance.GlideReleased -= StopGliding;
+                _controller.GroundTouched -= StopGliding;
+            }
         }
 
 

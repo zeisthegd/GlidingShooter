@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CameraManager
   m_EditorClassIdentifier: 
   MinimapCameraPrefab: {fileID: 0}
-  PlayerCameraPrefab: {fileID: 5968655913418232350, guid: 5f7c5c30791976046ac0c03c3b177c38,
+  PlayerCameraPrefab: {fileID: 8191959233711763088, guid: c2ff6ce34e4deb84282fa063409813b9,
     type: 3}
   CurrenPlayerCam: {fileID: 0}
   CurrentUICam: {fileID: 0}

@@ -53,7 +53,8 @@ namespace Penwyn.Game
         /// </summary>
         public Character FindByOwnerActorNumber(int ownerActNr)
         {
-            return _playersInRoom.Find(player => player.GetComponent<PhotonView>().OwnerActorNr == ownerActNr);
+            FindPlayersInRooms();
+            return _playersInRoom.Find(player => player.photonView.OwnerActorNr == ownerActNr);
         }
 
         #endregion

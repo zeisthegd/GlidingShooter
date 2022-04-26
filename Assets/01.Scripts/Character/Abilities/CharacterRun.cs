@@ -23,16 +23,17 @@ namespace Penwyn.Game
         public override void UpdateAbility()
         {
             base.UpdateAbility();
-           // Vector3.ClampMagnitude(_controller.Velocity, RunSpeed);
         }
 
         public override void FixedUpdateAbility()
         {
             base.FixedUpdateAbility();
-            if (Type == ControlType.PlayerInput)
-                RunRaw(InputReader.Instance.MoveInput);
+            if (AbilityAuthorized)
+            {
+                if (Type == ControlType.PlayerInput)
+                    RunRaw(InputReader.Instance.MoveInput);
+            }
             DustHandling();
-
         }
 
         public virtual void RunRaw(Vector2 direction)

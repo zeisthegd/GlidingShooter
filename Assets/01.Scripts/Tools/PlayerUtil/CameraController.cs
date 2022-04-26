@@ -10,13 +10,13 @@ namespace Penwyn.Tools
 {
     public class CameraController : MonoBehaviour
     {
-        protected CinemachineVirtualCamera _virtualCamera;
-        protected CinemachineBasicMultiChannelPerlin _virtualCameraNoise;
+        public CinemachineVirtualCamera VirtualCamera;
+        public CinemachineBasicMultiChannelPerlin VirtualCameraNoise;
 
         protected virtual void Awake()
         {
-            _virtualCamera = GetComponent<CinemachineVirtualCamera>();
-            _virtualCameraNoise = _virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            VirtualCamera = GetComponent<CinemachineVirtualCamera>();
+            VirtualCameraNoise = VirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         }
 
         public virtual void FollowPlayer()
@@ -26,24 +26,34 @@ namespace Penwyn.Tools
 
         public virtual void Follow(Transform followTrf, Transform lookAtTrf)
         {
-            _virtualCamera.Follow = followTrf;
-            _virtualCamera.LookAt = lookAtTrf;
+            VirtualCamera.Follow = followTrf;
+            VirtualCamera.LookAt = lookAtTrf;
         }
 
         public virtual void StartShaking(float amplitude, float frequency)
         {
-            if (_virtualCamera != null && _virtualCameraNoise != null)
+            if (VirtualCamera != null && VirtualCameraNoise != null)
             {
-                _virtualCameraNoise.m_AmplitudeGain = amplitude;
-                _virtualCameraNoise.m_FrequencyGain = frequency;
+                VirtualCameraNoise.m_AmplitudeGain = amplitude;
+                VirtualCameraNoise.m_FrequencyGain = frequency;
             }
-
         }
 
         public virtual void SetFOV(float newFOV)
         {
-            if (_virtualCamera != null)
-                _virtualCamera.m_Lens.FieldOfView = newFOV;
+            if (VirtualCamera != null)
+                VirtualCamera.m_Lens.FieldOfView = newFOV;
+        }
+
+        public virtual void ChangeBodyDistance(float newDst)
+        {
+            if (VirtualCamera != null)
+            {
+                if (VirtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>())
+                {
+                    VirtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>().m_CameraDistance = newDst;
+                }
+            }
         }
 
         public virtual void ConnectEvents()

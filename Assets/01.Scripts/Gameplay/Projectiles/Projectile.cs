@@ -11,19 +11,38 @@ namespace Penwyn.Game
         [HorizontalLine]
         [Header("Velocity")]
         public float Speed;
+        public float OverrideGravity;
+        [Header("Components")]
         public DamageOnTouch DamageOnTouch;
         public CharacterController Controller;
 
         protected Health _health;
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _health = GetComponent<Health>();
+            if (Controller == null)
+                Controller = GetComponent<CharacterController>();
+            if (DamageOnTouch == null)
+                DamageOnTouch = GetComponent<DamageOnTouch>();
         }
-        
+
+        protected override void FixedUpdate()
+        {
+            base.FixedUpdate();
+            SimulateGravity();
+        }
+
         public virtual void FlyTowards(Vector3 direction)
         {
             Controller.SetVelocity(direction.normalized * Speed);
+        }
+
+        public virtual void SimulateGravity()
+        {
+            Controller.Body.useGravity = false;
+            Controller.AddForce(Vector3.down * OverrideGravity * Time.deltaTime);
         }
 
         protected override void OnEnable()

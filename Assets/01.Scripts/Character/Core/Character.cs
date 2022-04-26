@@ -4,11 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Photon.Pun;
+
 using Penwyn.Tools;
 
 namespace Penwyn.Game
 {
-    public class Character : MonoBehaviour
+    public class Character : MonoBehaviourPun
     {
         [Header("Character ID")]
         public string CharacterID;
@@ -32,6 +34,7 @@ namespace Penwyn.Game
         protected CharacterWeaponHandler _characterWeaponHandler;
         protected CharacterRun _characterRun;
         protected CharacterHandleMoney _characterMoney;
+        private StateMachine<CharacterAbilityStates> _states;
 
         protected virtual void Awake()
         {
@@ -94,6 +97,7 @@ namespace Penwyn.Game
                     _abilities[i].AwakeAbility(this);
                 }
             }
+            _states = new StateMachine<CharacterAbilityStates>(CharacterAbilityStates.Idling);
         }
 
         protected virtual void GetGeneralAbilities()
@@ -128,11 +132,12 @@ namespace Penwyn.Game
         }
         #endregion
 
-        public SpriteRenderer SpriteRenderer { get => Model.GetComponent<SpriteRenderer>(); }
+        public MeshRenderer MeshRenderer { get => Model.GetComponent<MeshRenderer>(); }
         public Vector3 Position { get => transform.position; }
         public List<CharacterAbility> Abilities { get => _abilities; }
         public CharacterRun CharacterRun { get => _characterRun; }
         public CharacterHandleMoney CharacterMoney { get => _characterMoney; }
         public CharacterWeaponHandler CharacterWeaponHandler { get => _characterWeaponHandler; }
+        public StateMachine<CharacterAbilityStates> States { get => _states; set => _states = value; }
     }
 }

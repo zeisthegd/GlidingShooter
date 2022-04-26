@@ -42,8 +42,7 @@ namespace Penwyn.Game
 
         public virtual void Set(float newValue)
         {
-            _energy = newValue;
-            _energy = Mathf.Clamp(_energy, 0, MaxEnergy);
+            _energy = Mathf.Clamp(newValue, 0, MaxEnergy);
             OnChanged?.Invoke();
         }
 

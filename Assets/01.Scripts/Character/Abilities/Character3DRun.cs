@@ -29,12 +29,12 @@ namespace Penwyn.Game
 
         public override void FixedUpdateAbility()
         {
-            if (Type == ControlType.PlayerInput && _controller.IsTouchingGround)
+            if (Type == ControlType.PlayerInput && _controller.IsTouchingGround && AbilityAuthorized)
             {
                 if (UseRawInput)
-                    RunRaw(InputReader.Instance.MoveInput);
+                    RunRaw(InputReader.Instance.MoveInput.normalized);
                 else
-                    RunAccelerate(InputReader.Instance.MoveInput);
+                    RunAccelerate(InputReader.Instance.MoveInput.normalized);
             }
             DustHandling();
         }

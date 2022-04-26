@@ -6,9 +6,11 @@ using UnityEngine.Events;
 using NaughtyAttributes;
 using Penwyn.Tools;
 
+using Photon.Pun;
+
 namespace Penwyn.Game
 {
-    public class Weapon : MonoBehaviour
+    public class Weapon : MonoBehaviourPun, IPunInstantiateMagicCallback
     {
         [Header("Data")]
         [Expandable]
@@ -214,16 +216,29 @@ namespace Penwyn.Game
             _weaponAutoAim = GetComponent<WeaponAutoAim>();
         }
 
-        protected virtual void OnEnable()
+        public void OnPhotonInstantiate(PhotonMessageInfo info)
         {
-            _currentWeaponState = WeaponState.WeaponIdle;
+            object[] data = info.photonView.InstantiationData;
+            this.gameObject.name = (string)data[0];
+            this.Owner = PlayerManager.Instance.FindByOwnerActorNumber((int)data[1]);
+            this.Owner.CharacterWeaponHandler.SetWeapon(this);
         }
 
-        protected virtual void OnDisable()
+
+        public virtual void OnEnable()
         {
+            _currentWeaponState = WeaponState.WeaponIdle;
+            PhotonNetwork.AddCallbackTarget(this);
+        }
+
+        public virtual void OnDisable()
+        {
+            PhotonNetwork.RemoveCallbackTarget(this);
             StopAllCoroutines();
             if (CurrentData.RequiresHealth && Owner.Health != null)
                 Owner.Health.OnChanged -= OnHealthChanged;
         }
+
+
     }
 }

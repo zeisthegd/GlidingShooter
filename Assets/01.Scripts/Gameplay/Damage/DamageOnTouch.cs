@@ -64,7 +64,7 @@ namespace Penwyn.Game
             }
         }
 
-        public virtual void OnTriggerEnter2D(Collider2D col)
+        public virtual void OnTriggerEnter(Collider col)
         {
             if (this.gameObject.activeInHierarchy && TargetMask.Contains(col.gameObject.layer))
             {

@@ -63,7 +63,7 @@ namespace Penwyn.Game
         {
             if (_currentHPBar)
             {
-                Vector2 sizeOfSlider = new Vector2(_health.Character.SpriteRenderer.sprite.rect.width * 2, _currentHPBar.ActualValue.GetComponent<RectTransform>().sizeDelta.y);
+                Vector2 sizeOfSlider = new Vector2(_health.Character.Controller.Collider.bounds.extents.x * 2, _currentHPBar.ActualValue.GetComponent<RectTransform>().sizeDelta.y);
                 _currentHPBar.ActualValue.GetComponent<RectTransform>().sizeDelta = sizeOfSlider;
                 _currentHPBar.LostValue.GetComponent<RectTransform>().sizeDelta = sizeOfSlider;
             }

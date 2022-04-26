@@ -4,7 +4,6 @@ using UnityEngine;
 
 public enum ControllerState
 {
-    Idling,
-    Running,
-    Dashing
+    None,
+    LockedInput
 }

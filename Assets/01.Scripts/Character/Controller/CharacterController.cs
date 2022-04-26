@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+using Photon.Pun;
+
 using NaughtyAttributes;
 
 using Penwyn.Tools;
 namespace Penwyn.Game
 {
-    public class CharacterController : MonoBehaviour
+    public class CharacterController : MonoBehaviour, IPunObservable
     {
         [Expandable] public PhysicsSettings Settings;
         protected Rigidbody _body;
         protected Collider _collider;
 
-        protected StateMachine<ControllerState> _states;
+        private StateMachine<ControllerState> _states;
 
         public event UnityAction GroundTouched;
         public event UnityAction WallTouched;
@@ -23,11 +25,16 @@ namespace Penwyn.Game
         [ReadOnly] public bool IsTouchingGround;
         [ReadOnly] public bool IsTouchingWall;
 
+
+        protected float _remoteVelocityMagnitude = 0;
+        protected PhotonTransformViewClassic _photonViewTransformClassic;
+
         void Awake()
         {
             _body = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
-            _states = new StateMachine<ControllerState>(ControllerState.Idling);
+            _photonViewTransformClassic = GetComponent<PhotonTransformViewClassic>();
+            _states = new StateMachine<ControllerState>(ControllerState.None);
         }
 
         public virtual void AddForce(Vector3 force, ForceMode mode = ForceMode.Force)
@@ -137,10 +144,29 @@ namespace Penwyn.Game
 
         }
 
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext((float)Velocity.magnitude);
+            }
+
+            if (stream.IsReading)
+            {
+                _remoteVelocityMagnitude = (float)stream.ReceiveNext();
+                if (_photonViewTransformClassic)
+                {
+                    float positionLerpAdjust = 5 * (_remoteVelocityMagnitude / 19F);
+                    _photonViewTransformClassic.m_PositionModel.TeleportIfDistanceGreaterThan = Mathf.Clamp(positionLerpAdjust, 5, positionLerpAdjust);
+                    _photonViewTransformClassic.m_PositionModel.InterpolateLerpSpeed = Mathf.Clamp(positionLerpAdjust, 5, positionLerpAdjust);
+                }
+            }
+        }
 
         public Rigidbody Body { get => _body; }
         public Collider Collider { get => _collider; set => _collider = value; }
         public Vector3 Velocity { get => _body.velocity; set => SetVelocity(value); }
+        public StateMachine<ControllerState> States { get => _states; }
     }
 }
 

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+using Photon.Pun;
 using Penwyn.Tools;
 
 namespace Penwyn.Game
@@ -9,13 +11,16 @@ namespace Penwyn.Game
     public class ProjectileWeapon : Weapon
     {
         protected ObjectPooler _projectilePooler;
+        protected Vector3 _target;
 
         protected override void UseWeapon()
         {
-            base.UseWeapon();
-            StartCoroutine(IterationCoroutine());
+            if (Owner.photonView.IsMine)
+            {
+                base.UseWeapon();
+                StartCoroutine(IterationCoroutine());
+            }
         }
-
 
         protected virtual IEnumerator IterationCoroutine()
         {
@@ -40,7 +45,9 @@ namespace Penwyn.Game
             gameObject.RotateZ(CurrentData.Angle / 2F);
             for (int i = 0; i < CurrentData.BulletPerShot; i++)
             {
-                SpawnProjectile();
+                _target = RaycastTarget();
+                SpawnProjectile(_target);
+                photonView.RPC(nameof(RPC_SpawnProjectile), Photon.Pun.RpcTarget.Others, new object[] { _target });
                 if (CurrentData.BulletPerShot > 1)
                 {
                     if (CurrentData.DelayBetweenBullets > 0)
@@ -53,13 +60,19 @@ namespace Penwyn.Game
         /// <summary>
         /// Create a projectile, direction is based on the weapon's rotation.
         /// </summary>
-        public virtual void SpawnProjectile()
+        public virtual void SpawnProjectile(Vector3 target)
         {
             Projectile projectile = _projectilePooler.PullOneObject().GetComponent<Projectile>();
             projectile.transform.position = this.transform.position;
             projectile.transform.rotation = this.transform.rotation;
             projectile.gameObject.SetActive(true);
-            projectile.FlyTowards((transform.rotation * Vector3.right));
+            projectile.FlyTowards((target - Owner.transform.position));
+        }
+
+        [PunRPC]
+        public virtual void RPC_SpawnProjectile(Vector3 target)
+        {
+            SpawnProjectile(target);
         }
 
         /// <summary>
@@ -78,6 +91,23 @@ namespace Penwyn.Game
             CurrentData.Projectile.DamageOnTouch.DamageDeal = CurrentData.Damage;
 
             CreateNewPool();
+        }
+
+        public virtual Vector3 RaycastTarget()
+        {
+            Vector3 target = Vector3.zero;
+            Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5F, 0.5F));
+            ray.origin = CameraManager.Instance.CurrenPlayerCam.transform.position;
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                target = hit.point;
+            }
+            else
+            {
+                target = ray.origin + ray.direction;
+            }
+
+            return target;
         }
 
         public virtual void CreateNewPool()

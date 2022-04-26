@@ -9,10 +9,12 @@ namespace Penwyn.Game
         public bool AbilityPermitted = true;
         public string Name;
 
-        public List<CharacterAbilityStates> ForbidStates;
+        public List<CharacterAbilityStates> ForbidPermissionForbidCharacterStates;
+        public List<ControllerState> ForbidPermissionControllerStates;
 
         protected Character _character;
         protected CharacterController _controller;
+        bool abilityAuthorized;
 
 
         public virtual void AwakeAbility(Character character)
@@ -37,11 +39,31 @@ namespace Penwyn.Game
             }
         }
 
-        public virtual void UpdateAbility() { }
+        public virtual void UpdateAbility() { abilityAuthorized = AbilityAuthorized; }
         public virtual void FixedUpdateAbility() { }
         public virtual void ConnectEvents() { }
         public virtual void DisconnectEvents() { }
         public virtual void OnDisable() { }
+
+        public bool AbilityAuthorized
+        {
+            get
+            {
+                foreach (CharacterAbilityStates state in ForbidPermissionForbidCharacterStates)
+                {
+                    if (_character.States.CurrentState == state)
+                        return false;
+                }
+
+                foreach (ControllerState state in ForbidPermissionControllerStates)
+                {
+                    if (_controller.States.CurrentState == state)
+                        return false;
+                }
+
+                return AbilityPermitted && _character.photonView.IsMine;
+            }
+        }
 
     }
 }

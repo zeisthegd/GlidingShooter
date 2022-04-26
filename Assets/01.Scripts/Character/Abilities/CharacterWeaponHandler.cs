@@ -4,6 +4,8 @@ using UnityEngine;
 
 using NaughtyAttributes;
 
+using Photon;
+using Photon.Pun;
 namespace Penwyn.Game
 {
     public class CharacterWeaponHandler : CharacterAbility
@@ -11,6 +13,7 @@ namespace Penwyn.Game
         [Header("Weapon Data")]
         public Weapon InitialWeaponPrefab;
         public WeaponData InitialWeaponData;
+        public string InitialWeaponPrefabPath;
         [HorizontalLine]
 
         [Header("Weapon Holder")]
@@ -28,11 +31,15 @@ namespace Penwyn.Game
         {
             if (WeaponHolder == null)
                 WeaponHolder = this.transform;
-
-            _currentWeapon = Instantiate(InitialWeaponPrefab, WeaponHolder.position, Quaternion.identity, WeaponHolder);
-            _currentWeapon.Owner = this._character;
-            _currentWeapon.Initialization();
-            _currentWeapon.LoadWeapon(InitialWeaponData);
+            if (_character.photonView.IsMine)
+            {
+                object[] data = new object[] { WeaponObjectName(), _character.photonView.OwnerActorNr };
+                _currentWeapon = PhotonNetwork.Instantiate(InitialWeaponPrefabPath, WeaponHolder.position, Quaternion.identity, 0, data).GetComponent<Weapon>();
+                _currentWeapon.Owner = this._character;
+                _currentWeapon.Initialization();
+                _currentWeapon.LoadWeapon(InitialWeaponData);
+                _currentWeapon.transform.SetParent(WeaponHolder);
+            }
         }
 
         public virtual void ChangeWeapon(WeaponData newData)
@@ -44,6 +51,22 @@ namespace Penwyn.Game
                 _currentWeapon.LoadWeapon(newData);
             }
         }
+
+        public virtual void SetWeapon(Weapon weapon)
+        {
+            _currentWeapon = weapon;
+            _currentWeapon.Owner = this._character;
+            _currentWeapon.Initialization();
+            _currentWeapon.LoadWeapon(InitialWeaponData);
+            _currentWeapon.transform.SetParent(WeaponHolder);
+        }
+
+        public virtual string WeaponObjectName()
+        {
+            return $"{_character.photonView.OwnerActorNr}_Weapon";
+        }
+
+
 
         public Weapon CurrentWeapon { get => _currentWeapon; }
         public WeaponData WeaponData { get => _currentWeaponData; }

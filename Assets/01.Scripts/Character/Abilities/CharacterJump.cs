@@ -18,14 +18,20 @@ namespace Penwyn.Game
         }
         public override void ConnectEvents()
         {
-            base.ConnectEvents();
-            InputReader.Instance.JumpPressed += Jump;
+            if (AbilityAuthorized)
+            {
+                base.ConnectEvents();
+                InputReader.Instance.JumpPressed += Jump;
+            }
         }
 
         public override void DisconnectEvents()
         {
-            base.DisconnectEvents();
-            InputReader.Instance.JumpPressed -= Jump;
+            if (AbilityAuthorized)
+            {
+                base.DisconnectEvents();
+                InputReader.Instance.JumpPressed -= Jump;
+            }
         }
     }
 
