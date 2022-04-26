@@ -31,8 +31,9 @@ namespace Penwyn.Game
         public float Cooldown = 1;
         public bool DisableAutoAimWhenShooting = false;
         [Header("Energy Requirements")]
+        public float StartingEnergy = 20;
         public bool RequiresHealth = false;
-        public float HealthPerUse = 0;
+        public float EnergyCostPerShot = 1;
         [Header("Add-On")]
         public bool ProjectileRotating = false;
         public float RotateSpeed = 1;

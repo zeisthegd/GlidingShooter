@@ -7,8 +7,6 @@ namespace Penwyn.Game
 {
     public class CharacterGlide : CharacterAbility
     {
-        [Header("Energy")]
-        public float EnergyCostPerSec;
         [Header("Dive")]
         public float MaxForce = 30;
         public float AirStrafeForce = 10;
@@ -73,9 +71,8 @@ namespace Penwyn.Game
         }
         public virtual void Glide()
         {
-            if (InputReader.Instance.IsHoldingGlide && !_controller.IsTouchingGround && HasEnergy)
+            if (InputReader.Instance.IsHoldingGlide && !_controller.IsTouchingGround)
             {
-                _character.Energy.Use(EnergyCostPerSec * Time.deltaTime);
                 float camAngle = Camera.main.transform.eulerAngles.x > 180 ? 360 - Camera.main.transform.eulerAngles.x : Camera.main.transform.eulerAngles.x;
                 _forcePercentage = Mathf.Abs(camAngle / 90);
                 _forcePercentage = Mathf.Clamp(_forcePercentage, MinForcePercentage, Mathf.Abs(camAngle / 90));
@@ -195,8 +192,6 @@ namespace Penwyn.Game
                 _controller.GroundTouched -= StopGliding;
             }
         }
-
-        public bool HasEnergy => _character.Energy.CurrentEnergy > EnergyCostPerSec * Time.deltaTime;
 
         public override void OnDisable()
         {

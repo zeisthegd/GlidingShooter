@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5692350330106118446}
   - component: {fileID: 6250427266480695930}
   - component: {fileID: 2329346769636211302}
+  - component: {fileID: 2575786190105130108}
   - component: {fileID: 3527671315484412853}
   - component: {fileID: 946096031878735879}
   m_Layer: 0
@@ -54,6 +55,7 @@ MonoBehaviour:
   InputType: 0
   UseFeedbacks: {fileID: 0}
   Owner: {fileID: 0}
+  Energy: {fileID: 0}
   _currentWeaponState: 0
 --- !u!114 &2329346769636211302
 MonoBehaviour:
@@ -74,6 +76,20 @@ MonoBehaviour:
   EnableObjectsAtStart: 0
   NestPoolBelowThis: 0
   NestObjectsInPool: 1
+--- !u!114 &2575786190105130108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6284914687825662314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53063e11ff4bc5442877832e49c04ab4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxEnergy: 10
+  _energy: 0
 --- !u!114 &3527671315484412853
 MonoBehaviour:
   m_ObjectHideFlags: 0

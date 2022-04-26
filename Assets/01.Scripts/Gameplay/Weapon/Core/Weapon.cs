@@ -30,6 +30,7 @@ namespace Penwyn.Game
 
         [Header("Owner")]
         [ReadOnly] public Character Owner;
+        [ReadOnly] public Energy Energy;
 
         [ReadOnly][SerializeField] protected WeaponState _currentWeaponState;
         protected WeaponAim _weaponAim;
@@ -71,7 +72,7 @@ namespace Penwyn.Game
 
         public virtual void UseWeaponTillNoTargetOrEnergy()
         {
-            if (Owner.Health.CurrentHealth <= CurrentData.HealthPerUse)
+            if (Energy.CurrentEnergy <= CurrentData.EnergyCostPerShot)
                 return;
             if (_weaponAutoAim)
             {
@@ -95,20 +96,20 @@ namespace Penwyn.Game
 
         protected virtual void UseEnergy()
         {
-            
+            Energy.Use(CurrentData.EnergyCostPerShot);
         }
 
-        protected virtual void OnHealthChanged()
+        protected virtual void OnEnergyChanged()
         {
-            if (Owner.Health.CurrentHealth <= CurrentData.HealthPerUse)
+            if (Energy.CurrentEnergy <= CurrentData.EnergyCostPerShot)
             {
                 if (_currentWeaponState == WeaponState.WeaponCooldown && _cooldownCoroutine != null)
                     StopCoroutine(_cooldownCoroutine);
-                _currentWeaponState = WeaponState.WeaponNotEnoughHealth;
+                _currentWeaponState = WeaponState.WeaponNotEnoughEnergy;
             }
             else
             {
-                if (_currentWeaponState == WeaponState.WeaponNotEnoughHealth)
+                if (_currentWeaponState == WeaponState.WeaponNotEnoughEnergy)
                     _currentWeaponState = WeaponState.WeaponIdle;
             }
             CheckUpgradeRequirements();
@@ -121,12 +122,7 @@ namespace Penwyn.Game
         {
             CurrentData = data;
             //SpriteRenderer.sprite = data.Icon;
-            SetHealthRequirements();
-            if (CurrentData.AutoUpgrade)
-            {
-                Owner.Health.StartingHealth = CurrentData.RequiredUpgradeValue;
-                Owner.Health.Set(CurrentData.RequiredUpgradeValue * 0.5F, CurrentData.RequiredUpgradeValue);
-            }
+            SetEnergyRequirements();
         }
 
         [Button("Load Weapon Data")]
@@ -138,22 +134,21 @@ namespace Penwyn.Game
                 Debug.Log("Please insert Weapon Data");
         }
 
-        public virtual void SetHealthRequirements()
+        public virtual void SetEnergyRequirements()
         {
+            this.Energy.Set(CurrentData.StartingEnergy, CurrentData.StartingEnergy);
             if (CurrentData.RequiresHealth)
             {
-                if (Owner.Health != null)
+                if (Energy != null)
                 {
-                    Owner.Health.OnChanged += OnHealthChanged;
+                    Energy.OnChanged += OnEnergyChanged;
                 }
                 else
                 {
-                    Debug.LogWarning($"No health assigned to {Owner.name} although this {CurrentData.Name} requires health!");
+                    Debug.LogWarning($"No health assigned to {Owner.name} although this {CurrentData.Name} requires energy!");
                 }
             }
         }
-
-
 
         #region Upgrade
 
@@ -213,6 +208,7 @@ namespace Penwyn.Game
         {
             _weaponAim = GetComponent<WeaponAim>();
             _weaponAutoAim = GetComponent<WeaponAutoAim>();
+            Energy = GetComponent<Energy>();
         }
 
         public void OnPhotonInstantiate(PhotonMessageInfo info)
@@ -235,7 +231,7 @@ namespace Penwyn.Game
             PhotonNetwork.RemoveCallbackTarget(this);
             StopAllCoroutines();
             if (CurrentData.RequiresHealth && Owner.Health != null)
-                Owner.Health.OnChanged -= OnHealthChanged;
+                Owner.Health.OnChanged -= OnEnergyChanged;
         }
 
 

@@ -78,7 +78,6 @@ GameObject:
   - component: {fileID: 4929071110447984942}
   - component: {fileID: 1553388793321527645}
   - component: {fileID: 4971944836853426941}
-  - component: {fileID: 2579981497134231391}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -145,7 +144,6 @@ MonoBehaviour:
   Animator: {fileID: 0}
   ShouldFlipModel: 0
   Health: {fileID: 8161169765059211183}
-  Energy: {fileID: 2579981497134231391}
   AbilitiesContainer:
   - {fileID: 1553388793733489346}
 --- !u!54 &1553388793321527647
@@ -215,6 +213,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Settings: {fileID: 11400000, guid: 00858cebe4554884f9e76a7f851823d9, type: 2}
+  ExternalForce: {x: 0, y: 0, z: 0}
+  ExternalForceDepleteRate: 1
   IsTouchingGround: 0
   IsTouchingWall: 0
 --- !u!114 &4971944836853426941
@@ -250,20 +250,6 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
---- !u!114 &2579981497134231391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553388793321527637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53063e11ff4bc5442877832e49c04ab4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxEnergy: 10
-  _energy: 0
 --- !u!1 &1553388793543817487
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,7 +470,6 @@ MonoBehaviour:
   Name: 
   ForbidPermissionForbidCharacterStates: 
   ForbidPermissionControllerStates: 
-  EnergyCostPerSec: 1
   MaxForce: 100
   AirStrafeForce: 1
   MinForcePercentage: 0.5

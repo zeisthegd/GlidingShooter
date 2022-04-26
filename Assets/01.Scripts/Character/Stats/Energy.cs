@@ -37,11 +37,12 @@ namespace Penwyn.Game
 
         public virtual void Add(float addValue)
         {
-            Set(_energy + addValue);
+            Set(_energy + addValue, MaxEnergy);
         }
 
-        public virtual void Set(float newValue)
+        public virtual void Set(float newValue, float maxEnergy)
         {
+            MaxEnergy = maxEnergy;
             _energy = Mathf.Clamp(newValue, 0, MaxEnergy);
             OnChanged?.Invoke();
         }

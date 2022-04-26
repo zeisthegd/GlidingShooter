@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 using NaughtyAttributes;
 
@@ -21,11 +22,12 @@ namespace Penwyn.Game
 
         protected Weapon _currentWeapon;
         protected WeaponData _currentWeaponData;
+        public event UnityAction WeaponChanged;
 
         public override void AwakeAbility(Character character)
         {
             base.AwakeAbility(character);
-            CreateWeapon();
+            ChangeWeapon(InitialWeaponData);
         }
         public virtual void CreateWeapon()
         {
@@ -50,6 +52,7 @@ namespace Penwyn.Game
             {
                 _currentWeapon.LoadWeapon(newData);
             }
+            WeaponChanged?.Invoke();
         }
 
         public virtual void SetWeapon(Weapon weapon)

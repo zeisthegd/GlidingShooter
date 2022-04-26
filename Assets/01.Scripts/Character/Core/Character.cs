@@ -25,7 +25,6 @@ namespace Penwyn.Game
 
         [Header("Stats")]
         public Health Health;
-        public Energy Energy;
 
         [Header("Abilities")]
         public List<GameObject> AbilitiesContainer;

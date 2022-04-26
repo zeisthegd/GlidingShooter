@@ -18,6 +18,9 @@ namespace Penwyn.Game
 
         private StateMachine<ControllerState> _states;
 
+        public Vector3 ExternalForce;
+        public float ExternalForceDepleteRate = 1;
+
         public event UnityAction GroundTouched;
         public event UnityAction WallTouched;
 
@@ -37,6 +40,12 @@ namespace Penwyn.Game
             _states = new StateMachine<ControllerState>(ControllerState.None);
         }
 
+        void Update()
+        {
+            Debug.Log(ExternalForce);
+            ExternalForce = Vector3.Lerp(ExternalForce, Vector3.zero, ExternalForceDepleteRate * Time.deltaTime);
+        }
+
         public virtual void AddForce(Vector3 force, ForceMode mode = ForceMode.Force)
         {
             _body.AddForce(force, mode);
@@ -54,7 +63,7 @@ namespace Penwyn.Game
 
         public virtual void SetVelocity(Vector3 newVelocity)
         {
-            _body.velocity = newVelocity;
+            _body.velocity = newVelocity + ExternalForce;
         }
 
         #region Physics Check

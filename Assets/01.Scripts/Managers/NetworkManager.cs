@@ -9,7 +9,7 @@ using Penwyn.Tools;
 
 namespace Penwyn.Game
 {
-    [CreateAssetMenu(menuName ="Managers/Network Manager")]
+    [CreateAssetMenu(menuName = "Managers/Network Manager")]
     public class NetworkManager : SingletonScriptableObject<NetworkManager>
     {
         public NetworkSettings NetworkSettings;
@@ -20,7 +20,8 @@ namespace Penwyn.Game
         public void Connect()
         {
             AssignSettings();
-            PhotonNetwork.ConnectUsingSettings();
+            if (PhotonNetwork.OfflineMode == false)
+                PhotonNetwork.ConnectUsingSettings();
         }
 
         public void Disconnect()
