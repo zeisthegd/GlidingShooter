@@ -95,8 +95,7 @@ namespace Penwyn.Game
 
         protected virtual void UseEnergy()
         {
-            if (Owner.Health != null)
-                Owner.Health.Lose(CurrentData.HealthPerUse);
+            
         }
 
         protected virtual void OnHealthChanged()

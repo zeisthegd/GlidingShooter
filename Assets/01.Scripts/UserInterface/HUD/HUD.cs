@@ -15,12 +15,16 @@ namespace Penwyn.UI
     {
         [Header("Player")]
         public ProgressBar PlayerHealth;
+        public ProgressBar PlayerEnergy;
         public TMP_Text PlayerMoney;
         public Button WeaponButton;
         public List<WeaponUpgradeButton> WeaponUpgradeButtons;
 
+
+        protected Character _localPlayer;
         protected virtual void Awake()
         {
+            PlayerManager.Instance.PlayerSpawned += OnPlayerSpawned;
         }
 
         protected virtual void Update()
@@ -43,37 +47,56 @@ namespace Penwyn.UI
         {
             if (PlayerHealth != null)
             {
-                PlayerHealth.SetMaxValue(Characters.Player.Health.MaxHealth);
-                PlayerHealth.SetValue(Characters.Player.Health.CurrentHealth);
+                PlayerHealth.SetMaxValue(_localPlayer.Health.MaxHealth);
+                PlayerHealth.SetValue(_localPlayer.Health.CurrentHealth);
+            }
+        }
+
+        public virtual void SetEnergyBar()
+        {
+            if (PlayerEnergy != null)
+            {
+                PlayerEnergy.SetMaxValue(_localPlayer.Health.MaxHealth);
+                PlayerEnergy.SetValue(_localPlayer.Health.CurrentHealth);
             }
         }
 
         protected virtual void UpdateHealth()
         {
-            PlayerHealth.SetValue(Characters.Player.Health.CurrentHealth);
-            if (Characters.Player.Health.MaxHealth != PlayerHealth.ActualValue.maxValue)
+            PlayerHealth.SetValue(_localPlayer.Health.CurrentHealth);
+            if (_localPlayer.Health.MaxHealth != PlayerHealth.ActualValue.maxValue)
             {
-                PlayerHealth.SetMaxValue(Characters.Player.Health.MaxHealth);
+                PlayerHealth.SetMaxValue(_localPlayer.Health.MaxHealth);
                 Debug.Log(PlayerHealth.ActualValue.maxValue);
+            }
+        }
+
+        protected virtual void UpdateEnergy()
+        {
+            PlayerEnergy.SetValue(_localPlayer.Energy.CurrentEnergy);
+            if (_localPlayer.Energy.MaxEnergy != PlayerEnergy.ActualValue.maxValue)
+            {
+                PlayerEnergy.SetMaxValue(_localPlayer.Energy.MaxEnergy);
+                Debug.Log(PlayerEnergy.ActualValue.maxValue);
             }
         }
 
         protected virtual void UpdateMoney()
         {
             if (PlayerMoney != null)
-                PlayerMoney.SetText(Characters.Player.CharacterMoney.CurrentMoney + "");
+                PlayerMoney.SetText(_localPlayer.CharacterMoney.CurrentMoney + "");
         }
 
         #region Weapon Upgrades
 
         public virtual void LoadAvailableUpgrades()
         {
-            if (Characters.Player.CharacterWeaponHandler.CurrentWeapon.CurrentData.Upgrades.Count <= 0)
+            if (_localPlayer.CharacterWeaponHandler.CurrentWeapon.CurrentData.Upgrades.Count <= 0)
                 return;
             Time.timeScale = 0;
-            for (int i = 0; i < Characters.Player.CharacterWeaponHandler.CurrentWeapon.CurrentData.Upgrades.Count; i++)
+            for (int i = 0; i < _localPlayer.CharacterWeaponHandler.CurrentWeapon.CurrentData.Upgrades.Count; i++)
             {
-                WeaponUpgradeButtons[i].Set(Characters.Player.CharacterWeaponHandler.CurrentWeapon.CurrentData.Upgrades[i]);
+                WeaponUpgradeButtons[i].Set(_localPlayer.CharacterWeaponHandler.CurrentWeapon.CurrentData.Upgrades[i]);
                 WeaponUpgradeButtons[i].gameObject.SetActive(true);
             }
         }
@@ -107,14 +130,16 @@ namespace Penwyn.UI
         public virtual void SetWeaponButtonIcon()
         {
             if (WeaponButton != null)
-                WeaponButton.image.sprite = Characters.Player.CharacterWeaponHandler.CurrentWeapon.CurrentData.Icon;
+                WeaponButton.image.sprite = _localPlayer.CharacterWeaponHandler.CurrentWeapon.CurrentData.Icon;
         }
 
         #endregion
 
         protected virtual void OnPlayerSpawned()
         {
+            _localPlayer = PlayerManager.Instance.LocalPlayer;
             SetHealthBar();
+            SetEnergyBar();
             SetWeaponButtonIcon();
             ConnectEvents();
         }
@@ -133,17 +158,20 @@ namespace Penwyn.UI
 
         public virtual void ConnectEvents()
         {
-            Characters.Player.Health.OnChanged += UpdateHealth;
-            Characters.Player.CharacterMoney.MoneyChanged += UpdateMoney;
-            Characters.Player.CharacterWeaponHandler.CurrentWeapon.RequestUpgradeEvent += LoadAvailableUpgrades;
+            _localPlayer.Health.OnChanged += UpdateHealth;
+            _localPlayer.Energy.OnChanged += UpdateEnergy;
+            // _localPlayer.CharacterMoney.MoneyChanged += UpdateMoney;
+            _localPlayer.CharacterWeaponHandler.CurrentWeapon.RequestUpgradeEvent += LoadAvailableUpgrades;
             ConnectEndWeaponUpgradesEvents();
         }
 
         public virtual void DisconnectEvents()
         {
-            Characters.Player.Health.OnChanged -= UpdateHealth;
-            Characters.Player.CharacterMoney.MoneyChanged -= UpdateMoney;
-            Characters.Player.CharacterWeaponHandler.CurrentWeapon.RequestUpgradeEvent -= LoadAvailableUpgrades;
+            _localPlayer.Health.OnChanged -= UpdateHealth;
+            _localPlayer.Energy.OnChanged -= UpdateEnergy;
+            //_localPlayer.CharacterMoney.MoneyChanged -= UpdateMoney;
+            _localPlayer.CharacterWeaponHandler.CurrentWeapon.RequestUpgradeEvent -= LoadAvailableUpgrades;
+            PlayerManager.Instance.PlayerSpawned -= OnPlayerSpawned;
             DisconnectEndWeaponUpgradesEvents();
         }
     }

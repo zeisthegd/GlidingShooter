@@ -6,9 +6,10 @@ using UnityEngine.Events;
 using NaughtyAttributes;
 using Penwyn.Tools;
 
+using Photon.Pun;
 namespace Penwyn.Game
 {
-    public class Health : MonoBehaviour
+    public class Health : MonoBehaviourPun
     {
         [Header("Health")]
         public float StartingHealth = 10;
@@ -41,8 +42,6 @@ namespace Penwyn.Game
             SetHealthAtAwake();
         }
 
-
-
         protected virtual void Start()
         {
             CreateHealthBar();
@@ -67,6 +66,7 @@ namespace Penwyn.Game
                     HitFeedbacks.PlayFeedbacks();
                 if (_health > 0)
                 {
+                    photonView.RPC(nameof(RPC_Take), RpcTarget.Others, _health, damage);
                     MakeInvulnerable();
                 }
                 else
@@ -76,6 +76,19 @@ namespace Penwyn.Game
                     Kill();
                 }
             }
+        }
+
+        [PunRPC]
+        public virtual void RPC_Take(float newHP, float damage)
+        {
+            _health = newHP;
+            MakeInvulnerable();
+        }
+
+        [PunRPC]
+        public virtual void RPC_Kill()
+        {
+            _health = 0;
         }
 
         /// <summary>

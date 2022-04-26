@@ -67,6 +67,7 @@ namespace Penwyn.Game
             projectile.transform.rotation = this.transform.rotation;
             projectile.gameObject.SetActive(true);
             projectile.FlyTowards((target - Owner.transform.position));
+            projectile.SetOwner(this.Owner);
         }
 
         [PunRPC]

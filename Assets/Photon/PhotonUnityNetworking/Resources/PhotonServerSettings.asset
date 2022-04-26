@@ -43,6 +43,9 @@ MonoBehaviour:
   - RPC_SpawnProjectile
   - RPC_FindWeapon
   - SetName
+  - RPC_Kill
+  - RPC_Take
+  - RPC_Disable
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

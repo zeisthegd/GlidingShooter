@@ -15,8 +15,10 @@ namespace Penwyn.Game
         [Header("Components")]
         public DamageOnTouch DamageOnTouch;
         public CharacterController Controller;
+        [ReadOnly] public Character Owner;
 
         protected Health _health;
+        protected bool _belongToLocalPlayer;
 
         protected override void Awake()
         {
@@ -43,6 +45,16 @@ namespace Penwyn.Game
         {
             Controller.Body.useGravity = false;
             Controller.AddForce(Vector3.down * OverrideGravity * Time.deltaTime);
+        }
+
+        public virtual void SetOwner(Character _owner)
+        {
+            Owner = _owner;
+            _belongToLocalPlayer = Owner == PlayerManager.Instance.LocalPlayer;
+            if (_belongToLocalPlayer == false)
+            {
+                DamageOnTouch.DamageDeal = 0;
+            }
         }
 
         protected override void OnEnable()

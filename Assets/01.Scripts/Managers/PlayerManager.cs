@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 using Photon;
 using Photon.Pun;
@@ -20,6 +21,8 @@ namespace Penwyn.Game
         protected List<Character> _playersInRoom;
         [ReadOnly] public Character LocalPlayer;
 
+        public event UnityAction PlayerSpawned;
+
         /// <summary>
         /// Instantiate the player model when they enter the room.
         /// </summary>
@@ -33,6 +36,7 @@ namespace Penwyn.Game
                 player.name = PhotonNetwork.NickName;
                 LocalPlayer = player.FindComponent<Character>();
                 CameraManager.Instance.CurrenPlayerCam.FollowPlayer();
+                PlayerSpawned?.Invoke();
             }
         }
 

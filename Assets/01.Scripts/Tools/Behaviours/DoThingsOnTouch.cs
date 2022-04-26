@@ -16,6 +16,7 @@ namespace Penwyn.Tools
             if (TargetMask.Contains(col.gameObject.layer))
             {
                 ActionsOnTouch?.Invoke();
+                
                 if (DisableAfterTouch)
                     gameObject.SetActive(false);
                 //TODO Play sound.
