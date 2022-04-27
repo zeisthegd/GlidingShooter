@@ -80,6 +80,15 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeCursorVisibility"",
+                    ""type"": ""Button"",
+                    ""id"": ""6ab7a03c-5cb5-43d8-b339-971faccc8c05"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -302,6 +311,17 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""41470a2e-abb1-43a6-bf8d-89361bf2f588"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeCursorVisibility"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -316,6 +336,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Gameplay_Glide = m_Gameplay.FindAction("Glide", throwIfNotFound: true);
         m_Gameplay_Look = m_Gameplay.FindAction("Look", throwIfNotFound: true);
         m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
+        m_Gameplay_ChangeCursorVisibility = m_Gameplay.FindAction("ChangeCursorVisibility", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -381,6 +402,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Glide;
     private readonly InputAction m_Gameplay_Look;
     private readonly InputAction m_Gameplay_Jump;
+    private readonly InputAction m_Gameplay_ChangeCursorVisibility;
     public struct GameplayActions
     {
         private @PlayerInput m_Wrapper;
@@ -391,6 +413,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @Glide => m_Wrapper.m_Gameplay_Glide;
         public InputAction @Look => m_Wrapper.m_Gameplay_Look;
         public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
+        public InputAction @ChangeCursorVisibility => m_Wrapper.m_Gameplay_ChangeCursorVisibility;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -418,6 +441,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnJump;
+                @ChangeCursorVisibility.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnChangeCursorVisibility;
+                @ChangeCursorVisibility.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnChangeCursorVisibility;
+                @ChangeCursorVisibility.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnChangeCursorVisibility;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -440,6 +466,9 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @ChangeCursorVisibility.started += instance.OnChangeCursorVisibility;
+                @ChangeCursorVisibility.performed += instance.OnChangeCursorVisibility;
+                @ChangeCursorVisibility.canceled += instance.OnChangeCursorVisibility;
             }
         }
     }
@@ -452,5 +481,6 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnGlide(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnChangeCursorVisibility(InputAction.CallbackContext context);
     }
 }

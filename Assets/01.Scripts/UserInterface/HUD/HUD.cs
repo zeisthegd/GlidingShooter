@@ -42,7 +42,7 @@ namespace Penwyn.UI
 
         #endregion
 
-        #region PlayerHUD
+        #region Player Stats HUD
 
         public virtual void SetHealthBar()
         {
@@ -50,15 +50,6 @@ namespace Penwyn.UI
             {
                 PlayerHealth.SetMaxValue(_localPlayer.Health.MaxHealth);
                 PlayerHealth.SetValue(_localPlayer.Health.CurrentHealth);
-            }
-        }
-
-        public virtual void SetEnergyBar()
-        {
-            if (PlayerEnergy != null)
-            {
-                PlayerEnergy.SetMaxValue(_localPlayerWeapon.Energy.MaxEnergy);
-                PlayerEnergy.SetValue(_localPlayerWeapon.Energy.CurrentEnergy);
             }
         }
 
@@ -72,6 +63,23 @@ namespace Penwyn.UI
             }
         }
 
+        protected virtual void UpdateMoney()
+        {
+            if (PlayerMoney != null)
+                PlayerMoney.SetText(_localPlayer.CharacterMoney.CurrentMoney + "");
+        }
+
+        #region  Weapon HUD
+
+        public virtual void SetEnergyBar()
+        {
+            if (PlayerEnergy != null)
+            {
+                PlayerEnergy.SetMaxValue(_localPlayerWeapon.Energy.MaxEnergy);
+                PlayerEnergy.SetValue(_localPlayerWeapon.Energy.CurrentEnergy);
+            }
+        }
+
         protected virtual void UpdateEnergy()
         {
             PlayerEnergy.SetValue(_localPlayerWeapon.Energy.CurrentEnergy);
@@ -82,11 +90,13 @@ namespace Penwyn.UI
             }
         }
 
-        protected virtual void UpdateMoney()
+        public virtual void SetWeaponButtonIcon()
         {
-            if (PlayerMoney != null)
-                PlayerMoney.SetText(_localPlayer.CharacterMoney.CurrentMoney + "");
+            if (WeaponButton != null)
+                WeaponButton.image.sprite = _localPlayerWeapon.CurrentData.Icon;
         }
+
+        #endregion
 
         #region Weapon Upgrades
 
@@ -128,11 +138,6 @@ namespace Penwyn.UI
             }
         }
 
-        public virtual void SetWeaponButtonIcon()
-        {
-            if (WeaponButton != null)
-                WeaponButton.image.sprite = _localPlayer.CharacterWeaponHandler.CurrentWeapon.CurrentData.Icon;
-        }
 
         #endregion
 
@@ -140,16 +145,15 @@ namespace Penwyn.UI
         {
             _localPlayer = PlayerManager.Instance.LocalPlayer;
             SetHealthBar();
-            SetWeaponButtonIcon();
-            ConnectEvents();
             OnWeaponChanged();
+            ConnectEvents();
         }
 
         protected virtual void OnWeaponChanged()
         {
             _localPlayerWeapon = _localPlayer.CharacterWeaponHandler.CurrentWeapon;
             SetEnergyBar();
-            _localPlayerWeapon.Energy.OnChanged += UpdateEnergy;
+            SetWeaponButtonIcon();
         }
 
         #endregion
@@ -168,8 +172,9 @@ namespace Penwyn.UI
         {
             _localPlayer.Health.OnChanged += UpdateHealth;
             _localPlayer.CharacterWeaponHandler.WeaponChanged += OnWeaponChanged;
+            _localPlayerWeapon.Energy.OnChanged += UpdateEnergy;
             // _localPlayer.CharacterMoney.MoneyChanged += UpdateMoney;
-            _localPlayer.CharacterWeaponHandler.CurrentWeapon.RequestUpgradeEvent += LoadAvailableUpgrades;
+            _localPlayerWeapon.RequestUpgradeEvent += LoadAvailableUpgrades;
             ConnectEndWeaponUpgradesEvents();
         }
 
@@ -179,7 +184,7 @@ namespace Penwyn.UI
             _localPlayerWeapon.Energy.OnChanged -= UpdateEnergy;
             _localPlayer.CharacterWeaponHandler.WeaponChanged -= OnWeaponChanged;
             //_localPlayer.CharacterMoney.MoneyChanged -= UpdateMoney;
-            _localPlayer.CharacterWeaponHandler.CurrentWeapon.RequestUpgradeEvent -= LoadAvailableUpgrades;
+            _localPlayerWeapon.RequestUpgradeEvent -= LoadAvailableUpgrades;
             PlayerManager.Instance.PlayerSpawned -= OnPlayerSpawned;
             DisconnectEndWeaponUpgradesEvents();
         }

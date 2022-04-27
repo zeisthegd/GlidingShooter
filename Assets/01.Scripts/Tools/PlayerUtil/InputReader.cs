@@ -29,6 +29,11 @@ namespace Penwyn.Tools
         public event UnityAction JumpPressed;
         public event UnityAction JumpReleased;
 
+        public event UnityAction ChangeMouseVisibilityPressed;
+        public event UnityAction ChangeMouseVisibilityReleased;
+
+        public event UnityAction GameplayInputEnabled;
+        public event UnityAction GameplayInputDisabled;
 
         #endregion
 
@@ -38,6 +43,7 @@ namespace Penwyn.Tools
         public bool IsHoldingSpecialAttack { get; set; }
         public bool IsHoldingJump { get; set; }
         public bool IsHoldingGlide { get; set; }
+        public bool IsHoldinghangeMouseVisibility { get; set; }
 
         #endregion
 
@@ -121,6 +127,21 @@ namespace Penwyn.Tools
             }
         }
 
+
+        public void OnChangeCursorVisibility(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                ChangeMouseVisibilityPressed?.Invoke();
+                IsHoldinghangeMouseVisibility = true;
+            }
+            else if (context.phase == UnityEngine.InputSystem.InputActionPhase.Canceled)
+            {
+                ChangeMouseVisibilityReleased?.Invoke();
+                IsHoldinghangeMouseVisibility = false;
+            }
+        }
+
         public void OnLook(UnityEngine.InputSystem.InputAction.CallbackContext context)
         {
 
@@ -129,20 +150,20 @@ namespace Penwyn.Tools
         public void EnableGameplayInput()
         {
             playerinput.Gameplay.Enable();
+            GameplayInputEnabled?.Invoke();
 
         }
 
         public void DisableGameplayInput()
         {
             playerinput.Gameplay.Disable();
+            GameplayInputDisabled?.Invoke();
         }
 
         void OnDisable()
         {
             DisableGameplayInput();
         }
-
-
 
 
         public Vector2 MoveInput { get; set; }

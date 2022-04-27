@@ -20,14 +20,15 @@ MonoBehaviour:
     type: 3}
   Damage: 1
   Iteration: 1
-  DelayBetweenIterations: 0.1
+  DelayBetweenIterations: 0
   BulletPerShot: 1
   DelayBetweenBullets: 0
   Angle: 0
-  Cooldown: 0.1
+  Cooldown: 0.5
   DisableAutoAimWhenShooting: 0
+  StartingEnergy: 20
   RequiresHealth: 0
-  HealthPerUse: 0
+  EnergyCostPerShot: 1
   ProjectileRotating: 0
   RotateSpeed: 1
   Upgrades: []

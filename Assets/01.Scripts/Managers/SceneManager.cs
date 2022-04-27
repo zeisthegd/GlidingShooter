@@ -57,10 +57,5 @@ namespace Penwyn.Game
             NetworkManager.Instance.Disconnect();
             Application.Quit();
         }
-
-        public string Title { get => TitleSceenName; }
-        public string Lobby { get => LobbySceenName; }
-        public string Room { get => RoomSceenName; }
-        public string Match { get => MatchSceenName; }
     }
 }

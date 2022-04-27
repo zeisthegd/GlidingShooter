@@ -42,7 +42,6 @@ namespace Penwyn.Game
 
         void Update()
         {
-            Debug.Log(ExternalForce);
             ExternalForce = Vector3.Lerp(ExternalForce, Vector3.zero, ExternalForceDepleteRate * Time.deltaTime);
         }
 
