@@ -8,7 +8,7 @@ using Penwyn.Tools;
 
 namespace Penwyn.Game
 {
-    public class AudioPlayer : MonoBehaviour
+    public class AudioPlayer : SingletonMonoBehaviour<AudioPlayer>
     {
         [Header("--- Audio Sources ---")]
         public AudioSource BGMSource;

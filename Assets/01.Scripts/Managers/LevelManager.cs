@@ -23,7 +23,6 @@ namespace Penwyn.Game
 
         protected virtual void Start()
         {
-            LoadLevel();
             InputReader.Instance.EnableGameplayInput();
         }
 
@@ -48,7 +47,7 @@ namespace Penwyn.Game
         /// <summary>
         /// Generate the level and spawn the enemies.
         /// </summary>
-        protected virtual void LoadLevel()
+        public virtual void LoadLevel()
         {
             if (ShouldCreateLevel)
             {

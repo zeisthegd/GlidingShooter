@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Network Settings
   m_EditorClassIdentifier: 
   GameVersion: 0.1
-  NickName: U4W3
+  NickName: Z7I6
   AutomaticallySyncScene: 0
-  OfflineMode: 0
+  OfflineMode: 1

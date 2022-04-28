@@ -19,6 +19,7 @@ namespace Penwyn.Game
     {
         [Header("Managers")]
         [Expandable] public NetworkManager NetworkManager;
+        [Expandable] public LevelManager LevelManager;
         [Expandable] public CameraManager CameraManager;
         [Expandable] public SceneManager SceneManager;
         [Expandable] public PlayerManager PlayerManager;
@@ -75,6 +76,7 @@ namespace Penwyn.Game
             if (scene.name == SceneManager.RoomSceenName)
             {
                 OnRoomSceneLoaded();
+                LevelManager.LoadLevel();
             }
         }
     }

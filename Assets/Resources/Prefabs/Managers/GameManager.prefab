@@ -1,5 +1,114 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &63565850
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 63565851}
+  - component: {fileID: 63565854}
+  - component: {fileID: 63565853}
+  - component: {fileID: 63565852}
+  - component: {fileID: 63565855}
+  m_Layer: 0
+  m_Name: LevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &63565851
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63565850}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3950279870636821490}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &63565854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63565850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1e0bba683bc78f4e8cd730cfeca6605, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MapDatas:
+  - {fileID: 11400000, guid: fd4163a7c7aa24f4e84c4fcd19c790ae, type: 2}
+  LevelGenerator: {fileID: 63565853}
+  LootDropManager: {fileID: 63565855}
+  ShouldCreateLevel: 1
+--- !u!114 &63565853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63565850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ed408950cbc6b4d9dd5f5e38c21459, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MapData: {fileID: 0}
+--- !u!114 &63565852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63565850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c391024bc0f70ef4985a62d15a5af4f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DistanceBetweenIsland: 240
+  MinIslandDistanceOffset: 30
+  MaxIslandDistanceOffset: 70
+  MinIslandHeightOffset: -120
+  MaxIslandHeightOffset: 120
+  IslandsContainer: {fileID: 0}
+  Islands:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!114 &63565855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63565850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 326b800107d8c7247a5cf17d29513559, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MapData: {fileID: 0}
+  _destructileTilemap: {fileID: 0}
 --- !u!1 &1205068065
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,8 +264,9 @@ GameObject:
   - component: {fileID: 3950279870636821490}
   - component: {fileID: 1336979685}
   - component: {fileID: 5574656926437217149}
-  - component: {fileID: 3950279870636821489}
   - component: {fileID: 1336979684}
+  - component: {fileID: 1968772350}
+  - component: {fileID: 1968772356}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -177,6 +287,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1205068066}
+  - {fileID: 63565851}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -215,6 +326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NetworkManager: {fileID: 11400000, guid: 47ddac1686648a849a49dfaea11a909f, type: 2}
+  LevelManager: {fileID: 63565854}
   CameraManager: {fileID: 11400000, guid: 06a840d9a4d1d9e46a07b605d690388e, type: 2}
   SceneManager: {fileID: 11400000, guid: 0b1b5a07542cec440a9941db33181a8f, type: 2}
   PlayerManager: {fileID: 11400000, guid: f267e355f8790e3458c3e89562172dfe, type: 2}
@@ -223,22 +335,6 @@ MonoBehaviour:
   CursorUtility: {fileID: 0}
   LevelPath: 
   MatchSettings: {fileID: 0}
---- !u!114 &3950279870636821489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3950279870636821484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1e0bba683bc78f4e8cd730cfeca6605, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MapDatas: []
-  LevelGenerator: {fileID: 0}
-  LootDropManager: {fileID: 0}
-  ShouldCreateLevel: 0
 --- !u!114 &1336979684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,3 +347,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc44ccf0721da464789e3934c3d42cad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1968772350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3950279870636821484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77a046d6f9614694fa0207ae00eec4f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1968772356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3950279870636821484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fd92c34c2da2a447b8aed2103f24256, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NormalCursor: {fileID: 0}
+  TargettingCursor: {fileID: 0}

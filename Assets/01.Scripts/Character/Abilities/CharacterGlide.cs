@@ -18,7 +18,8 @@ namespace Penwyn.Game
         public float LevitateExternalForce = 1;
 
         [Header("VFX")]
-        public float CameraDistanceWhenDiving = 10;
+        public float CameraDistanceWhenOnGround = 10;
+        public float CameraDistanceWhenGliding = 10;
         public float MinFOV = 40;
         public float MaxFOV = 70;
         public float FOVAdjustDuration = 1;
@@ -74,14 +75,14 @@ namespace Penwyn.Game
             if (InputReader.Instance.IsHoldingGlide && !_controller.IsTouchingGround)
             {
                 float camAngle = Camera.main.transform.eulerAngles.x > 180 ? 360 - Camera.main.transform.eulerAngles.x : Camera.main.transform.eulerAngles.x;
-                _forcePercentage = Mathf.Abs(camAngle / 90);
-                _forcePercentage = Mathf.Clamp(_forcePercentage, MinForcePercentage, Mathf.Abs(camAngle / 90));
+
+                _forcePercentage = Mathf.Clamp(Mathf.Abs(camAngle / 90), MinForcePercentage, (IsLookingUp ? MinForcePercentage : 1));
                 _controller.Body.useGravity = IsLookingUp;
 
                 if (IsLookingUp)
                     Levitate();
-                else
-                    Dive();
+                Dive();
+
                 AddHelpingLevitateForce();
                 _character.Model.transform.localRotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x + 90, 0, 0);
             }
@@ -96,7 +97,6 @@ namespace Penwyn.Game
             if (_topRecordedVelocity > 1)
                 _controller.SetVelocity(Camera.main.transform.forward * _topRecordedVelocity * LevitateForceMultiplier);
             _topRecordedVelocity = Mathf.Clamp(_topRecordedVelocity - Time.deltaTime * LevitateForceDecreaseMultiplier, 0, _topRecordedVelocity - Time.deltaTime * LevitateForceDecreaseMultiplier);
-
         }
 
         public virtual void Dive()
@@ -150,7 +150,7 @@ namespace Penwyn.Game
             {
                 _camDst -= Time.deltaTime * (MaxFOV - MinFOV) * FOVAdjustDuration;
             }
-            _camDst = Mathf.Clamp(_camDst, 0.01f, CameraDistanceWhenDiving);
+            _camDst = Mathf.Clamp(_camDst, CameraDistanceWhenOnGround, CameraDistanceWhenGliding);
             CameraManager.Instance.CurrenPlayerCam.ChangeBodyDistance(_camDst);
         }
 

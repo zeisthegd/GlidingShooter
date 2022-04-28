@@ -5,46 +5,74 @@ using UnityEngine.Tilemaps;
 
 using NaughtyAttributes;
 
+using Penwyn.Tools;
+
 namespace Penwyn.Game
 {
-    public class LevelBuilder : MonoBehaviour
+    public class LevelBuilder : SingletonMonoBehaviour<LevelBuilder>
     {
-        [Header("Tile Settings")]
-        public Tilemap GroundTilemap;
-        public Tilemap WallTilemap;
-        public PolygonCollider2D LevelBounds;
+        [Header("Spawn Settings")]
+        public float DistanceBetweenIsland = 40;
+        public float MinIslandDistanceOffset = 40;
+        public float MaxIslandDistanceOffset = 120;
+        public float MinIslandHeightOffset = 120;
+        public float MaxIslandHeightOffset = 120;
+        public Transform IslandsContainer;
+        [ReadOnly] public List<GameObject> Islands = new List<GameObject>();
         protected LevelGenerator _generator;
+        
 
-        public virtual void BuildMap(LevelGenerator generator)
+        void Awake()
         {
-            _generator = generator;
-            SetWallTiles();
-            SetLevelBounds();
+            Islands = new List<GameObject>();
         }
 
-        public virtual void SetWallTiles()
+        public virtual void BuildMap()
         {
-            int[,] walls = _generator.Map;
-            Vector3Int tilePos;
+            _generator = LevelGenerator.Instance;
+            IslandsContainer = GameObject.FindGameObjectWithTag("IslandsContainer").transform;
+            DestroyAllIslands();
+            SpawnIslands();
+        }
+
+        public virtual void SpawnIslands()
+        {
+            int[,] islands = _generator.Map;
             for (int x = 0; x < _generator.MapData.Width; x++)
             {
-                for (int y = 0; y < _generator.MapData.Height; y++)
+                for (int z = 0; z < _generator.MapData.Height; z++)
                 {
-                    tilePos = new Vector3Int(-_generator.MapData.Width / 2 + x, -_generator.MapData.Height / 2 + y);
-                    if (walls[x, y] == 1)
-                    {
-                        WallTilemap.SetTile(tilePos, _generator.MapData.WallTile);
-                    }
-                    GroundTilemap.SetTile(tilePos, _generator.MapData.GroundTile);
+                    if (islands[x, z] == 1)
+                        Islands.Add(Instantiate(_generator.MapData.IslandPrefab, GetRandomIslandPosition(x, z), Quaternion.identity, IslandsContainer));
                 }
             }
         }
 
-        public virtual void SetLevelBounds()
+        public virtual void DestroyAllIslands()
         {
-            float width = _generator.MapData.Width / 2;
-            float height = _generator.MapData.Height / 2;
-            LevelBounds.SetPath(0, new Vector2[] { new Vector2(width, height), new Vector2(-width, height), new Vector2(-width, -height), new Vector2(width, -height) });
+            for (int x = 0; x < Islands.Count; x++)
+            {
+                GameObject island = Islands[x];
+                Destroy(island);
+            }
+            Islands.Clear();
+        }
+
+        public virtual Vector3 GetRandomIslandPosition(int x, int z)
+        {
+            return new Vector3((DistanceBetweenIsland + Randomizer.RandomNumber(MinIslandDistanceOffset, MaxIslandDistanceOffset)) * x,
+                                    Randomizer.RandomNumber(MinIslandHeightOffset, MaxIslandHeightOffset),
+                                        (DistanceBetweenIsland + Randomizer.RandomNumber(MinIslandDistanceOffset, MaxIslandDistanceOffset)) * z);
+        }
+
+        void OnEnable()
+        {
+            LevelGenerator.Instance.LevelDataGenerated += BuildMap;
+        }
+
+        void OnDisable()
+        {
+            LevelGenerator.Instance.LevelDataGenerated -= BuildMap;
         }
     }
 }

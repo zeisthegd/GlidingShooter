@@ -12,31 +12,20 @@ namespace Penwyn.Game
     public class MapData : ScriptableObject
     {
         public string Name;
+        [Header("Array")]
+        public int Width = 5;
+        public int Height = 5;
+        public string Seed;
+        public bool UseRandomSeed;
+        [Header("Settings")]
+        public int MinIslandCount = 4;
+        public int MaxIslandCount = 10;
+        [Header("Environment Prefabs")]
+        public GameObject IslandPrefab;
         [Header("Enemies")]
         public EnemySpawnSettings[] SpawnSettings;
         public float StartingThreatLevel = 3;
         public float ThreatLevelIncrementPerSecond = 0.1F;
-
-        [HorizontalLine(1, EColor.Green)]
-        [Header("Environment")]
-        public int Width = 50;
-        public int Height = 50;
-        [Range(0, 100)] public int FillPercent = 50;
-        public int ResmoothWallTimes = 4;
-        public int MinNeighborWalls = 4;
-        public string Seed;
-        public bool UseRandomSeed;
-        [Header("Tilemap")]
-        public TileBase GroundTile;
-        public TileBase WallTile;
-
-
-        [HorizontalLine(1, EColor.Green)]
-        [Header("Drop")]
-        public CoinDrop LesserMoneyDrop;
-        public CoinDrop GreaterMoneyDrop;
-        public CoinDrop EliteMoneyDrop;
-
 
         public virtual EnemySpawnSettings GetRandomEnemySpawnSettings()
         {
@@ -50,7 +39,6 @@ namespace Penwyn.Game
     public struct EnemySpawnSettings
     {
         public string Name;
-        public Enemy Prefab;
         public EnemyData[] Datas;
 
         public EnemyData GetRandomEnemyData()
@@ -60,14 +48,6 @@ namespace Penwyn.Game
             Debug.Log("No enemy data inserted!");
             return null;
         }
-    }
-
-    [System.Serializable]
-    public struct CoinDrop
-    {
-        public Sprite CoinSprite;
-        public int MoneyAmount;
-        public int HealAmount;
     }
 }
 

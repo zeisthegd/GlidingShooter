@@ -9,6 +9,7 @@ namespace Penwyn.Game
         Idling,
         Running,
         Gliding,
-        OnAir
+        OnAir,
+        Hovering
     }
 }
