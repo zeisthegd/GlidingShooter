@@ -15,30 +15,18 @@ using Penwyn.UI;
 namespace Penwyn.Game
 {
 
-    public class GameManager : MonoBehaviourPun
+    public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         [Header("Managers")]
-        [Expandable] public NetworkManager NetworkManager;
-        [Expandable] public LevelManager LevelManager;
+        public LevelManager LevelManager;
         [Expandable] public CameraManager CameraManager;
         [Expandable] public SceneManager SceneManager;
         [Expandable] public PlayerManager PlayerManager;
         [Expandable] public InputManager InputManager;
         [Expandable] public AudioPlayer AudioPlayer;
 
-        [Header("Utilities")]
-        public CursorUtility CursorUtility;
 
-        //[SerializeField] AudioPlayer audioPlayer;
-
-        [Header("Level Stuff")]
-        //[SerializeField] Level levelPref;
-        public string LevelPath;
         [Expandable] public MatchSettings MatchSettings;
-
-        //   Level currentLevel;
-
-        public static GameManager Instance;
 
 
         void Awake()
@@ -53,29 +41,15 @@ namespace Penwyn.Game
 
         void CheckSingleton()
         {
-            if (Instance != null)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                Instance = this;
-                DontDestroyOnLoad(this);
-            }
-        }
-
-
-        public virtual void OnRoomSceneLoaded()
-        {
-            CameraManager.CreatePlayerCamera();
-            PlayerManager.CreateLocalPlayer();
+            DontDestroyOnLoad(this);
         }
 
         void OnSceneLoad(Scene scene, LoadSceneMode mode)
         {
             if (scene.name == SceneManager.RoomSceenName)
             {
-                OnRoomSceneLoaded();
+                CameraManager.CreatePlayerCamera();
+                PlayerManager.CreateLocalPlayer();
                 LevelManager.LoadLevel();
             }
         }

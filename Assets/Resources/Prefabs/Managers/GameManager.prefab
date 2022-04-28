@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 63565853}
   - component: {fileID: 63565852}
   - component: {fileID: 63565855}
+  - component: {fileID: 1147203108}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -51,7 +52,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fd4163a7c7aa24f4e84c4fcd19c790ae, type: 2}
   LevelGenerator: {fileID: 63565853}
   LootDropManager: {fileID: 63565855}
+  EnemySpawner: {fileID: 1147203108}
   ShouldCreateLevel: 1
+  CurrentThreatLevel: 0
+  MaxThreatLevel: 0
 --- !u!114 &63565853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,6 +113,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MapData: {fileID: 0}
   _destructileTilemap: {fileID: 0}
+--- !u!114 &1147203108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63565850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e21ca22e22b98a6439957f920fe87b31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MapData: {fileID: 11400000, guid: fd4163a7c7aa24f4e84c4fcd19c790ae, type: 2}
+  EnemyPoolPrefab: {fileID: -229595152421616941, guid: 9d834b860e853f8428ee5fb8523fa148,
+    type: 3}
+  ObjectPoolers: []
+  MinDistanceToPlayer: 10
+  MaxDistanceToPlayer: 20
+  TimeTillSpawnNewEnemies: 2
 --- !u!1 &1205068065
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,15 +348,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd6e63c2761336b4bbf7b83863fc09cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NetworkManager: {fileID: 11400000, guid: 47ddac1686648a849a49dfaea11a909f, type: 2}
   LevelManager: {fileID: 63565854}
   CameraManager: {fileID: 11400000, guid: 06a840d9a4d1d9e46a07b605d690388e, type: 2}
   SceneManager: {fileID: 11400000, guid: 0b1b5a07542cec440a9941db33181a8f, type: 2}
   PlayerManager: {fileID: 11400000, guid: f267e355f8790e3458c3e89562172dfe, type: 2}
   InputManager: {fileID: 11400000, guid: 29a9454571ae19c47be8970a209876af, type: 2}
   AudioPlayer: {fileID: 0}
-  CursorUtility: {fileID: 0}
-  LevelPath: 
   MatchSettings: {fileID: 0}
 --- !u!114 &1336979684
 MonoBehaviour:

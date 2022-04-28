@@ -61,7 +61,7 @@ namespace Penwyn.Game
                         return false;
                 }
 
-                return AbilityPermitted && _character.photonView.IsMine;
+                return AbilityPermitted;
             }
         }
 

@@ -33,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 1358326198000655401}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -149,6 +149,7 @@ MonoBehaviour:
   OverrideGravity: 10
   DamageOnTouch: {fileID: 3124391888613173752}
   Controller: {fileID: 9201141406063183192}
+  Owner: {fileID: 0}
 --- !u!114 &6410170606369863145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,6 +206,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Settings: {fileID: 11400000, guid: 00858cebe4554884f9e76a7f851823d9, type: 2}
+  ExternalForce: {x: 0, y: 0, z: 0}
+  ExternalForceDepleteRate: 1
   IsTouchingGround: 0
   IsTouchingWall: 0
 --- !u!54 &5738412704571917226

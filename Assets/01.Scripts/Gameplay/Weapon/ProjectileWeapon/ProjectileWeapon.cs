@@ -15,11 +15,8 @@ namespace Penwyn.Game
 
         protected override void UseWeapon()
         {
-            if (Owner.photonView.IsMine)
-            {
-                base.UseWeapon();
-                StartCoroutine(IterationCoroutine());
-            }
+            base.UseWeapon();
+            StartCoroutine(IterationCoroutine());
         }
 
         protected virtual IEnumerator IterationCoroutine()
@@ -47,7 +44,6 @@ namespace Penwyn.Game
             {
                 _target = RaycastTarget();
                 SpawnProjectile(_target);
-                photonView.RPC(nameof(RPC_SpawnProjectile), Photon.Pun.RpcTarget.Others, new object[] { _target });
                 if (CurrentData.BulletPerShot > 1)
                 {
                     if (CurrentData.DelayBetweenBullets > 0)
@@ -68,12 +64,6 @@ namespace Penwyn.Game
             projectile.gameObject.SetActive(true);
             projectile.FlyTowards((target - Owner.transform.position));
             projectile.SetOwner(this.Owner);
-        }
-
-        [PunRPC]
-        public virtual void RPC_SpawnProjectile(Vector3 target)
-        {
-            SpawnProjectile(target);
         }
 
         /// <summary>

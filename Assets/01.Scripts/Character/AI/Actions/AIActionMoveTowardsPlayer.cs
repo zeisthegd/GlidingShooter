@@ -27,13 +27,14 @@ namespace Penwyn.Game
 
         public override void UpdateComponent()
         {
-            _target = Characters.Player.gameObject;
+            _target = PlayerManager.Instance.LocalPlayer.gameObject;
+            if (_target == null)
+                return;
             float distanceToPlayer = Vector2.Distance(_target.transform.position, _character.Position);
             if (_target != null && distanceToPlayer > MinDistance)
             {
-                Vector2 dirToPlayer = _target.transform.position - _character.Position;
-                dirToPlayer = Quaternion.AngleAxis(_randomAngle, Vector3.forward) * dirToPlayer;
-
+                Vector2 dirToPlayer = (_target.transform.position - _character.Position).normalized;
+                _character.transform.LookAt(_target.transform.position);
                 _character.CharacterRun.RunRaw(dirToPlayer);
                 _character.Controller.MultiplyVelocity(DistanceToSpeedCurve.Evaluate(distanceToPlayer));
                 Debug.DrawRay(_character.Position, _character.Controller.Velocity);

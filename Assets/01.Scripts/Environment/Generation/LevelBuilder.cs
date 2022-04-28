@@ -20,7 +20,7 @@ namespace Penwyn.Game
         public Transform IslandsContainer;
         [ReadOnly] public List<GameObject> Islands = new List<GameObject>();
         protected LevelGenerator _generator;
-        
+
 
         void Awake()
         {
@@ -72,7 +72,8 @@ namespace Penwyn.Game
 
         void OnDisable()
         {
-            LevelGenerator.Instance.LevelDataGenerated -= BuildMap;
+            if (LevelGenerator.Instance != null)
+                LevelGenerator.Instance.LevelDataGenerated -= BuildMap;
         }
     }
 }

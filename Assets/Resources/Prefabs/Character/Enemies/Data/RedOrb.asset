@@ -9,9 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7b2ea16523b93a44bf69b30e4bd400c, type: 3}
-  m_Name: PlayerManager
+  m_Script: {fileID: 11500000, guid: 502cd353fc381c046851721985415b83, type: 3}
+  m_Name: RedOrb
   m_EditorClassIdentifier: 
-  PlayerPrefab: {fileID: 1553388793321527646, guid: a4a43ad4d5d2c364ca25d387b7d4bd78,
-    type: 3}
-  LocalPlayer: {fileID: 0}
+  Health: 1
+  MoveSpeed: 1
+  ThreatLevel: 1
+  Type: 0
+  WeaponData: {fileID: 11400000, guid: 25f4e5f478b5c65468a7e24e8b6751d9, type: 2}
+  RuntimeAnimatorController: {fileID: 0}

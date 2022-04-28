@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using NaughtyAttributes;
 namespace Penwyn.Game
 {
     public class Enemy : Character
@@ -18,6 +18,17 @@ namespace Penwyn.Game
             base.Awake();
             if (AIBrain == null)
                 AIBrain = GetComponent<AIBrain>();
+        }
+
+        protected virtual void Start()
+        {
+            AIBrain.WakeUp();
+        }
+
+        [Button("Load Enemy")]
+        public virtual void LoadInitData()
+        {
+            LoadEnemy(InitData);
         }
 
         public virtual void LoadEnemy(EnemyData data)

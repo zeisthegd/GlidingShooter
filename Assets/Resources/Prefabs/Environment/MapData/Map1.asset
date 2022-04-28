@@ -21,6 +21,11 @@ MonoBehaviour:
   MaxIslandCount: 10
   IslandPrefab: {fileID: 2172506766381936233, guid: 937c0e247e274524ebebe527025de785,
     type: 3}
-  SpawnSettings: []
+  SpawnSettings:
+  - Name: Smol
+    Prefab: {fileID: 6176657411468425469, guid: 41e964efae92005419d31142ee362e67,
+      type: 3}
+    Datas:
+    - {fileID: 11400000, guid: cb1e3e20c3766c240b0db9337194d465, type: 2}
   StartingThreatLevel: 3
   ThreatLevelIncrementPerSecond: 0.1

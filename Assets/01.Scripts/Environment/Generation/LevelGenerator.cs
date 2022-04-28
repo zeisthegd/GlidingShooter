@@ -67,21 +67,6 @@ namespace Penwyn.Game
             return neighborCount;
         }
 
-        public virtual Vector2 GetRandomEmptyPosition()
-        {
-            Vector2 position = new Vector2();
-            do
-            {
-                position.x = Randomizer.RandomNumber(0, MapData.Width);
-                position.y = Randomizer.RandomNumber(0, MapData.Height);
-            }
-            while (_map[(int)position.x, (int)position.y] == 1);
-
-            position.x = -MapData.Width / 2 + position.x + 0.5F;
-            position.y = -MapData.Height / 2 + position.y + 0.5F;
-            return position;
-        }
-
         public virtual int GetTotalIslandsCount()
         {
             int count = 0;

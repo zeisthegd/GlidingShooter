@@ -16,7 +16,7 @@ namespace Penwyn.Game
     public class PlayerManager : SingletonScriptableObject<PlayerManager>
     {
         [Header("Player")]
-        public string PlayerPrefabPath;
+        public Character PlayerPrefab;
         //Player Lists
         protected List<Character> _playersInRoom;
         [ReadOnly] public Character LocalPlayer;
@@ -28,15 +28,13 @@ namespace Penwyn.Game
         /// </summary>
         public void CreateLocalPlayer()
         {
-            if (PhotonNetwork.InRoom && LocalPlayer == null)
+            if (LocalPlayer == null)
             {
-                Debug.Log("Create player");
                 Transform spawnPos = GameObject.Find("SpawnPos").transform;
-                GameObject player = PhotonNetwork.Instantiate(PlayerPrefabPath, spawnPos.position, Quaternion.identity);
-                player.name = PhotonNetwork.NickName;
-                LocalPlayer = player.FindComponent<Character>();
+                LocalPlayer = Instantiate(PlayerPrefab, spawnPos.position, Quaternion.identity);
                 CameraManager.Instance.CurrenPlayerCam.FollowPlayer();
                 PlayerSpawned?.Invoke();
+                Debug.Log("Created player");
             }
         }
 
@@ -49,19 +47,6 @@ namespace Penwyn.Game
                 _playersInRoom.Add(playerObj.GetComponent<Character>());
             }
         }
-
-        #region Utilities
-
-        /// <summary>
-        /// Find a player by their photonview's owner actor number.
-        /// </summary>
-        public Character FindByOwnerActorNumber(int ownerActNr)
-        {
-            FindPlayersInRooms();
-            return _playersInRoom.Find(player => player.photonView.OwnerActorNr == ownerActNr);
-        }
-
-        #endregion
 
         void OnEnable()
         {

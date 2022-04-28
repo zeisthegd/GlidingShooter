@@ -38,7 +38,7 @@ namespace Penwyn.Game
 
         void LoadScene(string sceneName)
         {
-            PhotonNetwork.LoadLevel(sceneName);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
         }
         #endregion
 
@@ -46,7 +46,7 @@ namespace Penwyn.Game
 
         public void LoadMatchScene()
         {
-            PhotonNetwork.LoadLevel(MatchSceenName);
+            LoadScene(MatchSceenName);
         }
 
         #endregion

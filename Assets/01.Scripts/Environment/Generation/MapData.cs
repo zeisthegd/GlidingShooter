@@ -39,6 +39,7 @@ namespace Penwyn.Game
     public struct EnemySpawnSettings
     {
         public string Name;
+        public GameObject Prefab;
         public EnemyData[] Datas;
 
         public EnemyData GetRandomEnemyData()

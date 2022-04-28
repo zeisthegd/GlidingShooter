@@ -32,7 +32,7 @@ namespace Penwyn.Game
 
         protected List<CharacterAbility> _abilities;
         protected CharacterWeaponHandler _characterWeaponHandler;
-        protected CharacterRun _characterRun;
+        protected Character3DRun _characterRun;
         protected CharacterHandleMoney _characterMoney;
         private StateMachine<CharacterAbilityStates> _states;
 
@@ -102,7 +102,7 @@ namespace Penwyn.Game
 
         protected virtual void GetGeneralAbilities()
         {
-            _characterRun = FindAbility<CharacterRun>();
+            _characterRun = FindAbility<Character3DRun>();
             _characterWeaponHandler = FindAbility<CharacterWeaponHandler>();
             _characterMoney = FindAbility<CharacterHandleMoney>();
         }
@@ -135,7 +135,7 @@ namespace Penwyn.Game
         public MeshRenderer MeshRenderer { get => Model.GetComponent<MeshRenderer>(); }
         public Vector3 Position { get => transform.position; }
         public List<CharacterAbility> Abilities { get => _abilities; }
-        public CharacterRun CharacterRun { get => _characterRun; }
+        public Character3DRun CharacterRun { get => _characterRun; }
         public CharacterHandleMoney CharacterMoney { get => _characterMoney; }
         public CharacterWeaponHandler CharacterWeaponHandler { get => _characterWeaponHandler; }
         public StateMachine<CharacterAbilityStates> States { get => _states; set => _states = value; }

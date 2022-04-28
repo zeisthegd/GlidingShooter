@@ -31,8 +31,11 @@ namespace Penwyn.Game
 
         protected virtual void RotateWeaponToPlayer()
         {
-            Vector3 dirToPlayer = (Characters.Player.transform.position - _character.CharacterWeaponHandler.CurrentWeapon.transform.position).normalized;
-            _character.CharacterWeaponHandler.CurrentWeapon.transform.right = dirToPlayer;
+            if (PlayerManager.Instance.LocalPlayer != null)
+            {
+                Vector3 dirToPlayer = (PlayerManager.Instance.LocalPlayer.Position - _character.CharacterWeaponHandler.CurrentWeapon.transform.position).normalized;
+                _character.CharacterWeaponHandler.CurrentWeapon.transform.right = dirToPlayer;
+            }
         }
 
         public virtual void EnsureAbilityComponents()

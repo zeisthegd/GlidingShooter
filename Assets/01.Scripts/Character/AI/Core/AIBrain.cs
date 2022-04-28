@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+using Penwyn.Tools;
 using NaughtyAttributes;
 namespace Penwyn.Game
 {
@@ -15,9 +15,9 @@ namespace Penwyn.Game
 
         protected Character _character;
 
-        public virtual void Awake()
+        public virtual void WakeUp()
         {
-            _character = GetComponent<Character>();
+            _character = gameObject.FindComponent<Character>();
             AwakeStates();
             if (States.Count > 0)
                 CurrentState = States[0];

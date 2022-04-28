@@ -17,9 +17,16 @@ namespace Penwyn.Game
         [Header("Sub-components")]
         public LevelGenerator LevelGenerator;
         public LootDropManager LootDropManager;
+        public EnemySpawner EnemySpawner;
         [Header("Settings")]
         public bool ShouldCreateLevel = false;
+        public float CurrentThreatLevel = 0;
+        public float MaxThreatLevel = 0;
+
+
         protected MapData _mapData;
+        protected bool _initialized = false;
+
 
         protected virtual void Start()
         {
@@ -37,9 +44,9 @@ namespace Penwyn.Game
         /// </summary>
         public virtual void IncreaseThreatLevelAndProgress()
         {
-            if (ShouldCreateLevel)
+            if (ShouldCreateLevel && _initialized)
             {
-
+                MaxThreatLevel += _mapData.ThreatLevelIncrementPerSecond * Time.deltaTime;
             }
         }
 
@@ -53,6 +60,8 @@ namespace Penwyn.Game
             {
                 ChangeToRandomData();
                 LevelGenerator.GenerateLevel();
+                StartCoroutine(EnemySpawner.SpawnRandomEnemies());
+                _initialized = true;
             }
         }
 
@@ -66,7 +75,11 @@ namespace Penwyn.Game
 
             LevelGenerator.MapData = _mapData;
             LootDropManager.MapData = _mapData;
+            EnemySpawner.MapData = _mapData;
 
+            MaxThreatLevel = _mapData.StartingThreatLevel;
+
+            EnemySpawner.LoadData();
         }
 
         public virtual void MovePlayerTo(Vector2 position)

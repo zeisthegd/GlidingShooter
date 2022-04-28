@@ -39,6 +39,10 @@ namespace Penwyn.Game
             DustHandling();
         }
 
+        /// <summary>
+        /// Set velocity = input direction * speed.
+        /// </summary>
+        /// <param name="input">Normalized input</param>
         public virtual void RunRaw(Vector2 input)
         {
             Vector3 direction = transform.right * input.x + transform.forward * input.y;

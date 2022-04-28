@@ -502,7 +502,6 @@ MonoBehaviour:
   InitialWeaponPrefab: {fileID: 6250427266480695930, guid: bb1547ed5b32edf45a49ea6ff47e0212,
     type: 3}
   InitialWeaponData: {fileID: 11400000, guid: 25f4e5f478b5c65468a7e24e8b6751d9, type: 2}
-  InitialWeaponPrefabPath: Prefabs/Combat/Weapons/Prefabs/PlayerWeapon
   WeaponHolder: {fileID: 610142728}
 --- !u!114 &8321082537795942427
 MonoBehaviour:

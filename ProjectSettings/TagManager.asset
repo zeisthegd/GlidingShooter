@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - IslandsContainer
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -16,6 +17,7 @@ TagManager:
   - Projectile
   - Platform
   - Collectibles
+  - Enemy
   - 
   - 
   - 
@@ -36,8 +38,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Post Processing
   m_SortingLayers:
   - name: Default
     uniqueID: 0

@@ -14,7 +14,6 @@ namespace Penwyn.Game
         [Header("Weapon Data")]
         public Weapon InitialWeaponPrefab;
         public WeaponData InitialWeaponData;
-        public string InitialWeaponPrefabPath;
         [HorizontalLine]
 
         [Header("Weapon Holder")]
@@ -33,15 +32,11 @@ namespace Penwyn.Game
         {
             if (WeaponHolder == null)
                 WeaponHolder = this.transform;
-            if (_character.photonView.IsMine)
-            {
-                object[] data = new object[] { WeaponObjectName(), _character.photonView.OwnerActorNr };
-                _currentWeapon = PhotonNetwork.Instantiate(InitialWeaponPrefabPath, WeaponHolder.position, Quaternion.identity, 0, data).GetComponent<Weapon>();
-                _currentWeapon.Owner = this._character;
-                _currentWeapon.Initialization();
-                _currentWeapon.LoadWeapon(InitialWeaponData);
-                _currentWeapon.transform.SetParent(WeaponHolder);
-            }
+            _currentWeapon = Instantiate(InitialWeaponPrefab, WeaponHolder.position, Quaternion.identity).GetComponent<Weapon>();
+            _currentWeapon.Owner = this._character;
+            _currentWeapon.Initialization();
+            _currentWeapon.LoadWeapon(InitialWeaponData);
+            _currentWeapon.transform.SetParent(WeaponHolder);
         }
 
         public virtual void ChangeWeapon(WeaponData newData)
