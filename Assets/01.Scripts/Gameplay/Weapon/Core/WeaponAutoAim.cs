@@ -12,12 +12,13 @@ namespace Penwyn.Game
         [Header("Mask")]
         public LayerMask TargetsMask;
         public LayerMask ObstacleMask;
+        public float CastDistance = 10;
 
         [ReadOnly] public Transform Target;
         protected Weapon _weapon;
         protected WeaponAim _weaponAim;
         protected List<Transform> _targetList;
-        protected List<Collider2D> _detectionColliders;
+        protected List<Collider> _detectionColliders;
 
         protected virtual void Awake()
         {
@@ -39,11 +40,11 @@ namespace Penwyn.Game
         {
             Target = null;
             _targetList = new List<Transform>();
-            _detectionColliders = Physics2D.OverlapCircleAll(_weapon.Owner.transform.position, 1000, TargetsMask).ToList();
+            _detectionColliders = Physics.OverlapSphere(_weapon.Owner.transform.position, CastDistance, TargetsMask).ToList();
 
-            foreach (Collider2D collider in _detectionColliders)
+            foreach (Collider collider in _detectionColliders)
             {
-                if (!Physics2D.Raycast(_weapon.Owner.transform.position, collider.transform.position - _weapon.Owner.transform.position, Vector2.Distance(collider.transform.position, _weapon.Owner.transform.position), ObstacleMask) && !_targetList.Contains(collider.transform))
+                if (!Physics.Raycast(_weapon.Owner.transform.position, collider.transform.position - _weapon.Owner.transform.position, Vector3.Distance(collider.transform.position, _weapon.Owner.transform.position), ObstacleMask) && !_targetList.Contains(collider.transform))
                 {
                     _targetList.Add(collider.transform);
                 }

@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-using Photon.Pun;
 
 using NaughtyAttributes;
 
 using Penwyn.Tools;
 namespace Penwyn.Game
 {
-    public class CharacterController : MonoBehaviour, IPunObservable
+    public class CharacterController : MonoBehaviour
     {
         [Expandable] public PhysicsSettings Settings;
         protected Rigidbody _body;
@@ -21,8 +20,7 @@ namespace Penwyn.Game
         public Vector3 ExternalForce;
         public float ExternalForceDepleteRate = 1;
 
-        public event UnityAction GroundTouched;
-        public event UnityAction WallTouched;
+
 
         [HorizontalLine(1, EColor.Green)]
         [ReadOnly] public bool IsTouchingGround;
@@ -30,13 +28,16 @@ namespace Penwyn.Game
 
 
         protected float _remoteVelocityMagnitude = 0;
-        protected PhotonTransformViewClassic _photonViewTransformClassic;
+
+        public event UnityAction GroundTouched;
+        public event UnityAction WallTouched;
+        public event UnityAction<Collision> OnObjectCollided;
+        public event UnityAction<Collider> OnTriggerCollided;
 
         void Awake()
         {
             _body = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
-            _photonViewTransformClassic = GetComponent<PhotonTransformViewClassic>();
             _states = new StateMachine<ControllerState>(ControllerState.None);
         }
 
@@ -67,11 +68,6 @@ namespace Penwyn.Game
 
         #region Physics Check
 
-        public virtual void CheckOnGround()
-        {
-
-        }
-
         public bool RayCastDoesHit(Collider origin, Vector3 direction, float distance, LayerMask mask)
         {
             float extentsAxis = Mathf.Abs(direction.x) > Mathf.Abs(direction.y) ? origin.bounds.extents.x : origin.bounds.extents.y;
@@ -93,8 +89,8 @@ namespace Penwyn.Game
         }
 
         #endregion
-
-        public virtual void OnCollisionStay(Collision col)
+        #region  Collision Check
+        protected virtual void OnCollisionStay(Collision col)
         {
             if (CastForGround())
             {
@@ -117,7 +113,7 @@ namespace Penwyn.Game
             }
         }
 
-        public virtual void OnCollisionExit(Collision col)
+        protected virtual void OnCollisionExit(Collision col)
         {
             if (Settings.GroundWallMask.Contains(col.gameObject.layer))
             {
@@ -126,6 +122,7 @@ namespace Penwyn.Game
                 if (IsTouchingWall)
                     IsTouchingWall = CastForWall();
             }
+
         }
 
         public bool CastForGround()
@@ -141,35 +138,7 @@ namespace Penwyn.Game
                         || RayCastDoesHit(this._collider, -transform.forward, Settings.WallCastDistance, Settings.GroundWallMask);
         }
 
-
-        void OnEnable()
-        {
-
-        }
-
-        void OnDisable()
-        {
-
-        }
-
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
-            {
-                stream.SendNext((float)Velocity.magnitude);
-            }
-
-            if (stream.IsReading)
-            {
-                _remoteVelocityMagnitude = (float)stream.ReceiveNext();
-                if (_photonViewTransformClassic)
-                {
-                    float positionLerpAdjust = 5 * (_remoteVelocityMagnitude / 19F);
-                    _photonViewTransformClassic.m_PositionModel.TeleportIfDistanceGreaterThan = Mathf.Clamp(positionLerpAdjust, 5, positionLerpAdjust);
-                    _photonViewTransformClassic.m_PositionModel.InterpolateLerpSpeed = Mathf.Clamp(positionLerpAdjust, 5, positionLerpAdjust);
-                }
-            }
-        }
+        #endregion
 
         public Rigidbody Body { get => _body; }
         public Collider Collider { get => _collider; set => _collider = value; }

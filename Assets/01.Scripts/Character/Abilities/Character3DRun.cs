@@ -10,8 +10,10 @@ namespace Penwyn.Game
     {
         [Header("Speed")]
         public float RunSpeed = 5;
+        public float AirSpeed = 5;
         public float MaxSpeed = 5;
         public bool UseRawInput = true;
+        public bool ShouldLookAtCamera = false;
         public ControlType Type;
         [Header("Feedbacks")]
         public ParticleSystem Dust;
@@ -29,12 +31,19 @@ namespace Penwyn.Game
 
         public override void FixedUpdateAbility()
         {
-            if (Type == ControlType.PlayerInput && _controller.IsTouchingGround && AbilityAuthorized)
+            if (Type == ControlType.PlayerInput && AbilityAuthorized)
             {
-                if (UseRawInput)
-                    RunRaw(InputReader.Instance.MoveInput.normalized);
+                if (_controller.IsTouchingGround)
+                {
+                    if (UseRawInput)
+                        RunRaw(InputReader.Instance.MoveInput.normalized);
+                    else
+                        RunAccelerate(InputReader.Instance.MoveInput.normalized);
+                }
                 else
-                    RunAccelerate(InputReader.Instance.MoveInput.normalized);
+                {
+                    AirStrafe();
+                }
             }
             DustHandling();
         }
@@ -49,20 +58,36 @@ namespace Penwyn.Game
             _controller.SetVelocity(direction * RunSpeed);
         }
 
+
+        /// <summary>
+        /// Set velocity = input direction * speed.
+        /// </summary>
+        /// <param name="input">Normalized input</param>
+        public virtual void RunDirection(Vector3 input)
+        {
+            _controller.SetVelocity(input * RunSpeed);
+        }
+
         public virtual void RunAccelerate(Vector2 input)
         {
-            if (_controller.Velocity.magnitude < MaxSpeed)
-            {
-                Vector3 direction = transform.right * input.x + transform.forward * input.y;
-                _controller.AddForce(direction * RunSpeed, ForceMode.Acceleration);
-            }
+            float runPower = _controller.Velocity.magnitude / MaxSpeed;
+            Vector3 direction = transform.right * input.x + transform.forward * input.y;
+            _controller.AddForce(direction * RunSpeed * runPower, ForceMode.Acceleration);
+        }
+
+        public virtual void AirStrafe()
+        {
+            _controller.AddForce(_character.transform.right * InputReader.Instance.MoveInput.x * AirSpeed, ForceMode.Impulse);
         }
 
         public virtual void LookAtCamera()
         {
-            _character.transform.localRotation = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
-            if (_controller.IsTouchingGround || _controller.IsTouchingWall)
-                _character.Model.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            if (ShouldLookAtCamera)
+            {
+                _character.transform.localRotation = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
+                if (_controller.IsTouchingGround || _controller.IsTouchingWall)
+                    _character.Model.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            }
         }
 
         protected virtual void DustHandling()

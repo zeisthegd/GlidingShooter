@@ -16,6 +16,8 @@ namespace Penwyn.Game
         public float LevitateForceMultiplier = 1.5F;
         public float LevitateForceDecreaseMultiplier = 1.5F;
         public float LevitateExternalForce = 1;
+        [Header("Energy Requirements")]
+        public float EnergyPerSecond = 0.1F;
 
         [Header("VFX")]
         public float CameraDistanceWhenOnGround = 10;
@@ -72,7 +74,7 @@ namespace Penwyn.Game
         }
         public virtual void Glide()
         {
-            if (InputReader.Instance.IsHoldingGlide && !_controller.IsTouchingGround)
+            if (InputReader.Instance.IsHoldingGlide && !_controller.IsTouchingGround && HasEnergy)
             {
                 float camAngle = Camera.main.transform.eulerAngles.x > 180 ? 360 - Camera.main.transform.eulerAngles.x : Camera.main.transform.eulerAngles.x;
 
@@ -81,8 +83,9 @@ namespace Penwyn.Game
 
                 if (IsLookingUp)
                     Levitate();
-                Dive();
-
+                else
+                    Dive();
+                UseEnergy();
                 AddHelpingLevitateForce();
                 _character.Model.transform.localRotation = Quaternion.Euler(Camera.main.transform.eulerAngles.x + 90, 0, 0);
             }
@@ -109,6 +112,11 @@ namespace Penwyn.Game
             }
         }
 
+        public virtual void UseEnergy()
+        {
+            _character.Energy.Use(EnergyPerSecond * Time.deltaTime);
+        }
+
         public virtual void AddHelpingLevitateForce()
         {
             if (InputReader.Instance.IsHoldingJump)
@@ -117,15 +125,9 @@ namespace Penwyn.Game
             }
         }
 
-        public virtual void AirStrafe()
-        {
-            if (_controller.Velocity.z < AirStrafeForce)
-            {
-                _controller.AddForce(_character.transform.right * InputReader.Instance.MoveInput.y * AirStrafeForce, ForceMode.Impulse);
-                Debug.DrawRay(_character.Position, _character.transform.right * InputReader.Instance.MoveInput.y * AirStrafeForce, Color.red, 2);
-            }
-        }
-
+        /// <summary>
+        /// Increase FOV value while diving.
+        /// </summary>
         public virtual void AdjustFlightFOV()
         {
             if (_isGliding)
@@ -140,6 +142,9 @@ namespace Penwyn.Game
             CameraManager.Instance.CurrenPlayerCam.SetFOV(_fov);
         }
 
+        /// <summary>
+        /// Move cam further while diving.
+        /// </summary>
         public virtual void AdjustFlightCamDistance()
         {
             if (_isGliding)
@@ -154,12 +159,15 @@ namespace Penwyn.Game
             CameraManager.Instance.CurrenPlayerCam.ChangeBodyDistance(_camDst);
         }
 
-
+        /// <summary>
+        /// Shake the camera while diving.
+        /// </summary>
         public virtual void CameraShake()
         {
             if (_isGliding)
                 CameraManager.Instance.CurrenPlayerCam.StartShaking(FlyingShakeData.Amplitude * _forcePercentage, FlyingShakeData.Frequency * _forcePercentage);
         }
+
         public virtual void Reset()
         {
             _forcePercentage = 1;
@@ -199,6 +207,7 @@ namespace Penwyn.Game
         }
 
         public bool CanStartGliding => AbilityPermitted && !_controller.IsTouchingGround;
+        public bool HasEnergy => _character.Energy.CurrentEnergy > EnergyPerSecond;
 
         public bool IsLookingUp => Camera.main.transform.eulerAngles.x > 180;
     }

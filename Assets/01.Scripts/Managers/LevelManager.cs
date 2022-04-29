@@ -59,7 +59,7 @@ namespace Penwyn.Game
             if (ShouldCreateLevel)
             {
                 ChangeToRandomData();
-                LevelGenerator.GenerateLevel();
+                //  LevelGenerator.GenerateLevel();
                 StartCoroutine(EnemySpawner.SpawnRandomEnemies());
                 _initialized = true;
             }

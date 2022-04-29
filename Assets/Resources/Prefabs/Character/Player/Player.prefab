@@ -72,12 +72,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1553388793321527644}
   - component: {fileID: 8161169765059211183}
+  - component: {fileID: 8200298535790637520}
   - component: {fileID: 1553388793321527646}
   - component: {fileID: 1553388793321527647}
   - component: {fileID: 8817331865181329300}
-  - component: {fileID: 4929071110447984942}
   - component: {fileID: 1553388793321527645}
-  - component: {fileID: 4971944836853426941}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -126,6 +125,20 @@ MonoBehaviour:
   DeathFeedbacks: {fileID: 0}
   _health: 0
   _maxHealth: 0
+--- !u!114 &8200298535790637520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553388793321527637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53063e11ff4bc5442877832e49c04ab4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxEnergy: 10
+  _energy: 0
 --- !u!114 &1553388793321527646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,6 +157,7 @@ MonoBehaviour:
   Animator: {fileID: 0}
   ShouldFlipModel: 0
   Health: {fileID: 8161169765059211183}
+  Energy: {fileID: 8200298535790637520}
   AbilitiesContainer:
   - {fileID: 1553388793733489346}
 --- !u!54 &1553388793321527647
@@ -176,30 +190,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4929071110447984942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553388793321527637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 1553388793321527645}
-  - {fileID: 4971944836853426941}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &1553388793321527645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,39 +207,6 @@ MonoBehaviour:
   ExternalForceDepleteRate: 1
   IsTouchingGround: 0
   IsTouchingWall: 0
---- !u!114 &4971944836853426941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553388793321527637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_PositionModel:
-    SynchronizeEnabled: 1
-    TeleportEnabled: 1
-    TeleportIfDistanceGreaterThan: 5
-    InterpolateOption: 4
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 5
-    ExtrapolateOption: 0
-    ExtrapolateSpeed: 1
-    ExtrapolateIncludingRoundTripTime: 1
-    ExtrapolateNumberOfStoredPositions: 1
-  m_RotationModel:
-    SynchronizeEnabled: 1
-    InterpolateOption: 0
-    InterpolateRotateTowardsSpeed: 180
-    InterpolateLerpSpeed: 5
-  m_ScaleModel:
-    SynchronizeEnabled: 0
-    InterpolateOption: 0
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 0
 --- !u!1 &1553388793543817487
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,6 +352,8 @@ GameObject:
   - component: {fileID: 1553388793733489349}
   - component: {fileID: 3871915872508871081}
   - component: {fileID: 8321082537795942427}
+  - component: {fileID: 2132704340332806241}
+  - component: {fileID: 825421228955655136}
   m_Layer: 0
   m_Name: Abilities
   m_TagString: Untagged
@@ -434,8 +393,10 @@ MonoBehaviour:
   ForbidPermissionCharacterStates: 
   ForbidPermissionControllerStates: 
   RunSpeed: 20
+  AirSpeed: 0.5
   MaxSpeed: 25
   UseRawInput: 1
+  ShouldLookAtCamera: 1
   Type: 0
   Dust: {fileID: 0}
 --- !u!114 &1553388793733489350
@@ -477,6 +438,7 @@ MonoBehaviour:
   LevitateForceMultiplier: 2
   LevitateForceDecreaseMultiplier: 15
   LevitateExternalForce: 30
+  EnergyPerSecond: 1
   CameraDistanceWhenOnGround: 20
   CameraDistanceWhenGliding: 30
   MinFOV: 40
@@ -520,6 +482,39 @@ MonoBehaviour:
   ForbidPermissionCharacterStates: 
   ForbidPermissionControllerStates: 
   HoverForce: 20
+--- !u!114 &2132704340332806241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553388793733489346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42cc6d23170837e498ff11534b25d016, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AbilityPermitted: 1
+  Name: 
+  ForbidPermissionCharacterStates: 
+  ForbidPermissionControllerStates: 
+--- !u!114 &825421228955655136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553388793733489346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 546e25156f143974987b5358d3f24386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AbilityPermitted: 1
+  Name: 
+  ForbidPermissionCharacterStates: 
+  ForbidPermissionControllerStates: 
+  CurrentMoney: 0
 --- !u!1 &1553388794638317962
 GameObject:
   m_ObjectHideFlags: 0

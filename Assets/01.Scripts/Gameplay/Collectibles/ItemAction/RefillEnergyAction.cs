@@ -20,7 +20,7 @@ namespace Penwyn.Game
             Character character = gameObject.FindComponent<Character>();
             if (character != null)
             {
-                character.CharacterWeaponHandler.CurrentWeapon.Energy.Add(Amount);
+                character.Energy.Add(Amount);
             }
         }
     }

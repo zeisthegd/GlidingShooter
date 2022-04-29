@@ -23,11 +23,11 @@ namespace Penwyn.UI
 
         protected Character _localPlayer;
         protected Weapon _localPlayerWeapon;
+
         protected virtual void Awake()
         {
             PlayerManager.Instance.PlayerSpawned += OnPlayerSpawned;
         }
-
         protected virtual void Update()
         {
             UpdateLevelProgress();
@@ -75,17 +75,18 @@ namespace Penwyn.UI
         {
             if (PlayerEnergy != null)
             {
-                PlayerEnergy.SetMaxValue(_localPlayerWeapon.Energy.MaxEnergy);
-                PlayerEnergy.SetValue(_localPlayerWeapon.Energy.CurrentEnergy);
+                PlayerEnergy.SetMaxValue(_localPlayer.Energy.MaxEnergy);
+                PlayerEnergy.SetValue(_localPlayer.Energy.CurrentEnergy);
+                Debug.Log(_localPlayer.Energy.ToString());
             }
         }
 
         protected virtual void UpdateEnergy()
         {
-            PlayerEnergy.SetValue(_localPlayerWeapon.Energy.CurrentEnergy);
-            if (_localPlayerWeapon.Energy.MaxEnergy != PlayerEnergy.ActualValue.maxValue)
+            PlayerEnergy.SetValue(_localPlayer.Energy.CurrentEnergy);
+            if (_localPlayer.Energy.MaxEnergy != PlayerEnergy.ActualValue.maxValue)
             {
-                PlayerEnergy.SetMaxValue(_localPlayerWeapon.Energy.MaxEnergy);
+                PlayerEnergy.SetMaxValue(_localPlayer.Energy.MaxEnergy);
                 Debug.Log(PlayerEnergy.ActualValue.maxValue);
             }
         }
@@ -145,6 +146,7 @@ namespace Penwyn.UI
         {
             _localPlayer = PlayerManager.Instance.LocalPlayer;
             SetHealthBar();
+            SetEnergyBar();
             OnWeaponChanged();
             ConnectEvents();
         }
@@ -152,7 +154,6 @@ namespace Penwyn.UI
         protected virtual void OnWeaponChanged()
         {
             _localPlayerWeapon = _localPlayer.CharacterWeaponHandler.CurrentWeapon;
-            SetEnergyBar();
             SetWeaponButtonIcon();
         }
 
@@ -171,8 +172,8 @@ namespace Penwyn.UI
         public virtual void ConnectEvents()
         {
             _localPlayer.Health.OnChanged += UpdateHealth;
+            _localPlayer.Energy.OnChanged += UpdateEnergy;
             _localPlayer.CharacterWeaponHandler.WeaponChanged += OnWeaponChanged;
-            _localPlayerWeapon.Energy.OnChanged += UpdateEnergy;
             // _localPlayer.CharacterMoney.MoneyChanged += UpdateMoney;
             _localPlayerWeapon.RequestUpgradeEvent += LoadAvailableUpgrades;
             ConnectEndWeaponUpgradesEvents();
@@ -181,7 +182,7 @@ namespace Penwyn.UI
         public virtual void DisconnectEvents()
         {
             _localPlayer.Health.OnChanged -= UpdateHealth;
-            _localPlayerWeapon.Energy.OnChanged -= UpdateEnergy;
+            _localPlayer.Energy.OnChanged -= UpdateEnergy;
             _localPlayer.CharacterWeaponHandler.WeaponChanged -= OnWeaponChanged;
             //_localPlayer.CharacterMoney.MoneyChanged -= UpdateMoney;
             _localPlayerWeapon.RequestUpgradeEvent -= LoadAvailableUpgrades;

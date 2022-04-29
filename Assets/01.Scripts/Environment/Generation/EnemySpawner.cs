@@ -41,10 +41,11 @@ namespace Penwyn.Game
             ObjectPoolers = new List<ObjectPooler>();
             foreach (EnemySpawnSettings spawnSettings in MapData.SpawnSettings)
             {
-                ObjectPooler enemyPool = Instantiate(EnemyPoolPrefab);
-                enemyPool.ObjectToPool = spawnSettings.Prefab;
-                enemyPool.Init();
-                ObjectPoolers.Add(enemyPool);
+                ObjectPooler enemyPooler = Instantiate(EnemyPoolPrefab);
+                enemyPooler.ObjectToPool = spawnSettings.Prefab;
+                enemyPooler.Init();
+                ObjectPoolers.Add(enemyPooler);
+                ConnectEnemyInPoolWithDeathEvent(enemyPooler);
             }
         }
 
@@ -57,7 +58,7 @@ namespace Penwyn.Game
             if (MapData.SpawnSettings.Length > 0)
             {
                 _isSpawning = true;
-                if (LevelManager.Instance.CurrentThreatLevel < LevelManager.Instance.MaxThreatLevel)
+                while (LevelManager.Instance.CurrentThreatLevel < LevelManager.Instance.MaxThreatLevel)
                 {
                     Debug.Log("_isSpawning");
                     EnemySpawnSettings settings = MapData.GetRandomEnemySpawnSettings();

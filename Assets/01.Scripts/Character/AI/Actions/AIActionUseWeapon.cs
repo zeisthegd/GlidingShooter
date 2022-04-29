@@ -33,8 +33,7 @@ namespace Penwyn.Game
         {
             if (PlayerManager.Instance.LocalPlayer != null)
             {
-                Vector3 dirToPlayer = (PlayerManager.Instance.LocalPlayer.Position - _character.CharacterWeaponHandler.CurrentWeapon.transform.position).normalized;
-                _character.CharacterWeaponHandler.CurrentWeapon.transform.right = dirToPlayer;
+                _character.CharacterWeaponHandler.CurrentWeapon.transform.LookAt(PlayerManager.Instance.LocalPlayer.Position);
             }
         }
 

@@ -66,7 +66,6 @@ namespace Penwyn.Game
                     HitFeedbacks.PlayFeedbacks();
                 if (_health > 0)
                 {
-                    photonView.RPC(nameof(RPC_Take), RpcTarget.Others, _health, damage);
                     MakeInvulnerable();
                 }
                 else
@@ -204,7 +203,7 @@ namespace Penwyn.Game
         public virtual void Reset()
         {
             StopAllCoroutines();
-            ResetColor();
+            //ResetColor();
         }
 
         public virtual void OnEnable()

@@ -28,7 +28,6 @@ namespace Penwyn.Game
 
         [Header("Owner")]
         [ReadOnly] public Character Owner;
-        [ReadOnly] public Energy Energy;
 
         [ReadOnly][SerializeField] protected WeaponState _currentWeaponState;
         protected WeaponAim _weaponAim;
@@ -53,7 +52,6 @@ namespace Penwyn.Game
 
         public virtual void RequestWeaponUse()
         {
-            //*Derive this
             if (_currentWeaponState == WeaponState.WeaponIdle)
             {
                 UseWeapon();
@@ -65,13 +63,10 @@ namespace Penwyn.Game
             _currentWeaponState = WeaponState.WeaponUse;
             if (UseFeedbacks != null)
                 UseFeedbacks.PlayFeedbacks();
-            UseEnergy();
         }
 
-        public virtual void UseWeaponTillNoTargetOrEnergy()
+        public virtual void UseWeaponTillNoTarget()
         {
-            if (Energy.CurrentEnergy <= CurrentData.EnergyCostPerShot)
-                return;
             if (_weaponAutoAim)
             {
                 _weaponAutoAim.FindTarget();
@@ -92,26 +87,6 @@ namespace Penwyn.Game
             _currentWeaponState = WeaponState.WeaponIdle;
         }
 
-        protected virtual void UseEnergy()
-        {
-            Energy.Use(CurrentData.EnergyCostPerShot);
-        }
-
-        protected virtual void OnEnergyChanged()
-        {
-            if (Energy.CurrentEnergy <= CurrentData.EnergyCostPerShot)
-            {
-                if (_currentWeaponState == WeaponState.WeaponCooldown && _cooldownCoroutine != null)
-                    StopCoroutine(_cooldownCoroutine);
-                _currentWeaponState = WeaponState.WeaponNotEnoughEnergy;
-            }
-            else
-            {
-                if (_currentWeaponState == WeaponState.WeaponNotEnoughEnergy)
-                    _currentWeaponState = WeaponState.WeaponIdle;
-            }
-            CheckUpgradeRequirements();
-        }
 
         /// <summary>
         /// Load the weapon data from a scriptable data.
@@ -120,7 +95,6 @@ namespace Penwyn.Game
         {
             CurrentData = data;
             //SpriteRenderer.sprite = data.Icon;
-            SetEnergyRequirements();
         }
 
         [Button("Load Weapon Data")]
@@ -132,21 +106,6 @@ namespace Penwyn.Game
                 Debug.Log("Please insert Weapon Data");
         }
 
-        public virtual void SetEnergyRequirements()
-        {
-            this.Energy.Set(CurrentData.StartingEnergy, CurrentData.StartingEnergy);
-            if (CurrentData.RequiresHealth)
-            {
-                if (Energy != null)
-                {
-                    Energy.OnChanged += OnEnergyChanged;
-                }
-                else
-                {
-                    Debug.LogWarning($"No health assigned to {Owner.name} although this {CurrentData.Name} requires energy!");
-                }
-            }
-        }
 
         #region Upgrade
 
@@ -184,8 +143,7 @@ namespace Penwyn.Game
         {
             if (CurrentData.AutoUpgrade)
             {
-                if (Owner.Health.CurrentHealth == CurrentData.RequiredUpgradeValue)
-                    RequestUpgrade();
+                RequestUpgrade();
             }
         }
 
@@ -196,7 +154,12 @@ namespace Penwyn.Game
         {
             if (InputType == WeaponInputType.NormalAttack && InputReader.Instance.IsHoldingNormalAttack)
             {
-                UseWeaponTillNoTargetOrEnergy();
+                UseWeaponTillNoTarget();
+            }
+
+            if (InputType == WeaponInputType.Auto)
+            {
+                UseWeaponTillNoTarget();
             }
         }
         #endregion
@@ -206,7 +169,6 @@ namespace Penwyn.Game
         {
             _weaponAim = GetComponent<WeaponAim>();
             _weaponAutoAim = GetComponent<WeaponAutoAim>();
-            Energy = GetComponent<Energy>();
         }
 
         public virtual void OnEnable()
@@ -217,10 +179,9 @@ namespace Penwyn.Game
         public virtual void OnDisable()
         {
             StopAllCoroutines();
-            if (CurrentData.RequiresHealth && Owner.Health != null)
-                Owner.Health.OnChanged -= OnEnergyChanged;
         }
 
-
+        public WeaponAim WeaponAim => _weaponAim;
+        public WeaponAutoAim WeaponAutoAim => _weaponAutoAim;
     }
 }

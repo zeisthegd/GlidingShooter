@@ -10,6 +10,7 @@ namespace Penwyn.Game
 {
     public class ProjectileWeapon : Weapon
     {
+        public AimType AimType = AimType.Forward;
         protected ObjectPooler _projectilePooler;
         protected Vector3 _target;
 
@@ -42,7 +43,7 @@ namespace Penwyn.Game
             gameObject.RotateZ(CurrentData.Angle / 2F);
             for (int i = 0; i < CurrentData.BulletPerShot; i++)
             {
-                _target = RaycastTarget();
+                _target = GetTarget();
                 SpawnProjectile(_target);
                 if (CurrentData.BulletPerShot > 1)
                 {
@@ -62,7 +63,7 @@ namespace Penwyn.Game
             projectile.transform.position = this.transform.position;
             projectile.transform.rotation = this.transform.rotation;
             projectile.gameObject.SetActive(true);
-            projectile.FlyTowards((target - Owner.transform.position));
+            projectile.FlyTowards((target - this.transform.position));
             projectile.SetOwner(this.Owner);
         }
 
@@ -82,6 +83,23 @@ namespace Penwyn.Game
             CurrentData.Projectile.DamageOnTouch.DamageDeal = CurrentData.Damage;
 
             CreateNewPool();
+        }
+
+        public virtual Vector3 GetTarget()
+        {
+            if (_weaponAutoAim != null)
+            {
+                return _weaponAutoAim.Target.position;
+            }
+            if (AimType == AimType.Raycast)
+            {
+                return RaycastTarget();
+            }
+            if (AimType == AimType.Forward)
+            {
+                return (transform.position + transform.forward);
+            }
+            return Vector3.zero;
         }
 
         public virtual Vector3 RaycastTarget()
@@ -116,5 +134,10 @@ namespace Penwyn.Game
             base.GetComponents();
             _projectilePooler = GetComponent<ObjectPooler>();
         }
+    }
+    public enum AimType
+    {
+        Raycast,
+        Forward
     }
 }

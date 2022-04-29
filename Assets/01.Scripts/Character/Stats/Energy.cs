@@ -16,7 +16,7 @@ namespace Penwyn.Game
         [SerializeField][ReadOnly] protected float _energy = 0;
         protected Character _character;
 
-        void Start()
+        void Awake()
         {
             _character = GetComponent<Character>();
             _energy = MaxEnergy;
@@ -45,6 +45,11 @@ namespace Penwyn.Game
             MaxEnergy = maxEnergy;
             _energy = Mathf.Clamp(newValue, 0, MaxEnergy);
             OnChanged?.Invoke();
+        }
+
+        public override string ToString()
+        {
+            return $"Energy: {CurrentEnergy}/{MaxEnergy}";
         }
 
         public float CurrentEnergy { get => _energy; }

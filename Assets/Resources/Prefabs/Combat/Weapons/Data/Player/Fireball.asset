@@ -24,13 +24,13 @@ MonoBehaviour:
   BulletPerShot: 1
   DelayBetweenBullets: 0
   Angle: 0
-  Cooldown: 0.5
+  Cooldown: 0.1
   DisableAutoAimWhenShooting: 0
-  StartingEnergy: 20
+  StartingEnergy: 0
   RequiresHealth: 0
-  EnergyCostPerShot: 1
+  EnergyCostPerShot: 0
   ProjectileRotating: 0
-  RotateSpeed: 1
+  RotateSpeed: 0
   Upgrades: []
   AutoUpgrade: 0
   RequiredUpgradeValue: 0

@@ -33,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 1358326198000655401}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -144,9 +144,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InfiniteLifeTime: 0
-  LifeTime: 10
-  Speed: 80
-  OverrideGravity: 10
+  LifeTime: 5
+  Speed: 100
+  OverrideGravity: 8
   DamageOnTouch: {fileID: 3124391888613173752}
   Controller: {fileID: 9201141406063183192}
   Owner: {fileID: 0}
@@ -185,7 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 1024
   ObstacleMask:
     serializedVersion: 2
     m_Bits: 256
