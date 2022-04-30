@@ -66,7 +66,6 @@ namespace Penwyn.Game
 
         public virtual void OnRoomSceneLoaded()
         {
-            CameraManager.CreatePlayerCamera();
             PlayerManager.CreateLocalPlayer();
         }
 

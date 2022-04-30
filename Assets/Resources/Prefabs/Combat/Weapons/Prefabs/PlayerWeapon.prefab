@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 671bfbf967c7e6d4fb959f6f1b39983d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentData: {fileID: 11400000, guid: 25f4e5f478b5c65468a7e24e8b6751d9, type: 2}
+  CurrentData: {fileID: 11400000, guid: fa5905ad80a4ead458baef5ac1e314b2, type: 2}
   Animator: {fileID: 0}
   SpriteRenderer: {fileID: 0}
   InputType: 0
@@ -57,6 +57,7 @@ MonoBehaviour:
   Owner: {fileID: 0}
   Energy: {fileID: 0}
   _currentWeaponState: 0
+  AimType: 0
 --- !u!114 &2329346769636211302
 MonoBehaviour:
   m_ObjectHideFlags: 0

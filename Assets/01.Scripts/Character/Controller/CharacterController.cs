@@ -10,7 +10,10 @@ using NaughtyAttributes;
 using Penwyn.Tools;
 namespace Penwyn.Game
 {
-    public class CharacterController : MonoBehaviour, IPunObservable
+    /// <summary>
+    /// This should be in every controllable rigidbody.
+    /// </summary>
+    public class CharacterController : MonoBehaviour
     {
         [Expandable] public PhysicsSettings Settings;
         protected Rigidbody _body;
@@ -29,14 +32,12 @@ namespace Penwyn.Game
         [ReadOnly] public bool IsTouchingWall;
 
 
-        protected float _remoteVelocityMagnitude = 0;
-        protected PhotonTransformViewClassic _photonViewTransformClassic;
+       
 
         void Awake()
         {
             _body = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
-            _photonViewTransformClassic = GetComponent<PhotonTransformViewClassic>();
             _states = new StateMachine<ControllerState>(ControllerState.None);
         }
 
@@ -150,25 +151,6 @@ namespace Penwyn.Game
         void OnDisable()
         {
 
-        }
-
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
-            {
-                stream.SendNext((float)Velocity.magnitude);
-            }
-
-            if (stream.IsReading)
-            {
-                _remoteVelocityMagnitude = (float)stream.ReceiveNext();
-                if (_photonViewTransformClassic)
-                {
-                    float positionLerpAdjust = 5 * (_remoteVelocityMagnitude / 19F);
-                    _photonViewTransformClassic.m_PositionModel.TeleportIfDistanceGreaterThan = Mathf.Clamp(positionLerpAdjust, 5, positionLerpAdjust);
-                    _photonViewTransformClassic.m_PositionModel.InterpolateLerpSpeed = Mathf.Clamp(positionLerpAdjust, 5, positionLerpAdjust);
-                }
-            }
         }
 
         public Rigidbody Body { get => _body; }

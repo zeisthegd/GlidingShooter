@@ -67,18 +67,13 @@ namespace Penwyn.Game
             _currentWeaponState = WeaponState.WeaponUse;
             if (UseFeedbacks != null)
                 UseFeedbacks.PlayFeedbacks();
-            UseEnergy();
         }
 
         public virtual void UseWeaponTillNoTargetOrEnergy()
         {
-            if (Energy.CurrentEnergy <= CurrentData.EnergyCostPerShot)
-                return;
             if (_weaponAutoAim)
             {
                 _weaponAutoAim.FindTarget();
-                if (_weaponAutoAim.Target == null)
-                    return;
             }
             RequestWeaponUse();
         }
@@ -94,27 +89,6 @@ namespace Penwyn.Game
             _currentWeaponState = WeaponState.WeaponIdle;
         }
 
-        protected virtual void UseEnergy()
-        {
-            Energy.Use(CurrentData.EnergyCostPerShot);
-        }
-
-        protected virtual void OnEnergyChanged()
-        {
-            if (Energy.CurrentEnergy <= CurrentData.EnergyCostPerShot)
-            {
-                if (_currentWeaponState == WeaponState.WeaponCooldown && _cooldownCoroutine != null)
-                    StopCoroutine(_cooldownCoroutine);
-                _currentWeaponState = WeaponState.WeaponNotEnoughEnergy;
-            }
-            else
-            {
-                if (_currentWeaponState == WeaponState.WeaponNotEnoughEnergy)
-                    _currentWeaponState = WeaponState.WeaponIdle;
-            }
-            CheckUpgradeRequirements();
-        }
-
         /// <summary>
         /// Load the weapon data from a scriptable data.
         /// </summary>
@@ -122,7 +96,6 @@ namespace Penwyn.Game
         {
             CurrentData = data;
             //SpriteRenderer.sprite = data.Icon;
-            SetEnergyRequirements();
         }
 
         [Button("Load Weapon Data")]
@@ -134,21 +107,6 @@ namespace Penwyn.Game
                 Debug.Log("Please insert Weapon Data");
         }
 
-        public virtual void SetEnergyRequirements()
-        {
-            this.Energy.Set(CurrentData.StartingEnergy, CurrentData.StartingEnergy);
-            if (CurrentData.RequiresHealth)
-            {
-                if (Energy != null)
-                {
-                    Energy.OnChanged += OnEnergyChanged;
-                }
-                else
-                {
-                    Debug.LogWarning($"No health assigned to {Owner.name} although this {CurrentData.Name} requires energy!");
-                }
-            }
-        }
 
         #region Upgrade
 
@@ -230,8 +188,6 @@ namespace Penwyn.Game
         {
             PhotonNetwork.RemoveCallbackTarget(this);
             StopAllCoroutines();
-            if (CurrentData.RequiresHealth && Owner.Health != null)
-                Owner.Health.OnChanged -= OnEnergyChanged;
         }
 
 

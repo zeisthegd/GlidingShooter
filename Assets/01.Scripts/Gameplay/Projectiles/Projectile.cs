@@ -38,23 +38,22 @@ namespace Penwyn.Game
 
         public virtual void FlyTowards(Vector3 direction)
         {
-            Controller.SetVelocity(direction.normalized * Speed);
+            Controller?.SetVelocity(direction.normalized * Speed);
         }
 
         public virtual void SimulateGravity()
         {
-            Controller.Body.useGravity = false;
-            Controller.AddForce(Vector3.down * OverrideGravity * Time.deltaTime);
+            if (Controller != null)
+            {
+                Controller.Body.useGravity = false;
+                Controller.AddForce(Vector3.down * OverrideGravity * Time.deltaTime);
+            }
         }
 
         public virtual void SetOwner(Character _owner)
         {
             Owner = _owner;
             _belongToLocalPlayer = Owner == PlayerManager.Instance.LocalPlayer;
-            if (_belongToLocalPlayer == false)
-            {
-                DamageOnTouch.DamageDeal = 0;
-            }
         }
 
         protected override void OnEnable()
@@ -66,7 +65,7 @@ namespace Penwyn.Game
         protected override void OnDisable()
         {
             base.OnDisable();
-            Controller.SetVelocity(Vector3.zero);
+            Controller?.SetVelocity(Vector3.zero);
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }

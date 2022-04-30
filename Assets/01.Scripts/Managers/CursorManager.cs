@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 using Penwyn.Tools;
 namespace Penwyn.Game
 {
-    public class CursorManager : MonoBehaviour
+    public class CursorManager : SingletonMonoBehaviour<CursorManager>
     {
         public Texture2D NormalCursor;
         public Texture2D TargettingCursor;
@@ -31,23 +31,20 @@ namespace Penwyn.Game
             Cursor.lockState = lockMode;
         }
 
-        public static Vector3 GetMousePosition()
+        public Vector3 GetMousePosition()
         {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            mousePos.z = 0;
-            return mousePos;
+            Vector3 mousePos = Mouse.current.position.ReadValue();
+            mousePos.z = Camera.main.farClipPlane * 0.5F;
+            return Camera.main.ScreenToWorldPoint(mousePos);
         }
 
-        public GameObject GetObjectUnderMouse()
+        public RaycastHit GetRayHitUnderMouse()
         {
-            Vector3 mousePos = GetMousePosition();
-            Vector2 ray = new Vector2(mousePos.x, mousePos.y);
-            RaycastHit2D hit2D = Physics2D.Raycast(ray, ray);
-            if (hit2D.collider != null)
-            {
-                return hit2D.collider.gameObject;
-            }
-            return null;
+            RaycastHit hit;
+            Physics.Raycast(Camera.main.transform.position, GetMousePosition() - Camera.main.transform.position, out hit);
+            Debug.DrawRay(Camera.main.transform.position, hit.point - Camera.main.transform.position, Color.red);
+            Debug.DrawRay(hit.point, Vector3.up * 1000, Color.green);
+            return hit;
         }
 
         public void ResetCursor()

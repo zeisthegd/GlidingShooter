@@ -10,6 +10,7 @@ namespace Penwyn.Game
 {
     public class ProjectileWeapon : Weapon
     {
+        public AimType AimType = AimType.Forward;
         protected ObjectPooler _projectilePooler;
         protected Vector3 _target;
 
@@ -18,6 +19,7 @@ namespace Penwyn.Game
             if (Owner.photonView.IsMine)
             {
                 base.UseWeapon();
+                Debug.Log("UseWeapon");
                 StartCoroutine(IterationCoroutine());
             }
         }
@@ -41,11 +43,10 @@ namespace Penwyn.Game
         protected virtual IEnumerator UseWeaponCoroutine()
         {
             float projectileStep = GetProjectileStep();
-
             gameObject.RotateZ(CurrentData.Angle / 2F);
             for (int i = 0; i < CurrentData.BulletPerShot; i++)
             {
-                _target = RaycastTarget();
+                _target = GetTarget();
                 SpawnProjectile(_target);
                 photonView.RPC(nameof(RPC_SpawnProjectile), Photon.Pun.RpcTarget.Others, new object[] { _target });
                 if (CurrentData.BulletPerShot > 1)
@@ -74,6 +75,7 @@ namespace Penwyn.Game
         public virtual void RPC_SpawnProjectile(Vector3 target)
         {
             SpawnProjectile(target);
+            Debug.DrawRay(target, Vector3.up * 100, Color.black);
         }
 
         /// <summary>
@@ -89,28 +91,45 @@ namespace Penwyn.Game
         public override void LoadWeapon(WeaponData data)
         {
             base.LoadWeapon(data);
-            CurrentData.Projectile.DamageOnTouch.DamageDeal = CurrentData.Damage;
-
+            if (CurrentData.Projectile.DamageOnTouch)
+                CurrentData.Projectile.DamageOnTouch.DamageDeal = CurrentData.Damage;
             CreateNewPool();
+        }
+
+        public virtual Vector3 GetTarget()
+        {
+            if (_weaponAutoAim != null)
+            {
+                return _weaponAutoAim.Target.position;
+            }
+
+            if (AimType == AimType.Raycast)
+            {
+                return RaycastTarget();
+            }
+
+            if (AimType == AimType.Forward)
+            {
+                return (Owner.transform.position + Owner.transform.forward * 100);
+            }
+
+            return Vector3.zero;
         }
 
         public virtual Vector3 RaycastTarget()
         {
             Vector3 target = Vector3.zero;
-            Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5F, 0.5F));
-            ray.origin = CameraManager.Instance.CurrenPlayerCam.transform.position;
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            if (Physics.Raycast(Owner.transform.position, Owner.transform.forward, out RaycastHit hit))
             {
                 target = hit.point;
             }
             else
             {
-                target = ray.origin + ray.direction;
+                target = Vector3.ProjectOnPlane(CursorManager.Instance.GetRayHitUnderMouse().point, Vector3.up);
             }
 
             return target;
         }
-
         public virtual void CreateNewPool()
         {
             if (_projectilePooler.NoPoolFound())
@@ -126,5 +145,11 @@ namespace Penwyn.Game
             base.GetComponents();
             _projectilePooler = GetComponent<ObjectPooler>();
         }
+    }
+
+    public enum AimType
+    {
+        Raycast,
+        Forward
     }
 }

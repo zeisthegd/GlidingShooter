@@ -17,7 +17,7 @@ MonoBehaviour:
   Accelleration: 0
   Decelleration: 0
   WallCastDistance: 0.25
-  GroundCastDistance: 0
+  GroundCastDistance: 0.1
   GroundWallMask:
     serializedVersion: 2
     m_Bits: 256

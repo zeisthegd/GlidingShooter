@@ -30,13 +30,12 @@ namespace Penwyn.Game
         {
             if (PhotonNetwork.InRoom && LocalPlayer == null)
             {
-                Debug.Log("Create player");
                 Transform spawnPos = GameObject.Find("SpawnPos").transform;
                 GameObject player = PhotonNetwork.Instantiate(PlayerPrefabPath, spawnPos.position, Quaternion.identity);
                 player.name = PhotonNetwork.NickName;
                 LocalPlayer = player.FindComponent<Character>();
-                CameraManager.Instance.CurrenPlayerCam.FollowPlayer();
                 PlayerSpawned?.Invoke();
+                Debug.Log("Player Created!");
             }
         }
 
