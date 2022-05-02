@@ -708,7 +708,7 @@ RectTransform:
   - {fileID: 356853554}
   - {fileID: 1286066222}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1406,7 +1406,7 @@ PrefabInstance:
     - target: {fileID: 3950279870636821490, guid: 589153795ae921442b7fb20915b3b4bf,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3950279870636821490, guid: 589153795ae921442b7fb20915b3b4bf,
         type: 3}
@@ -1905,6 +1905,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1921047338}
   m_CullTransparentMesh: 0
+--- !u!1 &2049655600 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3950279870636821484, guid: 589153795ae921442b7fb20915b3b4bf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1765435406}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2049655608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049655600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09a9ebb02dd8ae64591e5a0da87a39bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2049655616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049655600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33f89ff930b130b49b74e609ad020cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentTeamTurn:
+    Name: 
+    Code: 0
+--- !u!114 &2049655617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049655600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8701526de72d8774fa165e66daf050ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listFoldIsOpen: 1
+  teamsList:
+  - Name: Blue
+    Code: 1
+  - Name: Red
+    Code: 2
 --- !u!1 &2139181933
 GameObject:
   m_ObjectHideFlags: 0

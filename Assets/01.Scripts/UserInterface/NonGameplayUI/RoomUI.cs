@@ -7,6 +7,7 @@ using TMPro;
 
 using Photon;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 
 using Penwyn.Game;
 
@@ -17,6 +18,15 @@ namespace Penwyn.UI
         [SerializeField] TMP_Text passcodeTxt;
         [SerializeField] Button openSettingsBtn;
         [SerializeField] Button startMatchBtn;
+
+        public List<TMP_Text> FirstTeamList;
+        public List<TMP_Text> SecondTeamList;
+
+        void Awake()
+        {
+            PhotonTeamsManager.PlayerJoinedTeam += ShowTeams;
+        }
+
         void Start()
         {
             if (PhotonNetwork.InRoom)
@@ -35,7 +45,23 @@ namespace Penwyn.UI
             {
                 PhotonNetwork.CurrentRoom.IsOpen = false;
                 PhotonNetwork.CurrentRoom.IsVisible = false;
-                SceneManager.Instance.LoadMatchScene();
+                GameManager.Instance.StartGame();
+            }
+        }
+
+        public virtual void ShowTeams(Photon.Realtime.Player player, PhotonTeam teamJoined)
+        {
+            Debug.Log("Show teams!");
+            Photon.Realtime.Player[] team;
+            PhotonTeamsManager.Instance.TryGetTeamMembers(1, out team);
+            for (int i = 0; i < team.Length; i++)
+            {
+                FirstTeamList[i].SetText(team[i].NickName + "");
+            }
+            PhotonTeamsManager.Instance.TryGetTeamMembers(2, out team);
+            for (int i = 0; i < team.Length; i++)
+            {
+                SecondTeamList[i].SetText(team[i].NickName + "");
             }
         }
     }

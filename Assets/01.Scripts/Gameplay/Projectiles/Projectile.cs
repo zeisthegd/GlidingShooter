@@ -15,6 +15,9 @@ namespace Penwyn.Game
         [Header("Components")]
         public DamageOnTouch DamageOnTouch;
         public CharacterController Controller;
+        [Header("Graphics")]
+        public TrailRenderer Trail;
+
         [ReadOnly] public Character Owner;
 
         protected Health _health;
@@ -67,6 +70,8 @@ namespace Penwyn.Game
             base.OnDisable();
             Controller?.SetVelocity(Vector3.zero);
             transform.rotation = Quaternion.Euler(0, 0, 0);
+            if (Trail != null)
+                Trail.Clear();
         }
     }
 

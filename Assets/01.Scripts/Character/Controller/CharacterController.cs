@@ -32,7 +32,7 @@ namespace Penwyn.Game
         [ReadOnly] public bool IsTouchingWall;
 
 
-       
+
 
         void Awake()
         {
@@ -48,7 +48,13 @@ namespace Penwyn.Game
 
         public virtual void AddForce(Vector3 force, ForceMode mode = ForceMode.Force)
         {
-            _body.AddForce(force, mode);
+            if (force != null)
+                _body.AddForce(force, mode);
+        }
+
+        public virtual void SetPosition(Vector3 newPosition)
+        {
+            transform.position = newPosition;
         }
 
         public virtual void AddPosition(Vector3 positionAddition)

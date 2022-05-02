@@ -66,13 +66,24 @@ namespace Penwyn.Game
 
         public virtual void OnTriggerEnter(Collider col)
         {
-            if (this.gameObject.activeInHierarchy && TargetMask.Contains(col.gameObject.layer))
+            HandleObjectCollided(col.gameObject);
+        }
+
+
+        public virtual void OnCollisionEnter(Collision col)
+        {
+            HandleObjectCollided(col.gameObject);
+        }
+
+        public virtual void HandleObjectCollided(GameObject collidedObject)
+        {
+            if (this.gameObject.activeInHierarchy && TargetMask.Contains(collidedObject.layer))
             {
-                DealDamage(col.gameObject);
+                DealDamage(collidedObject);
                 HandleRecoilDamage();
                 HitFeedbacks?.PlayFeedbacks();
             }
-            else if (ObstacleMask.Contains(col.gameObject.layer))
+            else if (ObstacleMask.Contains(collidedObject.layer))
             {
                 HandleCollideNonDamageable();
                 HitFeedbacks?.PlayFeedbacks();

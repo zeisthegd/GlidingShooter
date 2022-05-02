@@ -10,8 +10,9 @@ namespace Penwyn.Game
     {
         [Header("Speed")]
         public float RunSpeed = 5;
+        public float MaxSpeed = 30;
+        public float OppositeDirectionPower = 2;
         public float AirSpeed = 5;
-        public float MaxSpeed = 5;
         public bool UseRawInput = true;
         public ControlType Type;
         [Header("Feedbacks")]
@@ -50,15 +51,17 @@ namespace Penwyn.Game
         public virtual void RunRaw(Vector2 input)
         {
             Vector3 direction = Vector3.right * input.x + Vector3.forward * input.y;
-            _controller.SetVelocity(direction * RunSpeed);
+            if (input.magnitude > 0)
+                _controller.SetVelocity(direction * RunSpeed);
         }
 
         public virtual void RunAccelerate(Vector2 input)
         {
             if (AbilityAuthorized)
             {
+                float oppositeDirectionPower = Vector3.Angle(input, _controller.Velocity) > 135 ? OppositeDirectionPower : 1;
                 Vector3 direction = Vector3.right * input.x + Vector3.forward * input.y;
-                _controller.AddForce(direction * RunSpeed, ForceMode.Acceleration);
+                _controller.AddForce(direction * RunSpeed * oppositeDirectionPower * Time.deltaTime, ForceMode.Impulse);
             }
         }
 
@@ -67,7 +70,7 @@ namespace Penwyn.Game
             if (AbilityAuthorized)
             {
                 Vector3 direction = Vector3.right * InputReader.Instance.MoveInput.x + Vector3.forward * InputReader.Instance.MoveInput.y;
-                _controller.AddForce(direction * AirSpeed, ForceMode.Acceleration);
+                _controller.AddForce(direction * AirSpeed, ForceMode.Force);
             }
         }
 
@@ -79,7 +82,8 @@ namespace Penwyn.Game
                 Vector3 direction = (hit.point - _character.transform.position).normalized;
                 direction = Vector3.ProjectOnPlane(direction, Vector3.up);// Ignore the X rotation.
                 Debug.DrawRay(_character.transform.position, direction * 1000, Color.green);
-                _character.transform.forward = direction;
+                if (-direction != Vector3.zero)
+                    _character.transform.forward = direction;
             }
         }
 

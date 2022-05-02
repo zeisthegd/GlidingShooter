@@ -6,6 +6,8 @@ using UnityEngine.Events;
 
 using Photon;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
+using Photon.Realtime;
 
 using NaughtyAttributes;
 using Penwyn.Tools;
@@ -36,7 +38,25 @@ namespace Penwyn.Game
                 LocalPlayer = player.FindComponent<Character>();
                 PlayerSpawned?.Invoke();
                 Debug.Log("Player Created!");
+                TryJoiningATeam();
             }
+            FindPlayersInRooms();
+        }
+
+        public virtual void TryJoiningATeam()
+        {
+            PhotonTeam teamOne;
+            PhotonTeam teamTwo;
+            int teamOneCount = PhotonTeamsManager.Instance.GetTeamMembersCount(1);
+            int teamTwoCount = PhotonTeamsManager.Instance.GetTeamMembersCount(2);
+
+            PhotonTeamsManager.Instance.TryGetTeamByCode(1, out teamOne);
+            PhotonTeamsManager.Instance.TryGetTeamByCode(2, out teamTwo);
+            
+            if (teamOneCount > teamTwoCount)
+                PhotonNetwork.LocalPlayer.JoinTeam(teamTwo);
+            else
+                PhotonNetwork.LocalPlayer.JoinTeam(teamOne);
         }
 
         public void FindPlayersInRooms()

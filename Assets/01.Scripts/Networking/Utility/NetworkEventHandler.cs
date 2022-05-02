@@ -4,6 +4,7 @@ using UnityEngine;
 
 using Photon;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 
 using Penwyn.Game;
@@ -39,8 +40,8 @@ public class NetworkEventHandler : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         base.OnDisconnected(cause);
-       // Destroy(GameManager.Instance.gameObject);
-      //  GameManager.Instance = null;
+        // Destroy(GameManager.Instance.gameObject);
+        //  GameManager.Instance = null;
         SceneManager.Instance.LoadTitleScene();
     }
 

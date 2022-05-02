@@ -118,7 +118,7 @@ namespace Penwyn.Game
             customProps["Host"] = PhotonNetwork.NickName;
             customProps["Passcode"] = GetRandomPasscode();
 
-            options.MaxPlayers = 6;
+            options.MaxPlayers = 2;
             options.CustomRoomProperties = customProps;
             options.CleanupCacheOnLeave = false;
             options.CustomRoomPropertiesForLobby = new string[] { "Host", "Passcode" };

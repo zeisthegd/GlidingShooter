@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 using Photon;
@@ -38,6 +39,8 @@ namespace Penwyn.Game
         //   Level currentLevel;
 
         public static GameManager Instance;
+        public event UnityAction GameStarted;
+        protected GameState _gameState;
 
 
         void Awake()
@@ -48,6 +51,12 @@ namespace Penwyn.Game
         void Start()
         {
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoad;
+        }
+
+        public virtual void StartGame()
+        {
+            _gameState = GameState.Started;
+            GameStarted?.Invoke();
         }
 
         void CheckSingleton()
@@ -67,6 +76,7 @@ namespace Penwyn.Game
         public virtual void OnRoomSceneLoaded()
         {
             PlayerManager.CreateLocalPlayer();
+            _gameState = GameState.TeamChoosing;
         }
 
         void OnSceneLoad(Scene scene, LoadSceneMode mode)
@@ -76,5 +86,15 @@ namespace Penwyn.Game
                 OnRoomSceneLoaded();
             }
         }
+
+        public GameState State => _gameState;
+
+    }
+
+    public enum GameState
+    {
+        NotInRoom,
+        TeamChoosing,
+        Started
     }
 }

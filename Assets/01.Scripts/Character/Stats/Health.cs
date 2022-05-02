@@ -66,7 +66,8 @@ namespace Penwyn.Game
                     HitFeedbacks.PlayFeedbacks();
                 if (_health > 0)
                 {
-                    photonView.RPC(nameof(RPC_Take), RpcTarget.Others, _health, damage);
+                    if (photonView != null)
+                        photonView.RPC(nameof(RPC_Take), RpcTarget.Others, _health, damage);
                     MakeInvulnerable();
                 }
                 else

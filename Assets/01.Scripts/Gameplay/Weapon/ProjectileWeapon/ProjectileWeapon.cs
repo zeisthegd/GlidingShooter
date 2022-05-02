@@ -19,7 +19,6 @@ namespace Penwyn.Game
             if (Owner.photonView.IsMine)
             {
                 base.UseWeapon();
-                Debug.Log("UseWeapon");
                 StartCoroutine(IterationCoroutine());
             }
         }
@@ -67,7 +66,7 @@ namespace Penwyn.Game
             projectile.transform.position = this.transform.position;
             projectile.transform.rotation = this.transform.rotation;
             projectile.gameObject.SetActive(true);
-            projectile.FlyTowards((target - Owner.transform.position));
+            projectile.FlyTowards(Vector3.ProjectOnPlane(target - Owner.transform.position, Vector3.up));// Don't fly on y.
             projectile.SetOwner(this.Owner);
         }
 
@@ -116,20 +115,17 @@ namespace Penwyn.Game
             return Vector3.zero;
         }
 
+        /// <summary>
+        /// Cast a ray from the camera to the ground.
+        /// </summary>
+        /// <returns>Position on ground at mouse position.</returns>
         public virtual Vector3 RaycastTarget()
         {
             Vector3 target = Vector3.zero;
-            if (Physics.Raycast(Owner.transform.position, Owner.transform.forward, out RaycastHit hit))
-            {
-                target = hit.point;
-            }
-            else
-            {
-                target = Vector3.ProjectOnPlane(CursorManager.Instance.GetRayHitUnderMouse().point, Vector3.up);
-            }
-
+            target = Vector3.ProjectOnPlane(CursorManager.Instance.GetRayHitUnderMouse().point, Vector3.up);
             return target;
         }
+        
         public virtual void CreateNewPool()
         {
             if (_projectilePooler.NoPoolFound())
