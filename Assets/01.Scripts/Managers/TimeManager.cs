@@ -18,7 +18,7 @@ namespace Penwyn.Game
 
         void Update()
         {
-            if (GameManager.Instance.State == GameState.Started && TurnManager.Instance.IsLocalPlayerTurn)
+            if (GameManager.Instance.State == GameState.Started && CombatManager.Instance.IsLocalPlayerTurn)
             {
                 if (InputReader.Instance.MoveInput.magnitude > 0)
                 {

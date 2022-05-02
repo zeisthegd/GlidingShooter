@@ -83,7 +83,7 @@ namespace Penwyn.Game
                 HandleRecoilDamage();
                 HitFeedbacks?.PlayFeedbacks();
             }
-            else if (ObstacleMask.Contains(collidedObject.layer))
+            if (ObstacleMask.Contains(collidedObject.layer))
             {
                 HandleCollideNonDamageable();
                 HitFeedbacks?.PlayFeedbacks();

@@ -23,6 +23,9 @@ namespace Penwyn.UI
         [Header("Teams")]
         public List<TMP_Text> FirstTeamList;
         public List<TMP_Text> SecondTeamList;
+        [Header("Score")]
+        public TMP_Text FirstTeamScore;
+        public TMP_Text SecondTeamScore;
         [Header("Turns")]
         public TMP_Text TurnTextPrefab;
         public Transform Container;
@@ -30,7 +33,8 @@ namespace Penwyn.UI
         void Awake()
         {
             PhotonTeamsManager.PlayerJoinedTeam += ShowTeams;
-            TurnManager.Instance.TurnGenerated += ShowTurns;
+            //TurnManager.Instance.TurnGenerated += ShowTurns;
+            CombatManager.Instance.ScoreChanged += ShowScore;
         }
 
         void Start()
@@ -71,11 +75,17 @@ namespace Penwyn.UI
             }
         }
 
+        public virtual void ShowScore()
+        {
+            FirstTeamScore.SetText(CombatManager.Instance.FirstTeamScore + "");
+            SecondTeamScore.SetText(CombatManager.Instance.SecondTeamScore + "");
+        }
+
         public virtual void ShowTurns()
         {
-            for (int i = 0; i < TurnManager.Instance.TurnQueue.Count; i++)
+            for (int i = 0; i < CombatManager.Instance.TurnQueue.Count; i++)
             {
-                Player[] turns = TurnManager.Instance.TurnQueue.ToArray();
+                Player[] turns = CombatManager.Instance.TurnQueue.ToArray();
                 TMP_Text turnText = Instantiate(TurnTextPrefab, Container.position, Quaternion.identity, Container);
                 turnText.SetText(turns[i].NickName);
             }

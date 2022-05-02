@@ -13,22 +13,22 @@ MonoBehaviour:
   m_Name: Fireball
   m_EditorClassIdentifier: 
   Name: Fireball
-  Description: Shoot fireballs
+  Description: Shoot a fireball.
   Icon: {fileID: 0}
   Animator: {fileID: 0}
   Projectile: {fileID: 741555284487330288, guid: 995e6f0874ff5da4ca410e96db2fdf05,
     type: 3}
-  Damage: 1
+  Damage: 10000
   Iteration: 1
   DelayBetweenIterations: 0
   BulletPerShot: 1
   DelayBetweenBullets: 0
   Angle: 0
-  Cooldown: 0.5
+  Cooldown: 1
   DisableAutoAimWhenShooting: 0
-  StartingEnergy: 20
+  StartingEnergy: 0
   RequiresHealth: 0
-  EnergyCostPerShot: 1
+  EnergyCostPerShot: 0
   ProjectileRotating: 0
   RotateSpeed: 1
   Upgrades: []

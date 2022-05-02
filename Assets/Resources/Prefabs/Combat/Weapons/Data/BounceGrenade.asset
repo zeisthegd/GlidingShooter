@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BounceGrenade
   m_EditorClassIdentifier: 
   Name: Bounce Grenade
-  Description: Shoot fireballs
+  Description: Shoot a grenade.
   Icon: {fileID: 0}
   Animator: {fileID: 0}
   Projectile: {fileID: -7352975863369686220, guid: b22fbd72a0a8c79409c607becac0b8d5,

@@ -14,7 +14,7 @@ using Penwyn.Tools;
 
 namespace Penwyn.Game
 {
-    public class TurnManager : SingletonMonoBehaviour<TurnManager>
+    public class CombatManager : SingletonMonoBehaviour<CombatManager>
     {
         [ReadOnly] public Player CurrentPlayer;
 
@@ -26,7 +26,11 @@ namespace Penwyn.Game
         protected Queue<Player> _turnQueue = new Queue<Player>();
         protected PhotonView _photonView;
 
+        protected int _firstTeamScore = 0;
+        protected int _secondTeamScore = 0;
+
         public event UnityAction TurnGenerated;
+        public event UnityAction ScoreChanged;
         public virtual void Awake()
         {
             _photonView = GetComponent<PhotonView>();
@@ -80,6 +84,36 @@ namespace Penwyn.Game
             }
         }
 
+        public virtual void LocalPlayerDeath(Character player)
+        {
+            _photonView.RPC(nameof(PlayerDeath), RpcTarget.All, PhotonNetwork.LocalPlayer);
+        }
+
+        [PunRPC]
+        public virtual void PlayerDeath(Player player)
+        {
+            if (player.GetPhotonTeam() == _firstTeam)
+            {
+                if (_firstTeamScore > 0)
+                    _firstTeamScore -= 1;
+                _secondTeamScore += 1;
+            }
+            else
+            {
+                _firstTeamScore += 1;
+                if (_secondTeamScore > 0)
+                    _secondTeamScore -= 1;
+            }
+            ScoreChanged?.Invoke();
+        }
+
+        public virtual bool IsSameTeam(Player player)
+        {
+            if (player.GetPhotonTeam() == PhotonNetwork.LocalPlayer.GetPhotonTeam())
+                return true;
+            return false;
+        }
+
         protected virtual void AddNewTurnRotation()
         {
             for (int i = 0; i < 2; i++)
@@ -109,12 +143,14 @@ namespace Penwyn.Game
         public virtual void ConnectPlayerEvents()
         {
             PlayerManager.Instance.LocalPlayer.Energy.OutOfEnergy += LocalPlayerEndTurn;
+            PlayerManager.Instance.LocalPlayer.Health.OnDeath += LocalPlayerDeath;
             PlayerManager.Instance.LocalPlayer.CharacterWeaponHandler.CurrentWeapon.WeaponUsed += LocalPlayerEndTurn;
         }
 
         public virtual void DisconnectEvents()
         {
             PlayerManager.Instance.LocalPlayer.Energy.OutOfEnergy -= LocalPlayerEndTurn;
+            PlayerManager.Instance.LocalPlayer.Health.OnDeath -= LocalPlayerDeath;
             PlayerManager.Instance.LocalPlayer.CharacterWeaponHandler.CurrentWeapon.WeaponUsed -= LocalPlayerEndTurn;
         }
 
@@ -125,6 +161,8 @@ namespace Penwyn.Game
 
         public Queue<Player> TurnQueue => _turnQueue;
         public bool IsLocalPlayerTurn => CurrentPlayer == PhotonNetwork.LocalPlayer;
+        public int FirstTeamScore => _firstTeamScore;
+        public int SecondTeamScore => _secondTeamScore;
 
     }
 

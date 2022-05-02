@@ -26,7 +26,7 @@ namespace Penwyn.Game
         [Expandable] public InputManager InputManager;
 
         public AudioPlayer AudioPlayer;
-        public TurnManager TurnManager;
+        public CombatManager CombatManager;
 
         [Header("Utilities")]
         public CursorUtility CursorUtility;
@@ -64,7 +64,7 @@ namespace Penwyn.Game
         public virtual void StartGame()
         {
             _gameState = GameState.Started;
-            TurnManager.StartGame();
+            CombatManager.StartGame();
             GameStarted?.Invoke();
         }
 
