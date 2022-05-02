@@ -38,6 +38,7 @@ namespace Penwyn.Game
         protected Coroutine _cooldownCoroutine;
 
         public event UnityAction RequestUpgradeEvent;
+        public event UnityAction WeaponUsed;
 
         protected virtual void Awake()
         {
@@ -67,6 +68,11 @@ namespace Penwyn.Game
             _currentWeaponState = WeaponState.WeaponUse;
             if (UseFeedbacks != null)
                 UseFeedbacks.PlayFeedbacks();
+        }
+
+        public virtual void InvokeWeaponUsedEvent()
+        {
+            WeaponUsed?.Invoke();
         }
 
         public virtual void UseWeaponTillNoTargetOrEnergy()

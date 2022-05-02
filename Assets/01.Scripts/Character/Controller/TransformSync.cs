@@ -26,12 +26,12 @@ namespace Penwyn.Game
             _controller = GetComponent<CharacterController>();
         }
 
-        void FixedUpdate()
+        void Update()
         {
             if (!photonView.IsMine)
             {
-                _controller.SetPosition(Vector3.Lerp(transform.position, _remotePosition, _positionLerpSpeed * Time.deltaTime));
-                transform.rotation = Quaternion.Lerp(transform.rotation, _remoteRotation, _rotationLerpSpeed * Time.deltaTime);
+                _controller.SetPosition(Vector3.Lerp(transform.position, _remotePosition, _positionLerpSpeed * Time.unscaledDeltaTime));
+                transform.rotation = Quaternion.Lerp(transform.rotation, _remoteRotation, _rotationLerpSpeed * Time.unscaledDeltaTime);
             }
         }
 

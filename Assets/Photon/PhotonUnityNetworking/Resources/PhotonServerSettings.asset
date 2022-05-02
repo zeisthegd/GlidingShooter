@@ -47,6 +47,10 @@ MonoBehaviour:
   - RPC_Take
   - RPC_Disable
   - RPC_Respawn
+  - StartGame
+  - ResetTime
+  - StopTime
+  - NextTurn
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

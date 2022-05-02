@@ -24,7 +24,6 @@ namespace Penwyn.Game
         protected virtual void Start()
         {
             LoadLevel();
-            InputReader.Instance.EnableGameplayInput();
         }
 
         protected virtual void Update()

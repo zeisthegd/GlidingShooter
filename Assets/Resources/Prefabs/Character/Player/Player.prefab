@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 1553388793321527645}
   - component: {fileID: 4929071110447984942}
   - component: {fileID: 320027621797776526}
-  - component: {fileID: 4106926904068128796}
+  - component: {fileID: 6619533277177697462}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -145,6 +145,7 @@ MonoBehaviour:
   Animator: {fileID: 0}
   ShouldFlipModel: 0
   Health: {fileID: 8161169765059211183}
+  Energy: {fileID: 6619533277177697462}
   AbilitiesContainer:
   - {fileID: 1553388793733489346}
 --- !u!54 &1553388793321527647
@@ -214,7 +215,6 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 320027621797776526}
-  - {fileID: 4106926904068128796}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -255,7 +255,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4106926904068128796
+--- !u!114 &6619533277177697462
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -264,30 +264,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1553388793321527637}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
+  m_Script: {fileID: 11500000, guid: 53063e11ff4bc5442877832e49c04ab4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PositionModel:
-    SynchronizeEnabled: 1
-    TeleportEnabled: 1
-    TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 2
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 1
-    ExtrapolateOption: 0
-    ExtrapolateSpeed: 1
-    ExtrapolateIncludingRoundTripTime: 1
-    ExtrapolateNumberOfStoredPositions: 1
-  m_RotationModel:
-    SynchronizeEnabled: 0
-    InterpolateOption: 1
-    InterpolateRotateTowardsSpeed: 180
-    InterpolateLerpSpeed: 5
-  m_ScaleModel:
-    SynchronizeEnabled: 0
-    InterpolateOption: 0
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 0
+  MaxEnergy: 3
+  _energy: 0
 --- !u!1 &1553388793543817487
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,11 +450,12 @@ MonoBehaviour:
   Name: 
   ForbidPermissionForbidCharacterStates: 
   ForbidPermissionControllerStates: 
-  RunSpeed: 30
+  RunSpeed: 5
   MaxSpeed: 30
   OppositeDirectionPower: 3
   AirSpeed: 10
-  UseRawInput: 0
+  UseRawInput: 1
+  EnergyPerSecond: 1
   Type: 0
   Dust: {fileID: 0}
 --- !u!114 &1553388793733489350

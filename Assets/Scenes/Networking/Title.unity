@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.08277554, g: 0.036220513, b: 0.13373199, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -231,12 +231,12 @@ PrefabInstance:
     - target: {fileID: 5652926549425309133, guid: 7c97a68de8776144dbc3326ecddfad15,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -570
       objectReference: {fileID: 0}
     - target: {fileID: 5652926549425309133, guid: 7c97a68de8776144dbc3326ecddfad15,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -112
       objectReference: {fileID: 0}
     - target: {fileID: 5652926549425309133, guid: 7c97a68de8776144dbc3326ecddfad15,
         type: 3}
@@ -378,7 +378,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -59}
+  m_AnchoredPosition: {x: -570, y: -171}
   m_SizeDelta: {x: 200, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &341397005
@@ -512,7 +512,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -136.7}
+  m_AnchoredPosition: {x: -570, y: -248.69998}
   m_SizeDelta: {x: 200, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &356853555
@@ -767,7 +767,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 65}
+  m_AnchoredPosition: {x: -570, y: -46.999985}
   m_SizeDelta: {x: 400, y: 131}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &808079219
@@ -1136,12 +1136,12 @@ PrefabInstance:
     - target: {fileID: 8793299521802484726, guid: 8ba6e971b19b9104c896c298df32285f,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -570
       objectReference: {fileID: 0}
     - target: {fileID: 8793299521802484726, guid: 8ba6e971b19b9104c896c298df32285f,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -216
+      value: -328
       objectReference: {fileID: 0}
     - target: {fileID: 8793299521802484726, guid: 8ba6e971b19b9104c896c298df32285f,
         type: 3}
@@ -1334,6 +1334,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1390088264}
   m_CullTransparentMesh: 0
+--- !u!114 &1464961480 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1205068067, guid: 589153795ae921442b7fb20915b3b4bf,
+    type: 3}
+  m_PrefabInstance: {fileID: 1765435406}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25bdac3c31a54804b9ff96e06a9514dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1471670850
 GameObject:
   m_ObjectHideFlags: 0
@@ -1458,6 +1470,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5574656926437217149, guid: 589153795ae921442b7fb20915b3b4bf,
+        type: 3}
+      propertyPath: AudioPlayer
+      value: 
+      objectReference: {fileID: 1464961480}
+    - target: {fileID: 5574656926437217149, guid: 589153795ae921442b7fb20915b3b4bf,
+        type: 3}
+      propertyPath: TurnManager
+      value: 
+      objectReference: {fileID: 2049655616}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 589153795ae921442b7fb20915b3b4bf, type: 3}
 --- !u!1 &1826818137
@@ -1653,8 +1675,8 @@ Camera:
   m_GameObject: {fileID: 1899234512}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.2523585, g: 0.35554248, b: 0.5, a: 0.9843137}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.09282664, g: 0.102774166, b: 0.13207549, a: 0.9843137}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1935,9 +1957,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33f89ff930b130b49b74e609ad020cb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentTeamTurn:
-    Name: 
-    Code: 0
 --- !u!114 &2049655617
 MonoBehaviour:
   m_ObjectHideFlags: 0

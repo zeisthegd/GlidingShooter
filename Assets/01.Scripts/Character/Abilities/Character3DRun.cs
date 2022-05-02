@@ -14,6 +14,7 @@ namespace Penwyn.Game
         public float OppositeDirectionPower = 2;
         public float AirSpeed = 5;
         public bool UseRawInput = true;
+        public float EnergyPerSecond = 1;
         public ControlType Type;
         [Header("Feedbacks")]
         public ParticleSystem Dust;
@@ -35,6 +36,8 @@ namespace Penwyn.Game
             {
                 if (_controller.IsTouchingGround)
                 {
+                    if (InputReader.Instance.MoveInput.magnitude > 0)
+                        _character.Energy.Use(EnergyPerSecond * Time.deltaTime, true);
                     if (UseRawInput)
                         RunRaw(InputReader.Instance.MoveInput.normalized);
                     else

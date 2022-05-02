@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 using Photon.Pun;
@@ -36,6 +37,7 @@ namespace Penwyn.Game
                 _weaponAim.enabled = true;
             if (_weaponAutoAim != null && _weaponAutoAim.enabled == false)
                 _weaponAutoAim.enabled = true;
+            InvokeWeaponUsedEvent();
             StartCooldown();
         }
 

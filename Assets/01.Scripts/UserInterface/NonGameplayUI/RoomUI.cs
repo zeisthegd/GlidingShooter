@@ -7,6 +7,7 @@ using TMPro;
 
 using Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using Photon.Pun.UtilityScripts;
 
 using Penwyn.Game;
@@ -19,12 +20,17 @@ namespace Penwyn.UI
         [SerializeField] Button openSettingsBtn;
         [SerializeField] Button startMatchBtn;
 
+        [Header("Teams")]
         public List<TMP_Text> FirstTeamList;
         public List<TMP_Text> SecondTeamList;
+        [Header("Turns")]
+        public TMP_Text TurnTextPrefab;
+        public Transform Container;
 
         void Awake()
         {
             PhotonTeamsManager.PlayerJoinedTeam += ShowTeams;
+            TurnManager.Instance.TurnGenerated += ShowTurns;
         }
 
         void Start()
@@ -45,7 +51,7 @@ namespace Penwyn.UI
             {
                 PhotonNetwork.CurrentRoom.IsOpen = false;
                 PhotonNetwork.CurrentRoom.IsVisible = false;
-                GameManager.Instance.StartGame();
+                GameManager.Instance.RPC_StartGame();
             }
         }
 
@@ -62,6 +68,16 @@ namespace Penwyn.UI
             for (int i = 0; i < team.Length; i++)
             {
                 SecondTeamList[i].SetText(team[i].NickName + "");
+            }
+        }
+
+        public virtual void ShowTurns()
+        {
+            for (int i = 0; i < TurnManager.Instance.TurnQueue.Count; i++)
+            {
+                Player[] turns = TurnManager.Instance.TurnQueue.ToArray();
+                TMP_Text turnText = Instantiate(TurnTextPrefab, Container.position, Quaternion.identity, Container);
+                turnText.SetText(turns[i].NickName);
             }
         }
     }

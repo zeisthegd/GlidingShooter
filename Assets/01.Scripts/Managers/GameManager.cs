@@ -24,7 +24,9 @@ namespace Penwyn.Game
         [Expandable] public SceneManager SceneManager;
         [Expandable] public PlayerManager PlayerManager;
         [Expandable] public InputManager InputManager;
-        [Expandable] public AudioPlayer AudioPlayer;
+
+        public AudioPlayer AudioPlayer;
+        public TurnManager TurnManager;
 
         [Header("Utilities")]
         public CursorUtility CursorUtility;
@@ -53,9 +55,16 @@ namespace Penwyn.Game
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoad;
         }
 
+        public virtual void RPC_StartGame()
+        {
+            photonView.RPC(nameof(StartGame), RpcTarget.All);
+        }
+
+        [PunRPC]
         public virtual void StartGame()
         {
             _gameState = GameState.Started;
+            TurnManager.StartGame();
             GameStarted?.Invoke();
         }
 
