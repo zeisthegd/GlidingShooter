@@ -10,6 +10,7 @@ namespace Penwyn.LevelEditor
 {
     public class LevelEditorUI : MonoBehaviour
     {
+#if UNITY_EDITOR
         public Button TileButtonPrefab;
         public Transform TileButtonsContainer;
 
@@ -19,18 +20,19 @@ namespace Penwyn.LevelEditor
             LoadPlaceableObjects(LevelEditor.Instance.PlaceableObjects);
         }
 
-        public void LoadPlaceableObjects(List<GameObject> gameObjects)
+        public void LoadPlaceableObjects(List<LevelBlock> levelBlocks)
         {
-            foreach (GameObject gameObj in gameObjects)
+            foreach (LevelBlock block in levelBlocks)
             {
                 Button newBtn = Instantiate(TileButtonPrefab, TileButtonsContainer.position, Quaternion.identity, TileButtonsContainer);
-                newBtn.GetComponent<RawImage>().texture = AssetPreview.GetAssetPreview(gameObj);
+                newBtn.GetComponent<RawImage>().texture = AssetPreview.GetAssetPreview(block.gameObject);
                 newBtn.onClick.AddListener(() =>
                 {
-                    LevelEditor.Instance.SetCurrentSelectedObject(gameObj);
+                    LevelEditor.Instance.ChooseBlockToPlace(block);
                 });
             }
         }
+#endif
     }
 }
 

@@ -24,7 +24,7 @@ namespace Penwyn.Game
             SmoothWalls();
             Debug.Log("Level Generated");
             LevelBuilder.BuildMap(this);
-            LevelManager.Instance.MovePlayerTo(GetRandomEmptyPosition());
+            //LevelManager.Instance.MovePlayerTo(GetRandomEmptyPosition());
         }
 
         public virtual void FillWalls()

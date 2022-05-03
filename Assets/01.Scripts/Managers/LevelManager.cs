@@ -6,72 +6,69 @@ using UnityEngine.Events;
 using Penwyn.Tools;
 using NaughtyAttributes;
 
+using Penwyn.LevelEditor;
 
 namespace Penwyn.Game
 {
     public class LevelManager : SingletonMonoBehaviour<LevelManager>
     {
-        [Header("Map Datas")]
-        public List<MapData> MapDatas;
+        public List<LevelBlock> PlaceableObjects;
+        public List<LevelBlock> PlacedBlocks;
+        public LevelDataList LevelDataList;
 
-        [Header("Sub-components")]
-        public LevelGenerator LevelGenerator;
-        public LootDropManager LootDropManager;
-        [Header("Settings")]
-        public bool ShouldCreateLevel = false;
-        protected MapData _mapData;
+        public int CurrentLevelIndex = 0;
 
-        protected virtual void Start()
+        public virtual void LoadNextLevel()
         {
-            LoadLevel();
+            LoadLevelByIndex(CurrentLevelIndex + 1);
         }
 
-        protected virtual void Update()
+        public virtual void LoadLevelByIndex(int index)
         {
-            IncreaseThreatLevelAndProgress();
+            LoadLevel(LevelDataList.List[index]);
+            CurrentLevelIndex = index;
         }
-
-        /// <summary>
-        /// Increase the max threat level of enemies.
-        /// Increase the level progress.
-        /// </summary>
-        public virtual void IncreaseThreatLevelAndProgress()
-        {
-            if (ShouldCreateLevel)
-            {
-
-            }
-        }
-
 
         /// <summary>
         /// Generate the level and spawn the enemies.
         /// </summary>
-        protected virtual void LoadLevel()
+        protected virtual void LoadLevel(LevelData data)
         {
-            if (ShouldCreateLevel)
+            foreach (TileData tile in data.BlockMap)
             {
-                ChangeToRandomData();
-                LevelGenerator.GenerateLevel();
+                LevelBlock block = GetBlockByID(tile.BlockID);
+                LevelBlock blockObj = Instantiate(block);
+                blockObj.transform.position = tile.Position;
+                blockObj.transform.eulerAngles = new Vector3(0, tile.RotationAngleY, 0);
+                PlacedBlocks.Add(blockObj);
             }
         }
 
         /// <summary>
-        /// Change the level's data to a random one of the list.
+        /// Get a block by its ID.
         /// </summary>
-        public virtual void ChangeToRandomData()
+        public virtual LevelBlock GetBlockByID(string blockID)
         {
-            MapData randomData = MapDatas[Randomizer.RandomNumber(0, MapDatas.Count)];
-            _mapData = Instantiate(randomData);
-
-            LevelGenerator.MapData = _mapData;
-            LootDropManager.MapData = _mapData;
-
+            for (int i = 0; i < PlaceableObjects.Count; i++)
+            {
+                if (PlaceableObjects[i].BlockID == blockID)
+                    return PlaceableObjects[i];
+            }
+            return null;
         }
 
-        public virtual void MovePlayerTo(Vector2 position)
+
+        /// <summary>
+        /// Destroy all placed blocks
+        /// </summary>
+        [Button("Clean All Blocks", EButtonEnableMode.Playmode)]
+        public virtual void CleanAllBlocks()
         {
-            Characters.Player.transform.position = position;
+            for (int i = 0; i < PlacedBlocks.Count; i++)
+            {
+                Destroy(PlacedBlocks[i].gameObject);
+            }
+            PlacedBlocks.Clear();
         }
     }
 }

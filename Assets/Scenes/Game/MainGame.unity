@@ -1425,6 +1425,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1171947587306622413, guid: bec5e1350c518cf45854fa34cc9c972f,
+        type: 3}
+      propertyPath: TargetMask.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1171947588580241083, guid: bec5e1350c518cf45854fa34cc9c972f,
+        type: 3}
+      propertyPath: TargetMask.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1171947588868010425, guid: bec5e1350c518cf45854fa34cc9c972f,
         type: 3}
       propertyPath: m_RootOrder
@@ -1485,7 +1495,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Level
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 1171947588954266835, guid: bec5e1350c518cf45854fa34cc9c972f,
+        type: 3}
+      propertyPath: TargetMask.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1171947589004074672, guid: bec5e1350c518cf45854fa34cc9c972f,
+        type: 3}
+      propertyPath: TargetMask.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 1171947588954266835, guid: bec5e1350c518cf45854fa34cc9c972f, type: 3}
+    - {fileID: 1171947589004074672, guid: bec5e1350c518cf45854fa34cc9c972f, type: 3}
+    - {fileID: 1171947588580241083, guid: bec5e1350c518cf45854fa34cc9c972f, type: 3}
+    - {fileID: 1171947587306622413, guid: bec5e1350c518cf45854fa34cc9c972f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bec5e1350c518cf45854fa34cc9c972f, type: 3}
 --- !u!4 &1171947587885405166 stripped
 Transform:

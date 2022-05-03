@@ -27,6 +27,7 @@ namespace Penwyn.Game
 
         public AudioPlayer AudioPlayer;
         public CombatManager CombatManager;
+        public LevelManager LevelManager;
 
         [Header("Utilities")]
         public CursorUtility CursorUtility;
@@ -65,6 +66,7 @@ namespace Penwyn.Game
         {
             _gameState = GameState.Started;
             CombatManager.StartGame();
+            LevelManager.LoadLevelByIndex(0);
             GameStarted?.Invoke();
         }
 

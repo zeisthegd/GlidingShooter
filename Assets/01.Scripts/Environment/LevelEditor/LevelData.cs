@@ -8,7 +8,7 @@ namespace Penwyn.LevelEditor
     public class LevelData : ScriptableObject
     {
         public string LevelName;
-        public List<TileData> TileDatas;
+        public List<TileData> BlockMap;
     }
 }
 

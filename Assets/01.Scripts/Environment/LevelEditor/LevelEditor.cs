@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 using Penwyn.Game;
 using Penwyn.Tools;
@@ -12,19 +13,23 @@ namespace Penwyn.LevelEditor
 {
     public class LevelEditor : SingletonMonoBehaviour<LevelEditor>
     {
+#if UNITY_EDITOR
+
         [Header("Grid")]
         public int Width = 10;
         public int Height = 10;
         public int TileScale = 1;
 
 
-        public List<GameObject> PlaceableObjects;
+        [Header("Blocks List")]
+        public List<LevelBlock> PlaceableObjects;
+        public List<LevelBlock> PlacedBlocks;
+        public LevelBlock CurrentlySelectedBlock;
 
 
-
-        public GameObject CurrentlySelectedObject;
         protected Vector3 _currentMousePosition;
         protected Vector3 _mouseIndFromPos;
+        protected LevelData _data;
 
         void Start()
         {
@@ -37,35 +42,128 @@ namespace Penwyn.LevelEditor
 
         }
 
+        /// <summary>
+        /// Move the currently selected block using mouse input.
+        /// </summary>
         public virtual void UpdateCurrentObjectPosition()
         {
-            if (CurrentlySelectedObject != null)
+            if (CurrentlySelectedBlock != null)
             {
-                CurrentlySelectedObject.transform.position = IndexToGridPosition((int)_mouseIndFromPos.x, (int)_mouseIndFromPos.z);
+                CurrentlySelectedBlock.transform.position = IndexToGridPosition((int)_mouseIndFromPos.x, (int)_mouseIndFromPos.z);
             }
         }
 
-        public virtual void SetCurrentSelectedObject(GameObject gameObject)
+        /// <summary>
+        /// From the UI, choose a block to place.
+        /// </summary>
+        public virtual void ChooseBlockToPlace(LevelBlock block)
         {
-            if (CurrentlySelectedObject != null)
-                Destroy(CurrentlySelectedObject);
-            CurrentlySelectedObject = Instantiate(gameObject);
+            if (CurrentlySelectedBlock != null)
+                Destroy(CurrentlySelectedBlock);
+            CurrentlySelectedBlock = Instantiate(block);
+            InputReader.Instance.EnableGameplayInput();
         }
+
+        /// <summary>
+        /// Place the current block on the grid, add to the placed blocks list.
+        /// </summary>
+        public virtual void PlaceCurentBlock()
+        {
+            if (CurrentlySelectedBlock != null)
+            {
+                PlacedBlocks.Add(CurrentlySelectedBlock);
+                Debug.Log($"Placed {CurrentlySelectedBlock.BlockID}");
+                CurrentlySelectedBlock = null;
+                InputReader.Instance.DisableGameplayInput();
+            }
+        }
+        //*---------------------------------------------------------------------------------------------------------------------------------------------
 
         #region Data Serialization
+
+        /// <summary>
+        /// Get the layout and save it.
+        /// </summary>
         public virtual void SaveData(string path)
         {
-
+            _data = ScriptableObject.CreateInstance<LevelData>();
+            GetLevelLayout();
+            LevelDataManager.Instance.LevelData.BlockMap = _data.BlockMap;
         }
 
+        /// <summary>
+        /// Clone the data and load the layout.
+        /// </summary>
         public virtual void LoadData(string path)
         {
-
+            _data = Instantiate(LevelDataManager.Instance.LevelData);
+            CleanAllBlocks();
+            LoadLevelLayout();
         }
 
+        /// <summary>
+        /// Get the layout of currently placed blocks.
+        /// </summary>
+        public virtual void GetLevelLayout()
+        {
+            _data.BlockMap = new List<TileData>();
+            foreach (LevelBlock block in PlacedBlocks)
+            {
+                _data.BlockMap.Add(new TileData(block.BlockID, block.transform.position, block.transform.eulerAngles.y));
+            }
+        }
+
+        /// <summary>
+        /// Load the layout of the blocks from the save data.
+        /// Instantiate the blocks using the data and add the blocks to the placed blocks list.
+        /// </summary>
+        public virtual void LoadLevelLayout()
+        {
+            foreach (TileData data in _data.BlockMap)
+            {
+                LevelBlock block = GetBlockByID(data.BlockID);
+                LevelBlock blockObj = Instantiate(block);
+                blockObj.transform.position = data.Position;
+                blockObj.transform.eulerAngles = new Vector3(0, data.RotationAngleY, 0);
+                PlacedBlocks.Add(blockObj);
+            }
+        }
 
         #endregion
 
+        //*---------------------------------------------------------------------------------------------------------------------------------------------
+
+        #region Block Operations
+
+        /// <summary>
+        /// Get a block by its ID.
+        /// </summary>
+        public virtual LevelBlock GetBlockByID(string blockID)
+        {
+            for (int i = 0; i < PlaceableObjects.Count; i++)
+            {
+                if (PlaceableObjects[i].BlockID == blockID)
+                    return PlaceableObjects[i];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Destroy all placed blocks
+        /// </summary>
+        [Button("Clean All Blocks", EButtonEnableMode.Playmode)]
+        public virtual void CleanAllBlocks()
+        {
+            for (int i = 0; i < PlacedBlocks.Count; i++)
+            {
+                Destroy(PlacedBlocks[i].gameObject);
+            }
+            PlacedBlocks.Clear();
+        }
+
+        #endregion
+
+        //*---------------------------------------------------------------------------------------------------------------------------------------------
 
         #region Position Helper
         /// <summary>
@@ -106,5 +204,30 @@ namespace Penwyn.LevelEditor
                 }
             }
         }
+
+        void OnEnable()
+        {
+            if (InputReader.Instance != null)
+            {
+                InputReader.Instance.NormalAttackPressed += PlaceCurentBlock;
+            }
+            else
+            {
+                Debug.LogWarning("InputReader missing.");
+            }
+        }
+
+        void OnDisable()
+        {
+            if (InputReader.Instance != null)
+            {
+                InputReader.Instance.NormalAttackPressed -= PlaceCurentBlock;
+            }
+            else
+            {
+                Debug.LogWarning("InputReader missing.");
+            }
+        }
+#endif
     }
 }

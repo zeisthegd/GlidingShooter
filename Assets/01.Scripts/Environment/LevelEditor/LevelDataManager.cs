@@ -7,11 +7,13 @@ using UnityEngine.UI;
 using UnityEditor;
 
 using TMPro;
+using Penwyn.Tools;
 
 namespace Penwyn.LevelEditor
 {
-    public class LevelDataManager : MonoBehaviour
+    public class LevelDataManager : SingletonMonoBehaviour<LevelDataManager>
     {
+#if UNITY_EDITOR
         [Header("--- Save and Load ---")]
         public TMP_InputField FileLoadName;
         public TMP_InputField FileSaveName;
@@ -22,7 +24,7 @@ namespace Penwyn.LevelEditor
 
         [Header("--- Game Settings ---")]
         public LevelDataList LevelDataList;
-        protected LevelData _levelData;
+        public LevelData LevelData;
 
         public const string SaveFolderPath = "Assets/Resources/LevelDatas/";
 
@@ -47,14 +49,14 @@ namespace Penwyn.LevelEditor
             if (!FolderExists(folderPath))
                 AssetDatabase.CreateFolder(SaveFolderPath.TrimEnd('/'), FileSaveName.text);
 
-            _levelData = ScriptableObject.CreateInstance<LevelData>();
+            LevelData = ScriptableObject.CreateInstance<LevelData>();
 
-            _levelData.LevelName = FileSaveName.text;
+            LevelData.LevelName = FileSaveName.text;
             LevelEditor.Instance.SaveData(GetFilePath(folderPath, levelName, LevelDataSfx));
 
-            LevelDataList.Add(_levelData);
+            LevelDataList.Add(LevelData);
 
-            AssetDatabase.CreateAsset(_levelData, GetFilePath(folderPath, levelName, LevelDataSfx));
+            AssetDatabase.CreateAsset(LevelData, GetFilePath(folderPath, levelName, LevelDataSfx));
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("Saved");
@@ -75,8 +77,12 @@ namespace Penwyn.LevelEditor
 
             if (FolderExists(folderPath))
             {
-                _levelData = (LevelData)AssetDatabase.LoadAssetAtPath(GetSettingsPath(folderPath, levelName), typeof(LevelData));
+                LevelData = (LevelData)AssetDatabase.LoadAssetAtPath(GetSettingsPath(folderPath, levelName), typeof(LevelData));
                 LevelEditor.Instance.LoadData(GetFilePath(folderPath, levelName, LevelDataSfx));
+            }
+            else
+            {
+                Debug.LogWarning("Level not yet created.");
             }
         }
 
@@ -114,5 +120,6 @@ namespace Penwyn.LevelEditor
         {
             return System.IO.Directory.Exists(Application.dataPath + "/" + folderPath.Remove(0, 7));
         }
+#endif
     }
 }

@@ -60,15 +60,18 @@ namespace Penwyn.Game
 
         protected virtual void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (scene.name == SceneManager.Instance.MatchSceenName)
+            if (SceneManager.Instance != null)
             {
-                _isPermanentlyHide = true;
-                HideMouse();
-            }
-            else
-            {
-                _isPermanentlyHide = false;
-                ShowMouse();
+                if (scene.name == SceneManager.Instance.MatchSceenName)
+                {
+                    _isPermanentlyHide = true;
+                    HideMouse();
+                }
+                else
+                {
+                    _isPermanentlyHide = false;
+                    ShowMouse();
+                }
             }
         }
 

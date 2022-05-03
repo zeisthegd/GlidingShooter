@@ -13,4 +13,10 @@ MonoBehaviour:
   m_Name: 1_Level
   m_EditorClassIdentifier: 
   LevelName: 1
-  TileDatas: []
+  BlockMap:
+  - BlockID: BlueCube
+    Position: {x: -1, y: 1, z: -1}
+    RotationAngleY: 0
+  - BlockID: Cube
+    Position: {x: 5, y: 1, z: -5}
+    RotationAngleY: 0

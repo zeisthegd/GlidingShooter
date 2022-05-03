@@ -226,6 +226,7 @@ MonoBehaviour:
   InputManager: {fileID: 11400000, guid: 29a9454571ae19c47be8970a209876af, type: 2}
   AudioPlayer: {fileID: 1205068067}
   CombatManager: {fileID: 2049655616}
+  LevelManager: {fileID: 3950279870636821489}
   CursorUtility: {fileID: 0}
   LevelPath: 
   MatchSettings: {fileID: 0}
@@ -241,10 +242,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1e0bba683bc78f4e8cd730cfeca6605, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapDatas: []
-  LevelGenerator: {fileID: 0}
-  LootDropManager: {fileID: 0}
-  ShouldCreateLevel: 0
+  PlaceableObjects:
+  - {fileID: 333769083454464978, guid: 862740e3f9f514b47938287fa0a3a00e, type: 3}
+  - {fileID: -6325031265022170014, guid: ee4747ca459006b4a85148e40f925a8b, type: 3}
+  PlacedBlocks: []
+  LevelDataList: {fileID: 11400000, guid: 34e97901b7a377a45a7c3b454a0107f3, type: 2}
+  CurrentLevelIndex: 0
 --- !u!114 &1336979684
 MonoBehaviour:
   m_ObjectHideFlags: 0
