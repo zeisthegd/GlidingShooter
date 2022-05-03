@@ -77,8 +77,8 @@ namespace Penwyn.UI
 
         public virtual void ShowScore()
         {
-            FirstTeamScore.SetText(CombatManager.Instance.FirstTeamScore + "");
-            SecondTeamScore.SetText(CombatManager.Instance.SecondTeamScore + "");
+            FirstTeamScore.SetText(CombatManager.Instance.FirstTeam.Score + "");
+            SecondTeamScore.SetText(CombatManager.Instance.SecondTeam.Score + "");
         }
 
         public virtual void ShowTurns()

@@ -18,31 +18,29 @@ namespace Penwyn.Game
     {
         [ReadOnly] public Player CurrentPlayer;
 
-        protected Player[] _firstTeamPlayers;
-        protected Player[] _secondTeamPlayers;
-        protected PhotonTeam _firstTeam;
-        protected PhotonTeam _secondTeam;
-
         protected Queue<Player> _turnQueue = new Queue<Player>();
         protected PhotonView _photonView;
 
-        protected int _firstTeamScore = 0;
-        protected int _secondTeamScore = 0;
+
+        protected TeamData _firstTeam;
+        protected TeamData _secondTeam;
 
         public event UnityAction TurnGenerated;
         public event UnityAction ScoreChanged;
         public virtual void Awake()
         {
             _photonView = GetComponent<PhotonView>();
+            _firstTeam = new TeamData();
+            _secondTeam = new TeamData();
         }
 
         public virtual void StartGame()
         {
-            PhotonTeamsManager.Instance.TryGetTeamByCode(1, out _firstTeam);
-            PhotonTeamsManager.Instance.TryGetTeamByCode(2, out _secondTeam);
+            PhotonTeamsManager.Instance.TryGetTeamByCode(1, out _firstTeam.Team);
+            PhotonTeamsManager.Instance.TryGetTeamByCode(2, out _secondTeam.Team);
 
-            PhotonTeamsManager.Instance.TryGetTeamMembers(1, out _firstTeamPlayers);
-            PhotonTeamsManager.Instance.TryGetTeamMembers(2, out _secondTeamPlayers);
+            PhotonTeamsManager.Instance.TryGetTeamMembers(1, out _firstTeam.Players);
+            PhotonTeamsManager.Instance.TryGetTeamMembers(2, out _secondTeam.Players);
 
             for (int i = 0; i < 100; i++)
                 AddNewTurnRotation();
@@ -92,17 +90,17 @@ namespace Penwyn.Game
         [PunRPC]
         public virtual void PlayerDeath(Player player)
         {
-            if (player.GetPhotonTeam() == _firstTeam)
+            if (player.GetPhotonTeam() == _firstTeam.Team)
             {
-                if (_firstTeamScore > 0)
-                    _firstTeamScore -= 1;
-                _secondTeamScore += 1;
+                if (_firstTeam.Score > 0)
+                    _firstTeam.Score -= 1;
+                _secondTeam.Score += 1;
             }
             else
             {
-                _firstTeamScore += 1;
-                if (_secondTeamScore > 0)
-                    _secondTeamScore -= 1;
+                _firstTeam.Score += 1;
+                if (_secondTeam.Score > 0)
+                    _secondTeam.Score -= 1;
             }
             ScoreChanged?.Invoke();
         }
@@ -120,22 +118,22 @@ namespace Penwyn.Game
             {
                 if (i == 0)
                 {
-                    if (_firstTeamPlayers.Length > 0)
-                        _turnQueue.Enqueue(_firstTeamPlayers[i]);
-                    if (_secondTeamPlayers.Length > 0)
-                        _turnQueue.Enqueue(_secondTeamPlayers[i]);
+                    if (_firstTeam.Players.Length > 0)
+                        _turnQueue.Enqueue(_firstTeam.Players[i]);
+                    if (_secondTeam.Players.Length > 0)
+                        _turnQueue.Enqueue(_secondTeam.Players[i]);
                 }
                 else if (i == 1)
                 {
-                    if (_firstTeamPlayers.Length > 1)
-                        _turnQueue.Enqueue(_firstTeamPlayers[i]);
-                    else if (_firstTeamPlayers.Length > 0)
-                        _turnQueue.Enqueue(_firstTeamPlayers[0]);
+                    if (_firstTeam.Players.Length > 1)
+                        _turnQueue.Enqueue(_firstTeam.Players[i]);
+                    else if (_firstTeam.Players.Length > 0)
+                        _turnQueue.Enqueue(_firstTeam.Players[0]);
 
-                    if (_secondTeamPlayers.Length > 1)
-                        _turnQueue.Enqueue(_secondTeamPlayers[i]);
-                    else if (_secondTeamPlayers.Length > 0)
-                        _turnQueue.Enqueue(_secondTeamPlayers[0]);
+                    if (_secondTeam.Players.Length > 1)
+                        _turnQueue.Enqueue(_secondTeam.Players[i]);
+                    else if (_secondTeam.Players.Length > 0)
+                        _turnQueue.Enqueue(_secondTeam.Players[0]);
                 }
             }
         }
@@ -161,8 +159,8 @@ namespace Penwyn.Game
 
         public Queue<Player> TurnQueue => _turnQueue;
         public bool IsLocalPlayerTurn => CurrentPlayer == PhotonNetwork.LocalPlayer;
-        public int FirstTeamScore => _firstTeamScore;
-        public int SecondTeamScore => _secondTeamScore;
+        public TeamData FirstTeam => _firstTeam;
+        public TeamData SecondTeam => _secondTeam;
 
     }
 
