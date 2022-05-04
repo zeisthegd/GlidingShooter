@@ -94,8 +94,7 @@ namespace Penwyn.Game
             CombatManager.StartGame();
             LevelManager.LoadLevelByIndex(0);
             yield return new WaitForSeconds(MatchSettings.LevelLoadTime + MatchSettings.PlayerPositioningTime);
-            CombatManager.NextTurn();
-
+            InputReader.Instance.EnableGameplayInput();
             _gameState = GameState.Started;
         }
 
@@ -116,10 +115,8 @@ namespace Penwyn.Game
 
             LevelManager.LoadNextLevel();
             yield return new WaitForSeconds(MatchSettings.LevelLoadTime + MatchSettings.PlayerPositioningTime);
-            CombatManager.CreateNewTurnQueue();
             CombatManager.ResetDeathCount();
-            CombatManager.NextTurn();
-
+            InputReader.Instance.EnableGameplayInput();
             _gameState = GameState.Started;
         }
 

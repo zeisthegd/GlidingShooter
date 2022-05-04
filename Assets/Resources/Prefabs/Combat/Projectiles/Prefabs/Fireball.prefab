@@ -33,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 1358326198000655401}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 794930857359544217}
@@ -55,7 +55,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InfiniteLifeTime: 1
   LifeTime: 10
-  Speed: 20
+  Speed: 10
   OverrideGravity: 0
   DamageOnTouch: {fileID: 3124391888613173752}
   Controller: {fileID: 9201141406063183192}
@@ -171,7 +171,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 83d317a8cc25ba84190bdacb8c53e54b, type: 2}
+  - {fileID: 2100000, guid: 5fa4388b15087274299909a3dc44673a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -299,7 +299,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 83d317a8cc25ba84190bdacb8c53e54b, type: 2}
+  - {fileID: 2100000, guid: 5fa4388b15087274299909a3dc44673a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -320,7 +320,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 1
+  m_Time: 0.5
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1

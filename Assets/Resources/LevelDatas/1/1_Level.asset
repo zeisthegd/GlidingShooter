@@ -15,8 +15,8 @@ MonoBehaviour:
   LevelName: 1
   BlockMap:
   - BlockID: SecondTeamSpawn
-    Position: {x: -7, y: 1, z: 7}
+    Position: {x: 3, y: 1, z: -5}
     RotationAngleY: 0
   - BlockID: FirstTeamSpawn
-    Position: {x: 7, y: 1, z: -7}
+    Position: {x: -3, y: 1, z: 3}
     RotationAngleY: 0

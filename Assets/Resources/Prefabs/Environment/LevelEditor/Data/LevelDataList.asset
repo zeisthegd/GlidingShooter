@@ -12,10 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e10e04c5e22d7494aa6616033c667f8c, type: 3}
   m_Name: LevelDataList
   m_EditorClassIdentifier: 
-  List:
-  - {fileID: 11400000, guid: 0a363c1d6b33d92448efaba681d076f4, type: 2}
-  - {fileID: 11400000, guid: acb96d0375ac8e5429533f228e11e507, type: 2}
-  - {fileID: 11400000, guid: d94541e9492706c4286dae1df25519bb, type: 2}
-  - {fileID: 11400000, guid: eeb131b58cc559d4bb03adb486bbe7bd, type: 2}
-  - {fileID: 11400000, guid: 81d607eab09b30b42863f16bdae70142, type: 2}
-  - {fileID: 11400000, guid: a4be15fb67dc1614483a9f27f5a6f2e4, type: 2}
+  List: []

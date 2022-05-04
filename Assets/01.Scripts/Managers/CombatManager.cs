@@ -47,42 +47,7 @@ namespace Penwyn.Game
             PhotonTeamsManager.Instance.TryGetTeamMembers(1, out _firstTeam.Players);
             PhotonTeamsManager.Instance.TryGetTeamMembers(2, out _secondTeam.Players);
 
-            CreateNewTurnQueue();
             ConnectPlayerEvents();
-        }
-
-        public virtual void StartCurrentPlayerTurn()
-        {
-            if (IsLocalPlayerTurn)
-            {
-                InputReader.Instance.EnableGameplayInput();
-                PlayerManager.Instance.LocalPlayer.Energy.Set(1);
-            }
-            else
-            {
-                InputReader.Instance.DisableGameplayInput();
-            }
-        }
-
-        public virtual void RPC_NextTurn()
-        {
-            _photonView.RPC(nameof(NextTurn), RpcTarget.All);
-        }
-
-        [PunRPC]
-        public virtual void NextTurn()
-        {
-            CurrentPlayer = _turnQueue.Dequeue();
-            StartCurrentPlayerTurn();
-            TurnChanged?.Invoke();
-        }
-
-        public virtual void LocalPlayerEndTurn()
-        {
-            if (IsLocalPlayerTurn)
-            {
-                RPC_NextTurn();
-            }
         }
 
         public virtual void LocalPlayerDeath(Character player)
@@ -132,53 +97,17 @@ namespace Penwyn.Game
             return false;
         }
 
-        public virtual void CreateNewTurnQueue()
-        {
-            _turnQueue.Clear();
-            for (int i = 0; i < 100; i++)
-                AddNewTurnRotation();
-        }
-
-        protected virtual void AddNewTurnRotation()
-        {
-            for (int i = 0; i < 2; i++)
-            {
-                if (i == 0)
-                {
-                    if (_firstTeam.Players.Length > 0)
-                        _turnQueue.Enqueue(_firstTeam.Players[i]);
-                    if (_secondTeam.Players.Length > 0)
-                        _turnQueue.Enqueue(_secondTeam.Players[i]);
-                }
-                else if (i == 1)
-                {
-                    if (_firstTeam.Players.Length > 1)
-                        _turnQueue.Enqueue(_firstTeam.Players[i]);
-                    else if (_firstTeam.Players.Length > 0)
-                        _turnQueue.Enqueue(_firstTeam.Players[0]);
-
-                    if (_secondTeam.Players.Length > 1)
-                        _turnQueue.Enqueue(_secondTeam.Players[i]);
-                    else if (_secondTeam.Players.Length > 0)
-                        _turnQueue.Enqueue(_secondTeam.Players[0]);
-                }
-            }
-        }
 
         public virtual void ConnectPlayerEvents()
         {
-            PlayerManager.Instance.LocalPlayer.Energy.OutOfEnergy += LocalPlayerEndTurn;
             PlayerManager.Instance.LocalPlayer.Health.OnDeath += LocalPlayerDeath;
-            PlayerManager.Instance.LocalPlayer.CharacterWeaponHandler.CurrentWeapon.WeaponUsed += LocalPlayerEndTurn;
         }
 
         public virtual void DisconnectEvents()
         {
             if (PlayerManager.Instance != null && PlayerManager.Instance.LocalPlayer != null)
             {
-                PlayerManager.Instance.LocalPlayer.Energy.OutOfEnergy -= LocalPlayerEndTurn;
                 PlayerManager.Instance.LocalPlayer.Health.OnDeath -= LocalPlayerDeath;
-                PlayerManager.Instance.LocalPlayer.CharacterWeaponHandler.CurrentWeapon.WeaponUsed -= LocalPlayerEndTurn;
             }
         }
 

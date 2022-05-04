@@ -18,19 +18,7 @@ namespace Penwyn.Game
 
         void Update()
         {
-            if (GameManager.Instance.State == GameState.Started && CombatManager.Instance.IsLocalPlayerTurn)
-            {
-                if (InputReader.Instance.MoveInput.magnitude > 0)
-                {
-                    if (Time.timeScale == 0)
-                        _photonView.RPC(nameof(ResetTime), RpcTarget.All);
-                }
-                else
-                {
-                    if (Time.timeScale == 1)
-                        _photonView.RPC(nameof(StopTime), RpcTarget.All);
-                }
-            }
+            
         }
 
         [PunRPC]

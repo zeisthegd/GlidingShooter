@@ -324,7 +324,7 @@ MonoBehaviour:
   OppositeDirectionPower: 3
   AirSpeed: 10
   UseRawInput: 1
-  EnergyPerSecond: 1
+  EnergyPerSecond: 0
   Type: 0
   Dust: {fileID: 0}
 --- !u!114 &1665289660334917367
