@@ -14,7 +14,6 @@ namespace Penwyn.UI
     public class HUD : SingletonMonoBehaviour<HUD>
     {
         [Header("Player")]
-        public ProgressBar PlayerHealth;
         public ProgressBar PlayerEnergy;
         public TMP_Text PlayerMoney;
         public Button WeaponButton;
@@ -44,24 +43,6 @@ namespace Penwyn.UI
 
         #region Player Stats HUD
 
-        public virtual void SetHealthBar()
-        {
-            if (PlayerHealth != null)
-            {
-                PlayerHealth.SetMaxValue(_localPlayer.Health.MaxHealth);
-                PlayerHealth.SetValue(_localPlayer.Health.CurrentHealth);
-            }
-        }
-
-        protected virtual void UpdateHealth()
-        {
-            PlayerHealth.SetValue(_localPlayer.Health.CurrentHealth);
-            if (_localPlayer.Health.MaxHealth != PlayerHealth.ActualValue.maxValue)
-            {
-                PlayerHealth.SetMaxValue(_localPlayer.Health.MaxHealth);
-                Debug.Log(PlayerHealth.ActualValue.maxValue);
-            }
-        }
 
         protected virtual void UpdateMoney()
         {
@@ -75,17 +56,17 @@ namespace Penwyn.UI
         {
             if (PlayerEnergy != null)
             {
-                PlayerEnergy.SetMaxValue(_localPlayerWeapon.Energy.MaxEnergy);
-                PlayerEnergy.SetValue(_localPlayerWeapon.Energy.CurrentEnergy);
+                PlayerEnergy.SetMaxValue(_localPlayer.Energy.MaxEnergy);
+                PlayerEnergy.SetValue(_localPlayer.Energy.CurrentEnergy);
             }
         }
 
         protected virtual void UpdateEnergy()
         {
-            PlayerEnergy.SetValue(_localPlayerWeapon.Energy.CurrentEnergy);
-            if (_localPlayerWeapon.Energy.MaxEnergy != PlayerEnergy.ActualValue.maxValue)
+            PlayerEnergy.SetValue(_localPlayer.Energy.CurrentEnergy);
+            if (_localPlayer.Energy.MaxEnergy != PlayerEnergy.ActualValue.maxValue)
             {
-                PlayerEnergy.SetMaxValue(_localPlayerWeapon.Energy.MaxEnergy);
+                PlayerEnergy.SetMaxValue(_localPlayer.Energy.MaxEnergy);
                 Debug.Log(PlayerEnergy.ActualValue.maxValue);
             }
         }
@@ -144,7 +125,6 @@ namespace Penwyn.UI
         protected virtual void OnPlayerSpawned()
         {
             _localPlayer = PlayerManager.Instance.LocalPlayer;
-            SetHealthBar();
             OnWeaponChanged();
             ConnectEvents();
         }
@@ -170,9 +150,8 @@ namespace Penwyn.UI
 
         public virtual void ConnectEvents()
         {
-            _localPlayer.Health.OnChanged += UpdateHealth;
             _localPlayer.CharacterWeaponHandler.WeaponChanged += OnWeaponChanged;
-            _localPlayerWeapon.Energy.OnChanged += UpdateEnergy;
+            _localPlayer.Energy.OnChanged += UpdateEnergy;
             // _localPlayer.CharacterMoney.MoneyChanged += UpdateMoney;
             _localPlayerWeapon.RequestUpgradeEvent += LoadAvailableUpgrades;
             ConnectEndWeaponUpgradesEvents();
@@ -180,8 +159,7 @@ namespace Penwyn.UI
 
         public virtual void DisconnectEvents()
         {
-            _localPlayer.Health.OnChanged -= UpdateHealth;
-            _localPlayerWeapon.Energy.OnChanged -= UpdateEnergy;
+            _localPlayer.Energy.OnChanged -= UpdateEnergy;
             _localPlayer.CharacterWeaponHandler.WeaponChanged -= OnWeaponChanged;
             //_localPlayer.CharacterMoney.MoneyChanged -= UpdateMoney;
             _localPlayerWeapon.RequestUpgradeEvent -= LoadAvailableUpgrades;

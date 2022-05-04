@@ -25,7 +25,7 @@ namespace Penwyn.Game
         protected TeamData _firstTeam;
         protected TeamData _secondTeam;
 
-        public event UnityAction TurnGenerated;
+        public event UnityAction TurnChanged;
         public event UnityAction ScoreChanged;
         public event UnityAction ATeamWon;
 
@@ -49,15 +49,14 @@ namespace Penwyn.Game
 
             CreateNewTurnQueue();
             ConnectPlayerEvents();
-            TurnGenerated?.Invoke();
         }
 
         public virtual void StartCurrentPlayerTurn()
         {
             if (IsLocalPlayerTurn)
             {
-                PlayerManager.Instance.LocalPlayer.Energy.Set(1);
                 InputReader.Instance.EnableGameplayInput();
+                PlayerManager.Instance.LocalPlayer.Energy.Set(1);
             }
             else
             {
@@ -75,6 +74,7 @@ namespace Penwyn.Game
         {
             CurrentPlayer = _turnQueue.Dequeue();
             StartCurrentPlayerTurn();
+            TurnChanged?.Invoke();
         }
 
         public virtual void LocalPlayerEndTurn()

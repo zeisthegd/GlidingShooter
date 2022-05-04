@@ -26,7 +26,10 @@ namespace Penwyn.Game
 
         public virtual void LoadNextLevel()
         {
-            LoadLevelByIndex(CurrentLevelIndex + 1);
+            if (CurrentLevelIndex + 1 < LevelDataList.List.Count)
+                LoadLevelByIndex(CurrentLevelIndex + 1);
+            else
+                Announcer.Instance.Announce("There no level left! Thank you for playing!");
         }
 
         public virtual void LoadLevelByIndex(int index)
@@ -52,7 +55,7 @@ namespace Penwyn.Game
                 LevelBlock block = GetBlockByID(tile.BlockID);
                 LevelBlock blockObj = Instantiate(block);
                 blockObj.transform.position = tile.Position;
-                blockObj.transform.eulerAngles = new Vector3(0, tile.RotationAngleY, 0);
+                blockObj.transform.eulerAngles = new Vector3(block.transform.eulerAngles.x, tile.RotationAngleY, block.transform.eulerAngles.z);
                 PlacedBlocks.Add(blockObj);
             }
         }

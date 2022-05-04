@@ -19,6 +19,7 @@ namespace Penwyn.Game
     {
         [Header("Player")]
         public string PlayerPrefabPath;
+        public GameObject LocalPlayerMarker;
         //Player Lists
         protected List<Character> _playersInRoom;
         [ReadOnly] public Character LocalPlayer;
@@ -38,6 +39,7 @@ namespace Penwyn.Game
                 LocalPlayer = player.FindComponent<Character>();
                 PlayerSpawned?.Invoke();
                 Debug.Log("Player Created!");
+                Instantiate(LocalPlayerMarker, player.transform.position, Quaternion.Euler(-90, 0, 0), player.transform);
                 TryJoiningATeam();
             }
             FindPlayersInRooms();
@@ -52,7 +54,7 @@ namespace Penwyn.Game
 
             PhotonTeamsManager.Instance.TryGetTeamByCode(1, out teamOne);
             PhotonTeamsManager.Instance.TryGetTeamByCode(2, out teamTwo);
-            
+
             if (teamOneCount > teamTwoCount)
                 PhotonNetwork.LocalPlayer.JoinTeam(teamTwo);
             else

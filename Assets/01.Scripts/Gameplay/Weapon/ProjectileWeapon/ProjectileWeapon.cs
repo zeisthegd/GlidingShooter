@@ -68,7 +68,7 @@ namespace Penwyn.Game
             projectile.transform.position = this.transform.position;
             projectile.transform.rotation = this.transform.rotation;
             projectile.gameObject.SetActive(true);
-            projectile.FlyTowards(Vector3.ProjectOnPlane(target - Owner.transform.position, Vector3.up));// Don't fly on y.
+            projectile.FlyTowards(Vector3.ProjectOnPlane(target - this.transform.position, Vector3.up));// Don't fly on y.
             projectile.SetOwner(this.Owner);
         }
 
@@ -79,7 +79,7 @@ namespace Penwyn.Game
             projectile.transform.position = startPos;
             projectile.transform.rotation = this.transform.rotation;
             projectile.gameObject.SetActive(true);
-            projectile.FlyTowards(Vector3.ProjectOnPlane(target - Owner.transform.position, Vector3.up));// Don't fly on y.
+            projectile.FlyTowards(Vector3.ProjectOnPlane(target - startPos, Vector3.up));// Don't fly on y.
             projectile.SetOwner(this.Owner);
             Debug.DrawRay(target, Vector3.up * 100, Color.black);
         }

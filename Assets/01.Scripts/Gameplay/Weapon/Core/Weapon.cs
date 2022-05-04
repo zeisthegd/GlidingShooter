@@ -180,6 +180,7 @@ namespace Penwyn.Game
             object[] data = info.photonView.InstantiationData;
             this.gameObject.name = (string)data[0];
             this.Owner = PlayerManager.Instance.FindByOwnerActorNumber((int)data[1]);
+            Debug.Log(Owner == null);
             this.Owner.CharacterWeaponHandler.SetWeapon(this);
         }
 

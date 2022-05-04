@@ -28,12 +28,13 @@ namespace Penwyn.UI
         public TMP_Text SecondTeamScore;
         [Header("Turns")]
         public TMP_Text TurnTextPrefab;
+        public TMP_Text CurrentTurn;
         public Transform Container;
 
         void Awake()
         {
             PhotonTeamsManager.PlayerJoinedTeam += ShowTeams;
-            //TurnManager.Instance.TurnGenerated += ShowTurns;
+            CombatManager.Instance.TurnChanged += ShowTurns;
             CombatManager.Instance.ScoreChanged += ShowScore;
         }
 
@@ -56,7 +57,14 @@ namespace Penwyn.UI
                 PhotonNetwork.CurrentRoom.IsOpen = false;
                 PhotonNetwork.CurrentRoom.IsVisible = false;
                 GameManager.Instance.RPC_StartGame();
+                openSettingsBtn.gameObject.SetActive(false);
+                startMatchBtn.gameObject.SetActive(false);
             }
+        }
+
+        public virtual void OnGameStarted()
+        {
+            this.gameObject.SetActive(false);
         }
 
         public virtual void ShowTeams(Photon.Realtime.Player player, PhotonTeam teamJoined)
@@ -83,12 +91,23 @@ namespace Penwyn.UI
 
         public virtual void ShowTurns()
         {
-            for (int i = 0; i < CombatManager.Instance.TurnQueue.Count; i++)
-            {
-                Player[] turns = CombatManager.Instance.TurnQueue.ToArray();
-                TMP_Text turnText = Instantiate(TurnTextPrefab, Container.position, Quaternion.identity, Container);
-                turnText.SetText(turns[i].NickName);
-            }
+            // for (int i = 0; i < CombatManager.Instance.TurnQueue.Count; i++)
+            // {
+            //     Player[] turns = CombatManager.Instance.TurnQueue.ToArray();
+            //     TMP_Text turnText = Instantiate(TurnTextPrefab, Container.position, Quaternion.identity, Container);
+            //     turnText.SetText(turns[i].NickName);
+            // }
+            CurrentTurn.SetText(CombatManager.Instance.CurrentPlayer.NickName);
+        }
+
+        void OnEnable()
+        {
+            // GameManager.Instance.GameStarted += OnGameStarted;
+        }
+
+        void OnDisable()
+        {
+            //  GameManager.Instance.GameStarted -= OnGameStarted;
         }
     }
 

@@ -89,6 +89,7 @@ namespace Penwyn.Game
             _gameState = GameState.LevelLoading;
             Time.timeScale = 1;
             InputReader.Instance.DisableGameplayInput();
+            PlayerManager.Instance.LocalPlayer.Energy.Set(1);
 
             CombatManager.StartGame();
             LevelManager.LoadLevelByIndex(0);
@@ -111,6 +112,7 @@ namespace Penwyn.Game
             Time.timeScale = 1;
             InputReader.Instance.DisableGameplayInput();
             PlayerManager.LocalPlayer.Health.Reset();
+            PlayerManager.Instance.LocalPlayer.Energy.Set(1);
 
             LevelManager.LoadNextLevel();
             yield return new WaitForSeconds(MatchSettings.LevelLoadTime + MatchSettings.PlayerPositioningTime);
