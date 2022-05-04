@@ -13,6 +13,7 @@ namespace Penwyn.Game
     {
         [Header("Health")]
         public float StartingHealth = 10;
+        public bool DeactivateOnDeath = false;
         [Header("Invincible")]
         public bool Invincible = false;
         public Color InvincibleFlickerColor = Color.yellow;
@@ -137,7 +138,8 @@ namespace Penwyn.Game
         {
             _health = 0;
             OnDeath?.Invoke(_character);
-            gameObject.SetActive(false);
+            if (DeactivateOnDeath)
+                gameObject.SetActive(false);
         }
         #endregion
 
@@ -204,6 +206,7 @@ namespace Penwyn.Game
 
         public virtual void Reset()
         {
+            Set(StartingHealth, StartingHealth);
             StopAllCoroutines();
             ResetColor();
         }

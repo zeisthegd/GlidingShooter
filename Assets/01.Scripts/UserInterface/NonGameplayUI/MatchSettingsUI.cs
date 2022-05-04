@@ -19,10 +19,7 @@ namespace Penwyn.UI
 
         void LoadSettings(MatchSettings matchSettings)
         {
-            thiefCount.text = settings.ThiefCount.ToString();
-            treasureCount.text = settings.TreasureCount.ToString();
-            thiefViewRadius.text = settings.ThiefViewRadius.ToString();
-            guardViewRadius.text = settings.GuardViewRadius.ToString();
+            
         }
 
         void OnEnable()

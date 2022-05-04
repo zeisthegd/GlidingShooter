@@ -1,11 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-using Penwyn.Tools;
-using NaughtyAttributes;
+using Photon.Pun;
+using Photon.Pun.UtilityScripts;
+using Photon.Realtime;
 
+using NaughtyAttributes;
+using DG.Tweening;
+
+using Penwyn.Tools;
 using Penwyn.LevelEditor;
 
 namespace Penwyn.Game
@@ -30,9 +36,16 @@ namespace Penwyn.Game
         }
 
         /// <summary>
-        /// Generate the level and spawn the enemies.
+        /// Delete all blocks, create new ones, move players into positions.
         /// </summary>
         protected virtual void LoadLevel(LevelData data)
+        {
+            CleanAllBlocks();
+            CreateBlocks(data);
+            MoveLocalPlayerIntoPosition();
+        }
+
+        protected virtual void CreateBlocks(LevelData data)
         {
             foreach (TileData tile in data.BlockMap)
             {
@@ -42,6 +55,26 @@ namespace Penwyn.Game
                 blockObj.transform.eulerAngles = new Vector3(0, tile.RotationAngleY, 0);
                 PlacedBlocks.Add(blockObj);
             }
+        }
+
+        protected virtual void MoveLocalPlayerIntoPosition()
+        {
+            string spawnTag = "";
+            Player[] teamMembers;
+
+            if (PlayerManager.Instance.LocalPlayerIsFirstTeam)
+            {
+                spawnTag = "FirstTeamSpawn";
+                teamMembers = CombatManager.Instance.FirstTeam.Players;
+            }
+            else
+            {
+                spawnTag = "SecondTeamSpawn";
+                teamMembers = CombatManager.Instance.SecondTeam.Players;
+            }
+
+            GameObject[] spawns = GameObject.FindGameObjectsWithTag(spawnTag);
+            PlayerManager.Instance.LocalPlayer.transform.DOMove(spawns[Array.IndexOf(teamMembers, PhotonNetwork.LocalPlayer)].transform.position, 1);
         }
 
         /// <summary>
@@ -56,7 +89,6 @@ namespace Penwyn.Game
             }
             return null;
         }
-
 
         /// <summary>
         /// Destroy all placed blocks

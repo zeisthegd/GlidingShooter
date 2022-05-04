@@ -229,7 +229,7 @@ MonoBehaviour:
   LevelManager: {fileID: 3950279870636821489}
   CursorUtility: {fileID: 0}
   LevelPath: 
-  MatchSettings: {fileID: 0}
+  MatchSettings: {fileID: 11400000, guid: 49495899da414374eaabdb8c69fa8578, type: 2}
 --- !u!114 &3950279870636821489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,6 +245,8 @@ MonoBehaviour:
   PlaceableObjects:
   - {fileID: 333769083454464978, guid: 862740e3f9f514b47938287fa0a3a00e, type: 3}
   - {fileID: -6325031265022170014, guid: ee4747ca459006b4a85148e40f925a8b, type: 3}
+  - {fileID: -6325031265022170014, guid: 375ce99188cbe0440aa9278f03d89093, type: 3}
+  - {fileID: -6325031265022170014, guid: 5e4d3c05749707545ae9fcb7fc5df5e1, type: 3}
   PlacedBlocks: []
   LevelDataList: {fileID: 11400000, guid: 34e97901b7a377a45a7c3b454a0107f3, type: 2}
   CurrentLevelIndex: 0

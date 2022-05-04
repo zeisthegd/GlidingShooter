@@ -61,13 +61,64 @@ namespace Penwyn.Game
             photonView.RPC(nameof(StartGame), RpcTarget.All);
         }
 
+        public virtual void RPC_LoadNextLevel()
+        {
+            photonView.RPC(nameof(LoadNextLevel), RpcTarget.All);
+        }
+
         [PunRPC]
         public virtual void StartGame()
         {
-            _gameState = GameState.Started;
+            StartCoroutine(StartGameCoroutine());
+            GameStarted?.Invoke();
+        }
+
+        [PunRPC]
+        public virtual void LoadNextLevel()
+        {
+            StartCoroutine(LoadNextLevelCoroutine());
+        }
+
+        /// <summary>
+        /// Disable input and load the first level.
+        /// Create turns queue.
+        /// Load the first turn;
+        /// </summary>
+        public IEnumerator StartGameCoroutine()
+        {
+            _gameState = GameState.LevelLoading;
+            Time.timeScale = 1;
+            InputReader.Instance.DisableGameplayInput();
+
             CombatManager.StartGame();
             LevelManager.LoadLevelByIndex(0);
-            GameStarted?.Invoke();
+            yield return new WaitForSeconds(MatchSettings.LevelLoadTime + MatchSettings.PlayerPositioningTime);
+            CombatManager.NextTurn();
+
+            _gameState = GameState.Started;
+        }
+
+
+        /// <summary>
+        /// Disable input and load the next level.
+        /// Load the first turn;
+        /// </summary>
+        public IEnumerator LoadNextLevelCoroutine()
+        {
+            _gameState = GameState.LevelLoading;
+            yield return new WaitForSeconds(MatchSettings.LevelLoadTime + MatchSettings.PlayerPositioningTime);
+
+            Time.timeScale = 1;
+            InputReader.Instance.DisableGameplayInput();
+            PlayerManager.LocalPlayer.Health.Reset();
+
+            LevelManager.LoadNextLevel();
+            yield return new WaitForSeconds(MatchSettings.LevelLoadTime + MatchSettings.PlayerPositioningTime);
+            CombatManager.CreateNewTurnQueue();
+            CombatManager.ResetDeathCount();
+            CombatManager.NextTurn();
+
+            _gameState = GameState.Started;
         }
 
         void CheckSingleton()
@@ -106,6 +157,7 @@ namespace Penwyn.Game
     {
         NotInRoom,
         TeamChoosing,
+        LevelLoading,
         Started
     }
 }

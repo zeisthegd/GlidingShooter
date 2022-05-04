@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartingHealth: 3
+  DeactivateOnDeath: 1
   Invincible: 0
   InvincibleFlickerColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   InvulnerableDuration: 0

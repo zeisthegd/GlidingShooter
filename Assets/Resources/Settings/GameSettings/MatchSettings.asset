@@ -10,9 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3c0bf2cd7f2eae469f383d04ee26148, type: 3}
-  m_Name: Match Settings
+  m_Name: MatchSettings
   m_EditorClassIdentifier: 
-  thiefCount: 0
-  treasureCount: 0
-  guardViewRadius: 0
-  thiefViewRadius: 0
+  LevelLoadTime: 1
+  PlayerPositioningTime: 1

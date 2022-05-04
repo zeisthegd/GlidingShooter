@@ -87,6 +87,9 @@ namespace Penwyn.Game
 
         }
 
+        public bool LocalPlayerIsFirstTeam => PhotonNetwork.LocalPlayer.GetPhotonTeam() == CombatManager.Instance.FirstTeam.Team;
+        public bool LocalPlayerIsSecondTeam => PhotonNetwork.LocalPlayer.GetPhotonTeam() == CombatManager.Instance.SecondTeam.Team;
+
         public List<Character> PlayerInRoom { get => _playersInRoom; }
     }
 }

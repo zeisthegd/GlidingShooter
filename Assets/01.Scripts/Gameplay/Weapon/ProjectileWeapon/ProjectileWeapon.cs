@@ -49,7 +49,7 @@ namespace Penwyn.Game
             {
                 _target = GetTarget();
                 SpawnProjectile(_target);
-                photonView.RPC(nameof(RPC_SpawnProjectile), Photon.Pun.RpcTarget.Others, new object[] { _target });
+                photonView.RPC(nameof(RPC_SpawnProjectile), Photon.Pun.RpcTarget.Others, new object[] { transform.position, _target });
                 if (CurrentData.BulletPerShot > 1)
                 {
                     if (CurrentData.DelayBetweenBullets > 0)
@@ -73,9 +73,14 @@ namespace Penwyn.Game
         }
 
         [PunRPC]
-        public virtual void RPC_SpawnProjectile(Vector3 target)
+        public virtual void RPC_SpawnProjectile(Vector3 startPos, Vector3 target)
         {
-            SpawnProjectile(target);
+            Projectile projectile = _projectilePooler.PullOneObject().GetComponent<Projectile>();
+            projectile.transform.position = startPos;
+            projectile.transform.rotation = this.transform.rotation;
+            projectile.gameObject.SetActive(true);
+            projectile.FlyTowards(Vector3.ProjectOnPlane(target - Owner.transform.position, Vector3.up));// Don't fly on y.
+            projectile.SetOwner(this.Owner);
             Debug.DrawRay(target, Vector3.up * 100, Color.black);
         }
 
@@ -127,7 +132,7 @@ namespace Penwyn.Game
             target = Vector3.ProjectOnPlane(CursorManager.Instance.GetRayHitUnderMouse().point, Vector3.up);
             return target;
         }
-        
+
         public virtual void CreateNewPool()
         {
             if (_projectilePooler.NoPoolFound())

@@ -12,5 +12,6 @@ namespace Penwyn.Game
         public PhotonTeam Team;
         public Player[] Players;
         public int Score;
+        public int CurrentDeath;
     }
 }

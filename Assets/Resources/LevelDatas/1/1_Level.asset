@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LevelName: 1
   BlockMap:
-  - BlockID: BlueCube
-    Position: {x: -1, y: 1, z: -1}
+  - BlockID: SecondTeamSpawn
+    Position: {x: -7, y: 1, z: 7}
     RotationAngleY: 0
-  - BlockID: Cube
-    Position: {x: 5, y: 1, z: -5}
+  - BlockID: FirstTeamSpawn
+    Position: {x: 7, y: 1, z: -7}
     RotationAngleY: 0

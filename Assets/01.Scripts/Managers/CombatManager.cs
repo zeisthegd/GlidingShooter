@@ -27,11 +27,16 @@ namespace Penwyn.Game
 
         public event UnityAction TurnGenerated;
         public event UnityAction ScoreChanged;
+        public event UnityAction ATeamWon;
+
         public virtual void Awake()
         {
             _photonView = GetComponent<PhotonView>();
             _firstTeam = new TeamData();
             _secondTeam = new TeamData();
+
+            _firstTeam.CurrentDeath = 0;
+            _secondTeam.CurrentDeath = 0;
         }
 
         public virtual void StartGame()
@@ -42,10 +47,8 @@ namespace Penwyn.Game
             PhotonTeamsManager.Instance.TryGetTeamMembers(1, out _firstTeam.Players);
             PhotonTeamsManager.Instance.TryGetTeamMembers(2, out _secondTeam.Players);
 
-            for (int i = 0; i < 100; i++)
-                AddNewTurnRotation();
+            CreateNewTurnQueue();
             ConnectPlayerEvents();
-            RPC_NextTurn();
             TurnGenerated?.Invoke();
         }
 
@@ -95,14 +98,31 @@ namespace Penwyn.Game
                 if (_firstTeam.Score > 0)
                     _firstTeam.Score -= 1;
                 _secondTeam.Score += 1;
+                _firstTeam.CurrentDeath++;
             }
             else
             {
                 _firstTeam.Score += 1;
                 if (_secondTeam.Score > 0)
                     _secondTeam.Score -= 1;
+                _secondTeam.CurrentDeath++;
             }
+            HandleAllTeamMemberDeath();
             ScoreChanged?.Invoke();
+        }
+
+        protected virtual void HandleAllTeamMemberDeath()
+        {
+            if (_firstTeam.CurrentDeath == _firstTeam.Players.Length || _secondTeam.CurrentDeath == _secondTeam.Players.Length)
+            {
+                GameManager.Instance.LoadNextLevel();
+            }
+        }
+
+        public virtual void ResetDeathCount()
+        {
+            _firstTeam.CurrentDeath = 0;
+            _secondTeam.CurrentDeath = 0;
         }
 
         public virtual bool IsSameTeam(Player player)
@@ -110,6 +130,13 @@ namespace Penwyn.Game
             if (player.GetPhotonTeam() == PhotonNetwork.LocalPlayer.GetPhotonTeam())
                 return true;
             return false;
+        }
+
+        public virtual void CreateNewTurnQueue()
+        {
+            _turnQueue.Clear();
+            for (int i = 0; i < 100; i++)
+                AddNewTurnRotation();
         }
 
         protected virtual void AddNewTurnRotation()
@@ -147,9 +174,12 @@ namespace Penwyn.Game
 
         public virtual void DisconnectEvents()
         {
-            PlayerManager.Instance.LocalPlayer.Energy.OutOfEnergy -= LocalPlayerEndTurn;
-            PlayerManager.Instance.LocalPlayer.Health.OnDeath -= LocalPlayerDeath;
-            PlayerManager.Instance.LocalPlayer.CharacterWeaponHandler.CurrentWeapon.WeaponUsed -= LocalPlayerEndTurn;
+            if (PlayerManager.Instance != null && PlayerManager.Instance.LocalPlayer != null)
+            {
+                PlayerManager.Instance.LocalPlayer.Energy.OutOfEnergy -= LocalPlayerEndTurn;
+                PlayerManager.Instance.LocalPlayer.Health.OnDeath -= LocalPlayerDeath;
+                PlayerManager.Instance.LocalPlayer.CharacterWeaponHandler.CurrentWeapon.WeaponUsed -= LocalPlayerEndTurn;
+            }
         }
 
         protected virtual void OnDisable()
