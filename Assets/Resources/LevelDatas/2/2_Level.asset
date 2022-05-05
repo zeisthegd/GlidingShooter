@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 762415436b0eeb643b329fa6520cc6e2, type: 3}
-  m_Name: 1_Level
+  m_Name: 2_Level
   m_EditorClassIdentifier: 
-  LevelName: 1
+  LevelName: 2
   BlockMap:
   - BlockID: FirstTeamSpawn
     Position: {x: -3.5, y: 0.6, z: 3.5}
@@ -25,4 +25,16 @@ MonoBehaviour:
     RotationAngleY: 0
   - BlockID: SecondTeamSpawn
     Position: {x: -3.5, y: 0.6, z: -3.5}
+    RotationAngleY: 0
+  - BlockID: BlueCube
+    Position: {x: -0.5, y: 0.6, z: 0.5}
+    RotationAngleY: 0
+  - BlockID: BlueCube
+    Position: {x: 0.5, y: 0.6, z: 0.5}
+    RotationAngleY: 0
+  - BlockID: BlueCube
+    Position: {x: 0.5, y: 0.6, z: -0.5}
+    RotationAngleY: 0
+  - BlockID: BlueCube
+    Position: {x: -0.5, y: 0.6, z: -0.5}
     RotationAngleY: 0

@@ -1672,9 +1672,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f99828c2d9163404989820a2ab53d1ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Width: 10
-  Height: 10
-  TileScale: 2
+  Width: 20
+  Height: 14
+  TileScale: 1
   PlaceableObjects:
   - {fileID: 333769083454464978, guid: 862740e3f9f514b47938287fa0a3a00e, type: 3}
   - {fileID: -6325031265022170014, guid: ee4747ca459006b4a85148e40f925a8b, type: 3}
@@ -1874,8 +1874,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -494.54407, y: 270.69788}
-  m_SizeDelta: {x: -989.0881, y: -541.3957}
+  m_AnchoredPosition: {x: 500, y: -232.5}
+  m_SizeDelta: {x: -1000, y: -465}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5815953880103869527
 CanvasRenderer:

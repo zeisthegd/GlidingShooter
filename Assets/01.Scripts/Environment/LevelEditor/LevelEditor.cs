@@ -19,6 +19,7 @@ namespace Penwyn.LevelEditor
         public int Width = 10;
         public int Height = 10;
         public int TileScale = 1;
+        public Vector3 SpawnOffset;
 
 
         [Header("Blocks List")]
@@ -58,8 +59,9 @@ namespace Penwyn.LevelEditor
         /// </summary>
         public virtual void ChooseBlockToPlace(LevelBlock block)
         {
+            InputReader.Instance.DisableGameplayInput();
             if (CurrentlySelectedBlock != null)
-                Destroy(CurrentlySelectedBlock);
+                Destroy(CurrentlySelectedBlock.gameObject);
             CurrentlySelectedBlock = Instantiate(block);
             InputReader.Instance.EnableGameplayInput();
         }
@@ -69,12 +71,28 @@ namespace Penwyn.LevelEditor
         /// </summary>
         public virtual void PlaceCurentBlock()
         {
-            if (CurrentlySelectedBlock != null)
+            if (CurrentlySelectedBlock != null && PositionInsideGrid(CurrentlySelectedBlock.transform.position))
             {
-                PlacedBlocks.Add(CurrentlySelectedBlock);
+                PlacedBlocks.Add(Instantiate(CurrentlySelectedBlock, CurrentlySelectedBlock.transform.position + SpawnOffset, CurrentlySelectedBlock.transform.rotation));
                 Debug.Log($"Placed {CurrentlySelectedBlock.BlockID}");
-                CurrentlySelectedBlock = null;
-                InputReader.Instance.DisableGameplayInput();
+            }
+        }
+
+        /// <summary>
+        /// Place the current block on the grid, add to the placed blocks list.
+        /// </summary>
+        public virtual void DeleteBlockUnderMouse()
+        {
+            LevelBlock block = CursorManager.Instance.GetRayHitUnderMouse().collider.gameObject.GetComponent<LevelBlock>();
+            Debug.Log("DeleteBlockUnderMouse");
+            if (block != null)
+            {
+                PlacedBlocks.Remove(block);
+                Destroy(block.gameObject);
+            }
+            else
+            {
+                Debug.Log("No block under mouse");
             }
         }
         //*---------------------------------------------------------------------------------------------------------------------------------------------
@@ -188,6 +206,16 @@ namespace Penwyn.LevelEditor
             position.z = Mathf.Round((z / TileScale) + (Height / 2.0F - 0.5F));
             return position;
         }
+        public virtual bool PositionInsideGrid(Vector3 position)
+        {
+            Vector3 indexFromPos = PositionToIndex(position.x, position.z);
+            return indexFromPos.x >= 0 && indexFromPos.z >= 0 && indexFromPos.x < Width && indexFromPos.z < Height;
+        }
+        public virtual bool IndexInsideGrid(int x, int y)
+        {
+            return x >= 0 && y >= 0 && x < Width && y < Height;
+        }
+
         #endregion
 
         void OnDrawGizmos()
@@ -210,6 +238,7 @@ namespace Penwyn.LevelEditor
             if (InputReader.Instance != null)
             {
                 InputReader.Instance.NormalAttackPressed += PlaceCurentBlock;
+                InputReader.Instance.SpecialAttackPressed += DeleteBlockUnderMouse;
             }
             else
             {
@@ -222,6 +251,7 @@ namespace Penwyn.LevelEditor
             if (InputReader.Instance != null)
             {
                 InputReader.Instance.NormalAttackPressed -= PlaceCurentBlock;
+                InputReader.Instance.SpecialAttackPressed -= DeleteBlockUnderMouse;
             }
             else
             {

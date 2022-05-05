@@ -37,6 +37,7 @@ namespace Penwyn.LevelEditor
         /// </summary>
         public void Save()
         {
+            InputReader.Instance.DisableGameplayInput();
             if (string.IsNullOrEmpty(FileSaveName.text))
             {
                 Debug.Log("Null input");
@@ -69,6 +70,7 @@ namespace Penwyn.LevelEditor
         /// </summary>
         public void Load()
         {
+            InputReader.Instance.DisableGameplayInput();
             if (string.IsNullOrEmpty(FileLoadName.text))
                 return;
             FileSaveName.text = FileLoadName.text;

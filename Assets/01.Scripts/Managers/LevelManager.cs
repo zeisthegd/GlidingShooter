@@ -38,13 +38,19 @@ namespace Penwyn.Game
             CurrentLevelIndex = index;
         }
 
+        public virtual void LoadLevel(LevelData data)
+        {
+            StartCoroutine(LoadLevelCoroutine(data));
+        }
+
         /// <summary>
         /// Delete all blocks, create new ones, move players into positions.
         /// </summary>
-        protected virtual void LoadLevel(LevelData data)
+        protected virtual IEnumerator LoadLevelCoroutine(LevelData data)
         {
             CleanAllBlocks();
             CreateBlocks(data);
+            yield return new WaitForSeconds(0.25F);
             MoveLocalPlayerIntoPosition();
         }
 
@@ -62,6 +68,7 @@ namespace Penwyn.Game
 
         protected virtual void MoveLocalPlayerIntoPosition()
         {
+            Debug.Log(PlacedBlocks.Count);
             string spawnTag = "";
             Player[] teamMembers;
 
