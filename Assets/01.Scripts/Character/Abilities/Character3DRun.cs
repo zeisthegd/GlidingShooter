@@ -55,7 +55,7 @@ namespace Penwyn.Game
         {
             Vector3 direction = Vector3.right * input.x + Vector3.forward * input.y;
             if (input.magnitude > 0)
-                _controller.SetVelocity(direction * RunSpeed);
+                _controller.SetVelocity(direction * RunSpeed * Time.deltaTime);
         }
 
         public virtual void RunAccelerate(Vector2 input)

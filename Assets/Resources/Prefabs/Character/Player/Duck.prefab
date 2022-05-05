@@ -289,7 +289,7 @@ MonoBehaviour:
   Name: 
   ForbidPermissionForbidCharacterStates: 
   ForbidPermissionControllerStates: 
-  RunSpeed: 5
+  RunSpeed: 170
   MaxSpeed: 30
   OppositeDirectionPower: 3
   AirSpeed: 10

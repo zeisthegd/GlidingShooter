@@ -48,8 +48,8 @@ namespace Penwyn.Game
             for (int i = 0; i < CurrentData.BulletPerShot; i++)
             {
                 _target = GetTarget();
-                SpawnProjectile(_target);
-                photonView.RPC(nameof(RPC_SpawnProjectile), Photon.Pun.RpcTarget.Others, new object[] { transform.position, _target });
+                //SpawnProjectile(_target);
+                photonView.RPC(nameof(RPC_SpawnProjectile), Photon.Pun.RpcTarget.AllViaServer, new object[] { transform.position, _target });
                 if (CurrentData.BulletPerShot > 1)
                 {
                     if (CurrentData.DelayBetweenBullets > 0)
